@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto;
+package org.fdryt.ornamental.domain;
 
 public enum Classification {
 

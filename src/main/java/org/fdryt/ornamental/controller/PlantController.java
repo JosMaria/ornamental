@@ -2,7 +2,8 @@ package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.CreatePlantDTO;
-import org.fdryt.ornamental.dto.Family;
+import org.fdryt.ornamental.dto.PlantResponseDTO;
+import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,12 @@ import javax.validation.Valid;
 @RequestMapping("api/v1/nursery")
 public class PlantController {
 
+    private final PlantService plantService;
+
     @PostMapping
-    public ResponseEntity<CreatePlantDTO> insert(@Valid @RequestBody CreatePlantDTO createPlantDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createPlantDTO);
+    public ResponseEntity<PlantResponseDTO> insert(@Valid @RequestBody CreatePlantDTO createPlantDTO) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(plantService.insert(createPlantDTO));
     }
 }

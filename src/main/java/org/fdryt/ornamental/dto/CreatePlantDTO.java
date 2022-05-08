@@ -2,6 +2,8 @@ package org.fdryt.ornamental.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.domain.Classification;
+import org.fdryt.ornamental.domain.Family;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
