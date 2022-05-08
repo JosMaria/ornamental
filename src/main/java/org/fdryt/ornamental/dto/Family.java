@@ -2,18 +2,18 @@ package org.fdryt.ornamental.dto;
 
 public enum Family {
 
-    EUPHORBIACEAE, FABACEAE, ASPARAGACEAE, SOLANACEAE,
-    LAMIACEAE, SALICACEAE, ASPHODELACEAE, AMARYLLIDACEAE,
-    COMMELINACEAE, ARACEAE, RUSCACEAE, BEGONIACEAE,
-    VERBENACEAE, APOCYNACEAE, MALVACEAE, BROMELIACEAE,
-    NYCTAGINACEAE, CACTACEAE, RUBIACEAE, MARANTACEAE,
-    SAPINDACEAE, ARALIACEAE, ANNONACEAE, RUTACEAE,
-    VITACEAE, POLYPODIACEAE, CRASSULACEAE, ROSACEAE,
-    MYRTACEAE, MORACEAE, OLEACEAE, ONAGRACEAE, GESNERIACEAE,
-    XANTHORRHOEACEAE, ASPLENIACEAE, DAVALLICEAE,
-    AMARANTHACEAE, BIGNONIACEAE, AGAVACEAE, PASIFLORACEAE,
-    ANACARDIACEAE, PHYTOKACCACEAE, PORTULACACEAE, LAURACEAE,
-    CARICACEAE, CYPERACEAE, GERANIACEAE, CUPRESSACEAE,
-    PINACEAE, URTICACEAE, ASTERACEAE, SAXIFRAGACEAE,
-    MIMOSACEAE, BALSAMINACEAE, PASSIFLORACEAE, ACANTHACEAE
+    Euphorbiaceae, Fabaceae, Asparagaceae, Solanaceae,
+    Lamiaceae, Salicaceae, Asphodelaceae, Amaryllidaceae,
+    Commelinaceae, Araceae, Ruscaceae, Begoniaceae,
+    Verbenaceae, Apocynaceae, Malvaceae, Bromeliaceae,
+    Nyctaginaceae, Cactaceae, Rubiaceae, Marantaceae,
+    Sapindaceae, Araliaceae, Annonaceae, Rutaceae,
+    Vitaceae, Polypodiaceae, Crassulaceae, Rosaceae,
+    Myrtaceae, Moraceae, Oleaceae, Onagraceae, Gesneriaceae,
+    Xanthorrhoeaceae, Aspleniaceae, Davalliceae,
+    Amaranthaceae, Bignoniaceae, Agavaceae, Pasifloraceae,
+    Anacardiaceae, Phytokaccaceae, Portulacaceae, Lauraceae,
+    Caricaceae, Cyperaceae, Geraniaceae, Cupressaceae,
+    Pinaceae, Urticaceae, Asteraceae, Saxifragaceae,
+    Mimosaceae, Balsaminaceae, Passifloraceae, Acanthaceae
 }
