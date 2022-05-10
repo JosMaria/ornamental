@@ -1,6 +1,6 @@
 package org.fdryt.ornamental.domain;
 
-public enum Family {
+public enum TypeFamily {
 
     Euphorbiaceae, Fabaceae, Asparagaceae, Solanaceae,
     Lamiaceae, Salicaceae, Asphodelaceae, Amaryllidaceae,
