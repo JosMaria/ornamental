@@ -22,8 +22,10 @@ public class PlantServiceImpl implements PlantService {
             String message = String.format("Plant with scientific name: %s already exists.", createPlantDTO.getScientificName());
             throw new PlantAlreadyExistException(message);
         } else {
-            log.info("inserted plant with common name: {}", createPlantDTO.getCommonName());
-            return null;
+            //TODO: mapping CreatePlantDTO to Plant entity and insert the entity
+            log.info("Inserted plant with a common name: {}", createPlantDTO.getCommonName());
+            //TODO: mapping Plant entity to PlantResponseDTO and insert the DTO
+            return new PlantResponseDTO();
         }
     }
 }
