@@ -6,7 +6,6 @@ import org.fdryt.ornamental.domain.Family;
 
 import java.util.Set;
 
-
 @Setter
 public class PlantResponseDTO {
 
