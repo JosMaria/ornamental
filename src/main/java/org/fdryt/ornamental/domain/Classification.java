@@ -8,9 +8,9 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "classifications")
+@NoArgsConstructor
 public class Classification {
 
     @Id
@@ -21,4 +21,7 @@ public class Classification {
     @Enumerated(EnumType.STRING)
     private TypeClassification typeClassification;
 
+    public Classification(TypeClassification typeClassification) {
+        this.typeClassification = typeClassification;
+    }
 }

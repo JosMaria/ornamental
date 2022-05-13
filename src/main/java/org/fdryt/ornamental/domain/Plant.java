@@ -28,9 +28,13 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private TypeFamily family;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable( name = "plants_classifications",
                 joinColumns = @JoinColumn(name = "plant_id"),
                 inverseJoinColumns = @JoinColumn(name = "classification_id"))
-    private Set<Classification> classifications = new HashSet<>();
+    private final Set<Classification> classifications = new HashSet<>();
+
+    public void addClassification(Classification classification) {
+        classifications.add(classification);
+    }
 }
