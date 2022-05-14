@@ -28,7 +28,7 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private TypeFamily family;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable( name = "plants_classifications",
                 joinColumns = @JoinColumn(name = "plant_id"),
                 inverseJoinColumns = @JoinColumn(name = "classification_id"))

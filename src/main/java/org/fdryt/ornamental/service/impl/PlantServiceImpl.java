@@ -14,9 +14,6 @@ import org.fdryt.ornamental.service.PlantService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,12 +40,7 @@ public class PlantServiceImpl implements PlantService {
             log.info("Inserted plant with a common name: {}", createPlantDTO.getCommonName());
 
             // Mapping plant to DTO
-            PlantResponseDTO response = plantMapper.map(plantPersisted, PlantResponseDTO.class);
-            Set<TypeClassification> typeClassifications = plantPersisted.getClassifications().stream()
-                    .map(Classification::getTypeClassification)
-                    .collect(Collectors.toSet());
-            response.setClassifications(typeClassifications);
-            return response;
+            return plantMapper.map(plantPersisted, PlantResponseDTO.class);
         }
     }
 

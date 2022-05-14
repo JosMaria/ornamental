@@ -4,19 +4,18 @@ server:
     include-message: always
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
   datasource:
-    url: jdbc:h2:mem:nursery_db
-    #url: jdbc:h2:file:./src/main/resources/db/nursery;AUTO_SERVER=TRUE
-    username: maria
+    url: jdbc:postgresql://localhost:5432/nursery
+    username: josemaria
     password: maria17
-    driver-class-name: org.h2.Driver
+    driver-class-name: org.postgresql.Driver
+    #url: jdbc:h2:file:./src/main/resources/db/nursery;AUTO_SERVER=TRUE
   jpa:
+    show-sql: true
     open-in-view: false
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
