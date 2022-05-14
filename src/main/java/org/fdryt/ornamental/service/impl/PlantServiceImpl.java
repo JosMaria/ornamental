@@ -11,6 +11,7 @@ import org.fdryt.ornamental.problem.exception.PlantAlreadyExistException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -23,6 +24,7 @@ public class PlantServiceImpl implements PlantService {
 
     private final PlantRepository plantRepository;
     private final ClassificationRepository classificationRepository;
+    private final ModelMapper plantMapper;
 
     @Override
     public PlantResponseDTO insert(CreatePlantDTO createPlantDTO) {
@@ -30,42 +32,29 @@ public class PlantServiceImpl implements PlantService {
             String message = String.format("Plant with scientific name: %s already exists.", createPlantDTO.getScientificName());
             throw new PlantAlreadyExistException(message);
         } else {
-            Plant plantToPersist = dtoToEntity(createPlantDTO);
+            // Mapping the plant to be persisted.
+            Plant plantToPersist = plantMapper.map(createPlantDTO, Plant.class);
+            createPlantDTO.getClassifications().stream()
+                    .map(this::findClassificationByType)
+                    .forEach(plantToPersist::addClassification);
+
+            // Saving the plant and print log
             Plant plantPersisted = plantRepository.save(plantToPersist);
             log.info("Inserted plant with a common name: {}", createPlantDTO.getCommonName());
-            return entityToDTO(plantPersisted);
+
+            // Mapping plant to DTO
+            PlantResponseDTO response = plantMapper.map(plantPersisted, PlantResponseDTO.class);
+            Set<TypeClassification> typeClassifications = plantPersisted.getClassifications().stream()
+                    .map(Classification::getTypeClassification)
+                    .collect(Collectors.toSet());
+            response.setClassifications(typeClassifications);
+            return response;
         }
     }
 
-    private Plant dtoToEntity(CreatePlantDTO dto) {
-        Plant plant = new Plant();
-        plant.setCommonName(dto.getCommonName());
-        plant.setScientificName(dto.getScientificName());
-        plant.setFamily(dto.getFamily());
-
-        dto.getClassifications().stream()
-                .map(this::findClassification)
-                .forEach(plant::addClassification);
-
-        return plant;
-    }
-
-    private Classification findClassification(TypeClassification type) {
+    private Classification findClassificationByType(TypeClassification type) {
         String msgException = String.format("Type classification %s does not exists", type);
         return classificationRepository.findClassificationByTypeClassification(type)
                 .orElseThrow(() -> new IllegalArgumentException(msgException));
-    }
-
-    private PlantResponseDTO entityToDTO(Plant plant) {
-        PlantResponseDTO dto = new PlantResponseDTO();
-        dto.setCommonName(plant.getCommonName());
-        dto.setScientificName(plant.getScientificName());
-        dto.setFamily(plant.getFamily());
-        Set<TypeClassification> typeClassifications = plant.getClassifications()
-                .stream()
-                .map(Classification::getTypeClassification)
-                .collect(Collectors.toSet());
-        dto.setClassifications(typeClassifications);
-        return dto;
     }
 }

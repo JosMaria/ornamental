@@ -20,8 +20,4 @@ public class Classification {
 
     @Enumerated(EnumType.STRING)
     private TypeClassification typeClassification;
-
-    public Classification(TypeClassification typeClassification) {
-        this.typeClassification = typeClassification;
-    }
 }
