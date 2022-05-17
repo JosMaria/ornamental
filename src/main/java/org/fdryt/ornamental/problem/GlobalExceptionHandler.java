@@ -1,5 +1,6 @@
 package org.fdryt.ornamental.problem;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.problem.exception.PlantAlreadyExistException;
 import org.fdryt.ornamental.problem.response.ProcessErrorResponse;
@@ -43,6 +44,17 @@ public class GlobalExceptionHandler {
         ValidationErrorResponse validationErrorResponse = new ValidationErrorResponse(LocalDateTime.now(),
                 httpStatus.value(), httpStatus.name(), httpServletRequest.getRequestURI(), fieldErrors);
 
-        return new ResponseEntity<>(validationErrorResponse, httpStatus);
+        return ResponseEntity.badRequest().body(validationErrorResponse);
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ProcessErrorResponse> handleInvalidFormatException(InvalidFormatException exception,
+                                                                                HttpServletRequest httpServletRequest) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        String message = String.format("Value %s not founded", exception.getValue());
+
+        ProcessErrorResponse processErrorResponse = new ProcessErrorResponse(LocalDateTime.now(), httpStatus.value(),
+                httpStatus.name(), httpServletRequest.getRequestURI(), message);
+        return ResponseEntity.badRequest().body(processErrorResponse);
     }
 }
