@@ -3,6 +3,7 @@ package org.fdryt.ornamental.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,6 +19,7 @@ import static org.fdryt.ornamental.security.AppUserRole.ASSISTANT;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -25,10 +27,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeRequests()
-            .anyRequest().authenticated()
-            .and()
-            .httpBasic();
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
 
     @Bean
@@ -36,22 +38,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected UserDetailsService userDetailsService() {
         UserDetails consuelo = User.withUsername("consuelo")
                 .password(passwordEncoder.encode("consuelo17"))
-                .roles(ADMINISTRATOR.name()) // ROLE_ADMINISTRATOR
+                .authorities(ADMINISTRATOR.getGrantedAuthorities())
                 .build();
 
         UserDetails jose = User.withUsername("jose")
                 .password(passwordEncoder.encode("jose17"))
-                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
+                .authorities(ASSISTANT.getGrantedAuthorities())
                 .build();
 
         UserDetails maria = User.withUsername("maria")
                 .password(passwordEncoder.encode("maria17"))
-                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
+                .authorities(ASSISTANT.getGrantedAuthorities())
                 .build();
 
         UserDetails antonio = User.withUsername("antonio")
                 .password(passwordEncoder.encode("antonio17"))
-                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
+                .authorities(ASSISTANT.getGrantedAuthorities())
                 .build();
         return new InMemoryUserDetailsManager(consuelo, jose, maria, antonio);
     }
