@@ -23,14 +23,13 @@ public class BeansConfiguration {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.getConfiguration().setSkipNullEnabled(true);
 
-        Converter<Set<Classification>, Set<TypeClassification>> converter = mappingContext ->
-                mappingContext.getSource().stream()
+        Converter<Set<Classification>, Set<TypeClassification>> converter =
+                mappingContext -> mappingContext.getSource().stream()
                         .map(Classification::getTypeClassification)
                         .collect(Collectors.toSet());
 
         TypeMap<Plant, PlantResponseDTO> typeMap = modelMapper.createTypeMap(Plant.class, PlantResponseDTO.class);
-        typeMap.addMappings(mapper -> mapper.using(converter)
-                .map(Plant::getClassifications, PlantResponseDTO::setClassifications));
+        typeMap.addMappings(mapper -> mapper.using(converter).map(Plant::getClassifications, PlantResponseDTO::setClassifications));
         return modelMapper;
     }
 }
