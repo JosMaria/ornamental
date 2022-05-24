@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import static org.fdryt.ornamental.security.AppUserRole.ADMINISTRATOR;
+import static org.fdryt.ornamental.security.AppUserRole.ASSISTANT;
+
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -33,24 +36,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected UserDetailsService userDetailsService() {
         UserDetails consuelo = User.withUsername("consuelo")
                 .password(passwordEncoder.encode("consuelo17"))
-                .roles("ADMINISTRATOR") // ROLE_ADMINISTRATOR
+                .roles(ADMINISTRATOR.name()) // ROLE_ADMINISTRATOR
                 .build();
 
         UserDetails jose = User.withUsername("jose")
                 .password(passwordEncoder.encode("jose17"))
-                .roles("ASSISTANT") // ROLE_ASSISTANT
+                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
                 .build();
 
         UserDetails maria = User.withUsername("maria")
                 .password(passwordEncoder.encode("maria17"))
-                .roles("ASSISTANT") // ROLE_ASSISTANT
+                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
                 .build();
 
         UserDetails antonio = User.withUsername("antonio")
                 .password(passwordEncoder.encode("antonio17"))
-                .roles("ASSISTANT") // ROLE_ASSISTANT
+                .roles(ASSISTANT.name()) // ROLE_ASSISTANT
                 .build();
-
         return new InMemoryUserDetailsManager(consuelo, jose, maria, antonio);
     }
 }
