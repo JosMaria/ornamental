@@ -1,0 +1,10 @@
+INSERT INTO classifications (id, type_classification) values (1, 'ORNAMENTAL');
+INSERT INTO classifications (id, type_classification) values (2, 'FORESTAL');
+INSERT INTO classifications (id, type_classification) values (3, 'INDUSTRIAL');
+INSERT INTO classifications (id, type_classification) values (4, 'ALIMENTICIA');
+INSERT INTO classifications (id, type_classification) values (5, 'MEDICINAL');
+INSERT INTO classifications (id, type_classification) values (6, 'EXÓTICA');
+INSERT INTO classifications (id, type_classification) values (7, 'CACTU');
+INSERT INTO classifications (id, type_classification) values (8, 'FRUTAL');
+INSERT INTO classifications (id, type_classification) values (9, 'CRASA');
+INSERT INTO classifications (id, type_classification) values (10, 'SUCULENTA');
