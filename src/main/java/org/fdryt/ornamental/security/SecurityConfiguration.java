@@ -26,8 +26,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        /*http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()*/
         http.csrf().disable()
                 .authorizeRequests()
+                .antMatchers("/api/v1/nursery/catalog").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

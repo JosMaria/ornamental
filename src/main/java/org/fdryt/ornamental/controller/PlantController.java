@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/nursery/admin")
+@RequestMapping("api/v1/nursery")
 public class PlantController {
 
     private final PlantService plantService;
@@ -24,5 +24,11 @@ public class PlantController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(plantService.insert(createPlantDTO));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    @PostMapping("family")
+    public ResponseEntity<String> insertFamily(@RequestParam("family") String family) {
+        return ResponseEntity.status(HttpStatus.CREATED).body("Created " + "'" + family + "'");
     }
 }
