@@ -1,20 +1,16 @@
 package org.fdryt.ornamental.security;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.auth.AppUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
-import static org.fdryt.ornamental.security.AppUserRole.ADMINISTRATOR;
-import static org.fdryt.ornamental.security.AppUserRole.ASSISTANT;
 
 @RequiredArgsConstructor
 @Configuration
@@ -23,6 +19,7 @@ import static org.fdryt.ornamental.security.AppUserRole.ASSISTANT;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
+    private final AppUserService appUserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -36,28 +33,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
-    @Bean
     @Override
-    protected UserDetailsService userDetailsService() {
-        UserDetails consuelo = User.withUsername("consuelo")
-                .password(passwordEncoder.encode("consuelo17"))
-                .authorities(ADMINISTRATOR.getGrantedAuthorities())
-                .build();
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProvider());
+        super.configure(auth);
+    }
 
-        UserDetails jose = User.withUsername("jose")
-                .password(passwordEncoder.encode("jose17"))
-                .authorities(ASSISTANT.getGrantedAuthorities())
-                .build();
-
-        UserDetails maria = User.withUsername("maria")
-                .password(passwordEncoder.encode("maria17"))
-                .authorities(ASSISTANT.getGrantedAuthorities())
-                .build();
-
-        UserDetails antonio = User.withUsername("antonio")
-                .password(passwordEncoder.encode("antonio17"))
-                .authorities(ASSISTANT.getGrantedAuthorities())
-                .build();
-        return new InMemoryUserDetailsManager(consuelo, jose, maria, antonio);
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(passwordEncoder);
+        provider.setUserDetailsService(appUserService);
+        return provider;
     }
 }
