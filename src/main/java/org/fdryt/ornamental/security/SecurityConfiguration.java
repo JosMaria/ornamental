@@ -21,13 +21,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final AppUserService appUserService;
 
+    private static final String ROUTE_CATALOG = "/api/v1/nursery/catalog";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         /*http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()*/
-        http.csrf().disable()
+        http/*.cors().and()*/
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/nursery/catalog").permitAll()
+                .antMatchers(ROUTE_CATALOG).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
