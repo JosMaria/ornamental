@@ -43,7 +43,7 @@ public class FakeAppUserDaoService implements AppUserDao {
                 ),
                 new AppUser(
                         ASSISTANT.getGrantedAuthorities(),
-                        "antornio",
+                        "antonio",
                         passwordEncoder.encode("antonio17")
                 )
         );
