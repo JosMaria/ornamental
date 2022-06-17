@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/nursery/catalog")
@@ -67,7 +67,6 @@ public class CatalogController {
         return ResponseEntity.ok(message);
     }
 
-    // TODO:
     @GetMapping("permitTen")
     @PreAuthorize("hasAuthority('permission:ten') or hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<String> messageAccessibilityToPermissionTenAndAdministrator() {
