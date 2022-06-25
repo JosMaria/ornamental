@@ -1,6 +1,8 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.ProductResponseDTO;
+import org.fdryt.ornamental.service.OrnamentalPlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,15 +10,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/nursery/catalog")
-public class CatalogController {
+@RequestMapping("api/v1/nursery")
+public class OrnamentalPlantController {
+
+    private final OrnamentalPlantService ornamentalPlantService;
 
     @GetMapping
-    public ResponseEntity<String> showCatalog() {
-        return ResponseEntity.ok("Accessibility: PUBLIC\nHere will be the catalog");
+    public ResponseEntity<List<ProductResponseDTO>> getOrnamentalPlants() {
+        return ResponseEntity.ok(ornamentalPlantService.getOrnamentalPlants());
     }
 
     @GetMapping("administrator")
@@ -39,6 +45,7 @@ public class CatalogController {
         String message = "Accessibility: ASSISTANT\nThis resource is only to ASSISTANT";
         return ResponseEntity.ok(message);
     }
+
     @GetMapping("permitOne")
     @PreAuthorize("hasAuthority('permission:one')")
     public ResponseEntity<String> messageAccessibilityToPermitOne() {

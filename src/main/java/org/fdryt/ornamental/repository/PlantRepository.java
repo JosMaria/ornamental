@@ -1,6 +1,6 @@
 package org.fdryt.ornamental.repository;
 
-import org.fdryt.ornamental.domain.Plant;
+/*import org.fdryt.ornamental.domain.Plant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +14,4 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
             FROM Plant plant
             WHERE plant.scientificName = :scientificName""")
     boolean existsByScientificName(@Param("scientificName") String scientificName);
-}
+}*/

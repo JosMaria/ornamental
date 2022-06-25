@@ -1,6 +1,6 @@
 package org.fdryt.ornamental.domain;
 
-public enum TypeClassification {
+public enum ClassificationByUtility {
 
     ORNAMENTAL, FORESTAL, INDUSTRIAL,
     ALIMENTICIA, MEDICINAL, EXÓTICA,

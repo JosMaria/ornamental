@@ -1,10 +1,10 @@
 package org.fdryt.ornamental.service.impl;
-
+/*
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.Classification;
 import org.fdryt.ornamental.domain.Plant;
-import org.fdryt.ornamental.domain.TypeClassification;
+import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.dto.CreatePlantDTO;
 import org.fdryt.ornamental.dto.PlantResponseDTO;
 import org.fdryt.ornamental.problem.exception.PlantAlreadyExistException;
@@ -44,9 +44,9 @@ public class PlantServiceImpl implements PlantService {
         }
     }
 
-    private Classification findClassificationByType(TypeClassification type) {
+    private Classification findClassificationByType(ClassificationByUtility type) {
         String msgException = String.format("Type classification %s does not exists", type);
         return classificationRepository.findClassificationByTypeClassification(type)
                 .orElseThrow(() -> new IllegalArgumentException(msgException));
     }
-}
+}*/
