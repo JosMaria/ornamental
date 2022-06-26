@@ -1,22 +1,23 @@
 package org.fdryt.ornamental.domain;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.SEQUENCE;
+
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "identifications")
 public class Identification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "identification_generator")
+    @GeneratedValue(strategy = SEQUENCE, generator = "identification_generator")
     @SequenceGenerator(name = "identification_generator")
     private Long id;
 
@@ -26,29 +27,19 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private Family family;
 
-    @ManyToMany
     @JoinTable(
             name = "identifications_classifications",
             joinColumns =
                 @JoinColumn(
-                    foreignKey = @ForeignKey(name = "fk_identification_id"),
+                    foreignKey = @ForeignKey(name = "fk_identification"),
                     name = "identification_id"),
             inverseJoinColumns =
                 @JoinColumn(
-                    foreignKey = @ForeignKey(name = "fk_classification_id"),
+                    foreignKey = @ForeignKey(name = "fk_classification"),
                     name = "classification_id"))
+    @ManyToMany
     private final Set<Classification> classifications = new HashSet<>();
-
-    public Identification(String commonName, String scientificName, Family family) {
-        this.commonName = commonName;
-        this.scientificName = scientificName;
-        this.family = family;
-    }
-
-    public void addClassification(Classification classification) {
-        classifications.add(classification);
-    }
 }

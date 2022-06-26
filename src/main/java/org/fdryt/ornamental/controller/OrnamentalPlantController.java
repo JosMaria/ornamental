@@ -15,7 +15,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/nursery")
+@RequestMapping("api/v1/ornamental_plants")
 public class OrnamentalPlantController {
 
     private final OrnamentalPlantService ornamentalPlantService;
