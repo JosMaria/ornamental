@@ -41,5 +41,5 @@ public class Identification {
                     foreignKey = @ForeignKey(name = "fk_classification"),
                     name = "classification_id"))
     @ManyToMany
-    private final Set<Classification> classifications = new HashSet<>();
+    private final Set<Classification> classificationsByUtility = new HashSet<>();
 }

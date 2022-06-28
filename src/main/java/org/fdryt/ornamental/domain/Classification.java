@@ -23,7 +23,4 @@ public class Classification {
     @Column(unique = true, length = 50)
     @Enumerated(EnumType.STRING)
     private ClassificationByUtility classificationByUtility;
-
-    @ManyToMany(mappedBy = "classifications")
-    private final Set<Identification> identifications = new HashSet<>();
 }

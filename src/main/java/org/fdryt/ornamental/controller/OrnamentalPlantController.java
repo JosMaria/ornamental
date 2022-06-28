@@ -3,6 +3,8 @@ package org.fdryt.ornamental.controller;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.service.OrnamentalPlantService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -21,8 +25,9 @@ public class OrnamentalPlantController {
     private final OrnamentalPlantService ornamentalPlantService;
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getOrnamentalPlants() {
-        return ResponseEntity.ok(ornamentalPlantService.getOrnamentalPlants());
+    public ResponseEntity<List<ProductResponseDTO>> getOrnamentalPlants(
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+        return ResponseEntity.ok(ornamentalPlantService.getOrnamentalPlants(pageable));
     }
 
     @GetMapping("administrator")
