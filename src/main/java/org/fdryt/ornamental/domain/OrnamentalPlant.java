@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import javax.persistence.*;
 
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
@@ -25,7 +26,7 @@ public class OrnamentalPlant {
     @JoinColumn(
             nullable = false, unique = true,
             foreignKey = @ForeignKey(name = "fk_identification"))
-    @OneToOne(cascade = PERSIST)
+    @OneToOne(cascade = PERSIST, fetch = LAZY)
     private Identification identification;
 
     private String urlImage;

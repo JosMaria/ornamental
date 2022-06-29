@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface OrnamentalPlantService {
 
-    List<ProductResponseDTO> getOrnamentalPlants(Pageable pageable);
+    List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable);
+
+    List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable);
 }

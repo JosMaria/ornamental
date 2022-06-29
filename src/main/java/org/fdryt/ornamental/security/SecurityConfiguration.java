@@ -21,7 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final AppUserService appUserService;
 
-    private static final String ROUTE_CATALOG = "/api/v1/ornamental_plants";
+    private static final String ROUTE_CATALOG = "/api/v1/ornamental_plants/**";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

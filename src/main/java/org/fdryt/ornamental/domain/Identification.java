@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Getter
@@ -40,6 +41,6 @@ public class Identification {
                 @JoinColumn(
                     foreignKey = @ForeignKey(name = "fk_classification"),
                     name = "classification_id"))
-    @ManyToMany
+    @ManyToMany(fetch = LAZY)
     private final Set<Classification> classificationsByUtility = new HashSet<>();
 }
