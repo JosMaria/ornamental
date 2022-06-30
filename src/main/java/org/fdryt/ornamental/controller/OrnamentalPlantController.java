@@ -1,22 +1,37 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.ProductResponseDTO;
+import org.fdryt.ornamental.service.OrnamentalPlantService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/nursery/catalog")
-public class CatalogController {
+@RequestMapping("api/v1/ornamental_plants")
+public class OrnamentalPlantController {
+
+    private final OrnamentalPlantService ornamentalPlantService;
 
     @GetMapping
-    public ResponseEntity<String> showCatalog() {
-        return ResponseEntity.ok("Accessibility: PUBLIC\nHere will be the catalog");
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+        return ResponseEntity.ok(ornamentalPlantService.findAllOrnamentalPlants(pageable));
+    }
+
+    @GetMapping("classifications/{classification}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlantsByClassification(
+            @PathVariable("classification") String classification,
+            @PageableDefault(size = 16, direction = ASC) Pageable pageable) {
+        return ResponseEntity.ok(ornamentalPlantService.findAllOrnamentalPlantsByClassification(classification, pageable));
     }
 
     @GetMapping("administrator")
@@ -39,6 +54,7 @@ public class CatalogController {
         String message = "Accessibility: ASSISTANT\nThis resource is only to ASSISTANT";
         return ResponseEntity.ok(message);
     }
+
     @GetMapping("permitOne")
     @PreAuthorize("hasAuthority('permission:one')")
     public ResponseEntity<String> messageAccessibilityToPermitOne() {

@@ -21,7 +21,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final AppUserService appUserService;
 
-    private static final String ROUTE_CATALOG = "/api/v1/nursery/catalog";
+    private static final String CATALOG = "/api/v1/ornamental_plants/**";
+    private static final String CLASSIFICATIONS = "/api/v1/classifications";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,7 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http/*.cors().and()*/
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(ROUTE_CATALOG).permitAll()
+                .antMatchers(CATALOG, CLASSIFICATIONS).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

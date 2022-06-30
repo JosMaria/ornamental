@@ -2,8 +2,8 @@ package org.fdryt.ornamental.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.fdryt.ornamental.domain.TypeClassification;
-import org.fdryt.ornamental.domain.TypeFamily;
+import org.fdryt.ornamental.domain.ClassificationByUtility;
+import org.fdryt.ornamental.domain.Family;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -23,8 +23,8 @@ public class CreatePlantDTO {
     private String scientificName;
 
     @NotNull(message = "family field must not have a null value")
-    private TypeFamily family;
+    private Family family;
 
     @NotNull(message = "classifications field must not have a null value")
-    private Set<TypeClassification> classifications;
+    private Set<ClassificationByUtility> classifications;
 }
