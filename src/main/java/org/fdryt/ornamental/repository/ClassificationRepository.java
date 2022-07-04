@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Collection;
 
 @Repository
 public interface ClassificationRepository extends JpaRepository<Classification, Long> {
@@ -14,5 +14,5 @@ public interface ClassificationRepository extends JpaRepository<Classification, 
     @Query("""
             SELECT c.classificationByUtility
             FROM Classification c""")
-    List<ClassificationByUtility> findAllClassificationByUtility();
+    Collection<ClassificationByUtility> findAllClassificationByUtility();
 }

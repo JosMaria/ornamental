@@ -1,8 +1,8 @@
 package org.fdryt.ornamental.service;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ClassificationService {
 
-    List<String> findAllClassificationByUtility();
+    Set<String> findAllClassificationByUtility();
 }

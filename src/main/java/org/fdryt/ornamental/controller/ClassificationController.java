@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -19,7 +19,7 @@ public class ClassificationController {
     private final ClassificationService classificationService;
 
     @GetMapping
-    public ResponseEntity<List<String>> findAllClassificationByUtility() {
+    public ResponseEntity<Set<String>> findAllClassificationByUtility() {
         return ResponseEntity.ok(classificationService.findAllClassificationByUtility());
     }
 }

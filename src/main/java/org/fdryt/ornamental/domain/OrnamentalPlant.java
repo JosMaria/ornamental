@@ -26,7 +26,7 @@ public class OrnamentalPlant {
     @JoinColumn(
             nullable = false, unique = true,
             foreignKey = @ForeignKey(name = "fk_identification"))
-    @OneToOne(cascade = PERSIST, fetch = LAZY)
+    @OneToOne(cascade = PERSIST)
     private Identification identification;
 
     private String urlImage;

@@ -30,7 +30,7 @@ public class OrnamentalPlantController {
     @GetMapping("classifications/{classification}")
     public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlantsByClassification(
             @PathVariable("classification") String classification,
-            @PageableDefault(size = 16, direction = ASC) Pageable pageable) {
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
         return ResponseEntity.ok(ornamentalPlantService.findAllOrnamentalPlantsByClassification(classification, pageable));
     }
 
