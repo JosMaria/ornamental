@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.service.OrnamentalPlantService;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,16 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class OrnamentalPlantController {
 
     private final OrnamentalPlantService ornamentalPlantService;
+
+    @GetMapping("/identifications")
+    public ResponseEntity<List<IdentificationResponseDTO>> findAllIdentifications() {
+        List<IdentificationResponseDTO> list = List.of(
+                new IdentificationResponseDTO(1L, "commonName1", "scientificName1", "firstLetterLastname1", "family1", "status1"),
+                new IdentificationResponseDTO(2L, "commonName2", "scientificName2", "firstLetterLastname2", "family2", "status2"),
+                new IdentificationResponseDTO(3L, "commonName3", "scientificName3", "firstLetterLastname3", "family3", "status3")
+        );
+        return ResponseEntity.ok(list);
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(
