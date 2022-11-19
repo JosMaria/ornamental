@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.OrnamentalPlant;
+import org.fdryt.ornamental.domain.Status;
 import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.repository.OrnamentalPlantRepository;
@@ -47,6 +48,16 @@ public class OrnamentalPlantServiceImpl implements OrnamentalPlantService {
                 .toList();
     }
 
+    @Override
+    public List<IdentificationResponseDTO> findAllIdentificationsByStatus(Status status) {
+        log.info("Fetching identifications by status...");
+        return ornamentalPlantRepository.findAllByStatus(status)
+                .stream()
+                .map(this::entityToDTO)
+                .toList();
+    }
+
+    // TODO: Implement in model mapper
     private IdentificationResponseDTO entityToDTO(OrnamentalPlant ornamentalPlant) {
         Identification identification = ornamentalPlant.getIdentification();
         return new IdentificationResponseDTO(

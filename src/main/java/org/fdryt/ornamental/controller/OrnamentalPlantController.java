@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.domain.Status;
 import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.service.OrnamentalPlantService;
@@ -14,6 +15,24 @@ import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
+// * Info comment
+// ? warn comment
+// ! error comment
+// + notes comment
+    /*
+        * Info comment
+        ? warn comment
+        ! error comment
+        + notes comment
+    */
+
+/**
+ * * Info comment
+ * ? warn comment
+ * ! error comment
+ * + notes comment
+ * */
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
@@ -24,9 +43,16 @@ public class OrnamentalPlantController {
     private final OrnamentalPlantService ornamentalPlantService;
 
     @GetMapping("/identifications")
-    @PreAuthorize(ADMINISTRATOR_ACCESS)
+    //@PreAuthorize(ADMINISTRATOR_ACCESS)
     public ResponseEntity<List<IdentificationResponseDTO>> findAllIdentifications() {
         return ResponseEntity.ok(ornamentalPlantService.findAllIdentifications());
+    }
+
+    // + I think in @PathVariable or @RequestParam
+    @GetMapping("/identifications/{status}")
+    public ResponseEntity<List<IdentificationResponseDTO>> findAllIdentificationsByStatus(@PathVariable("status") String valueStatus) {
+        Status status = Status.valueOf(valueStatus);
+        return ResponseEntity.ok(ornamentalPlantService.findAllIdentificationsByStatus(status));
     }
 
     @GetMapping

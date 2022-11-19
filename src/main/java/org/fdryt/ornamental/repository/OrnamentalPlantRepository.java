@@ -3,6 +3,8 @@ package org.fdryt.ornamental.repository;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.OrnamentalPlant;
+import org.fdryt.ornamental.domain.Status;
+import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,11 @@ import java.util.List;
 
 @Repository
 public interface OrnamentalPlantRepository extends JpaRepository<OrnamentalPlant, Long> {
+    @Query("""
+        SELECT o
+        FROM OrnamentalPlant o
+        WHERE o.status = :status""")
+    List<OrnamentalPlant> findAllByStatus(@Param("status") Status status);
 
     @Query("""
             SELECT new org.fdryt.ornamental.dto.ProductResponseDTO
@@ -24,6 +31,7 @@ public interface OrnamentalPlantRepository extends JpaRepository<OrnamentalPlant
             INNER JOIN i.classificationsByUtility c
             WHERE c.classificationByUtility = :type""")
     Page<ProductResponseDTO> findAllByClassification(@Param("type") ClassificationByUtility type, Pageable pageable);
+
 
     /*@Query(nativeQuery = true,
             value = """
