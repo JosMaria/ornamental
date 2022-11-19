@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import javax.persistence.*;
 
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.SEQUENCE;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
@@ -30,7 +31,9 @@ public class OrnamentalPlant {
     private Identification identification;
 
     private String urlImage;
-    private boolean inConservation;
+
+    @Enumerated(value = STRING)
+    private Status status;
     /*private String origin;
     private String description;
     private String size;

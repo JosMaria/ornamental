@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.fdryt.ornamental.domain.Family;
+import org.fdryt.ornamental.domain.Status;
 
 @Getter
 @Setter
@@ -17,5 +18,5 @@ public class ProductResponseDTO {
     private String scientificName;
     private Family family;
     private String urlImage;
-    private boolean inConservation;
+    private Status status;
 }

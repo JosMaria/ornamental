@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.ClassificationByUtility;
+import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.OrnamentalPlant;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.springframework.data.domain.Page;
@@ -10,12 +11,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface OrnamentalPlantRepository extends JpaRepository<OrnamentalPlant, Long> {
 
     @Query("""
             SELECT new org.fdryt.ornamental.dto.ProductResponseDTO
-                (o.id, i.commonName, i.scientificName, i.family, o.urlImage, o.inConservation)
+                (o.id, i.commonName, i.scientificName, i.family, o.urlImage, o.status)
             FROM OrnamentalPlant o
             INNER JOIN o.identification i
             INNER JOIN i.classificationsByUtility c

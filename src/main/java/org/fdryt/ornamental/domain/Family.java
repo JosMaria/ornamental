@@ -2,18 +2,18 @@ package org.fdryt.ornamental.domain;
 
 public enum Family {
 
-    Euphorbiaceae, Fabaceae, Asparagaceae, Solanaceae,
-    Lamiaceae, Salicaceae, Asphodelaceae, Amaryllidaceae,
-    Commelinaceae, Araceae, Ruscaceae, Begoniaceae,
-    Verbenaceae, Apocynaceae, Malvaceae, Bromeliaceae,
-    Nyctaginaceae, Cactaceae, Rubiaceae, Marantaceae,
-    Sapindaceae, Araliaceae, Annonaceae, Rutaceae,
-    Vitaceae, Polypodiaceae, Crassulaceae, Rosaceae,
-    Myrtaceae, Moraceae, Oleaceae, Onagraceae, Gesneriaceae,
-    Xanthorrhoeaceae, Aspleniaceae, Davalliceae,
-    Amaranthaceae, Bignoniaceae, Agavaceae, Pasifloraceae,
-    Anacardiaceae, Phytokaccaceae, Portulacaceae, Lauraceae,
-    Caricaceae, Cyperaceae, Geraniaceae, Cupressaceae,
-    Pinaceae, Urticaceae, Asteraceae, Saxifragaceae,
-    Mimosaceae, Balsaminaceae, Passifloraceae, Acanthaceae
+    euphorbiaceae, fabaceae, asparagaceae, solanaceae,
+    lamiaceae, salicaceae, asphodelaceae, amaryllidaceae,
+    commelinaceae, araceae, ruscaceae, begoniaceae,
+    verbenaceae, apocynaceae, malvaceae, bromeliaceae,
+    nyctaginaceae, cactaceae, rubiaceae, marantaceae,
+    sapindaceae, araliaceae, annonaceae, rutaceae,
+    vitaceae, polypodiaceae, crassulaceae, rosaceae,
+    myrtaceae, moraceae, oleaceae, onagraceae, gesneriaceae,
+    xanthorrhoeaceae, aspleniaceae, davalliceae,
+    amaranthaceae, bignoniaceae, agavaceae, pasifloraceae,
+    anacardiaceae, phytokaccaceae, portulacaceae, lauraceae,
+    caricaceae, cyperaceae, geraniaceae, cupressaceae,
+    pinaceae, urticaceae, asteraceae, saxifragaceae,
+    mimosaceae, balsaminaceae, passifloraceae, acanthaceae
 }

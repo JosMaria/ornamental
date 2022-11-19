@@ -28,6 +28,8 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
+    private Character firstLetterLastname;
+
     @Enumerated(STRING)
     private Family family;
 

@@ -20,16 +20,13 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RequestMapping("api/v1/ornamental_plants")
 public class OrnamentalPlantController {
 
+    public static final String ADMINISTRATOR_ACCESS = "hasRole('ROLE_ADMINISTRATOR')";
     private final OrnamentalPlantService ornamentalPlantService;
 
     @GetMapping("/identifications")
+    @PreAuthorize(ADMINISTRATOR_ACCESS)
     public ResponseEntity<List<IdentificationResponseDTO>> findAllIdentifications() {
-        List<IdentificationResponseDTO> list = List.of(
-                new IdentificationResponseDTO(1L, "commonName1", "scientificName1", "firstLetterLastname1", "family1", "status1"),
-                new IdentificationResponseDTO(2L, "commonName2", "scientificName2", "firstLetterLastname2", "family2", "status2"),
-                new IdentificationResponseDTO(3L, "commonName3", "scientificName3", "firstLetterLastname3", "family3", "status3")
-        );
-        return ResponseEntity.ok(list);
+        return ResponseEntity.ok(ornamentalPlantService.findAllIdentifications());
     }
 
     @GetMapping

@@ -1,8 +1,11 @@
 package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
+import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.OrnamentalPlant;
+import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.repository.OrnamentalPlantRepository;
 import org.fdryt.ornamental.service.OrnamentalPlantService;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OrnamentalPlantServiceImpl implements OrnamentalPlantService {
@@ -32,5 +36,26 @@ public class OrnamentalPlantServiceImpl implements OrnamentalPlantService {
     public List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable) {
         ClassificationByUtility enumType = ClassificationByUtility.valueOf(type.trim().toUpperCase());
         return ornamentalPlantRepository.findAllByClassification(enumType, pageable).toList();
+    }
+
+    @Override
+    public List<IdentificationResponseDTO> findAllIdentifications() {
+        log.info("Fetching identifications...");
+        return ornamentalPlantRepository.findAll()
+                .stream()
+                .map(this::entityToDTO)
+                .toList();
+    }
+
+    private IdentificationResponseDTO entityToDTO(OrnamentalPlant ornamentalPlant) {
+        Identification identification = ornamentalPlant.getIdentification();
+        return new IdentificationResponseDTO(
+                ornamentalPlant.getId(),
+                identification.getCommonName(),
+                identification.getScientificName(),
+                identification.getFirstLetterLastname(),
+                identification.getFamily().name(),
+                ornamentalPlant.getStatus().name()
+        );
     }
 }

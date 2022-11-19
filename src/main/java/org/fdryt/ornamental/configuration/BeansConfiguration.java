@@ -1,6 +1,8 @@
 package org.fdryt.ornamental.configuration;
 
+import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.OrnamentalPlant;
+import org.fdryt.ornamental.dto.IdentificationResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
