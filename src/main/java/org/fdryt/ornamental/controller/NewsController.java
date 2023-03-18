@@ -3,6 +3,7 @@ package org.fdryt.ornamental.controller;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +42,10 @@ public class NewsController {
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         newsService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") Long id, @RequestBody UpdateNewsDTO updateNewsDTO) {
+        return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
     }
 }

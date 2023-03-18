@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.domain.News;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 import org.fdryt.ornamental.repository.NewsRepository;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -47,6 +49,18 @@ public class NewsServiceImpl implements NewsService {
     public void deleteById(Long id) {
         newsRepository.deleteById(id);
         log.info("Delete news with ID: {}", id);
+    }
+
+    @Transactional
+    @Override
+    public NewsResponseDTO update(Long id, UpdateNewsDTO updateNewsDTO) {
+        News newsFounded = newsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Item with ID: %s does not exists", id)));
+        newsFounded.setUrlImage(updateNewsDTO.getUrlImage());
+        newsFounded.setTitle(updateNewsDTO.getTitle());
+        newsFounded.setDescription(updateNewsDTO.getDescription());
+        log.info("Updated news with ID: {}", id);
+        return entityToDTO(newsFounded);
     }
 
     private NewsResponseDTO entityToDTO(News news) {
