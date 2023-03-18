@@ -5,6 +5,7 @@ import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,11 @@ public class NewsController {
     @GetMapping
     public ResponseEntity<List<NewsResponseDTO>> findAllNews() {
         return ResponseEntity.ok(newsService.findAllNews());
+    }
+
+    //TODO: endpoint access public
+    @GetMapping("{id}")
+    public ResponseEntity<NewsResponseDTO> findNewsById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(newsService.findNewsById(id));
     }
 }

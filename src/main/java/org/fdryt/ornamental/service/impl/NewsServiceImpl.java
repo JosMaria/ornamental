@@ -9,6 +9,7 @@ import org.fdryt.ornamental.service.NewsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +27,14 @@ public class NewsServiceImpl implements NewsService {
                 .toList();
     }
 
+    @Override
+    public NewsResponseDTO findNewsById(Long id) {
+        News newsFounded = newsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Item with ID: %s does not exists", id)));
+        log.info("Returning news with ID: {}", id);
+        return entityToDTO(newsFounded);
+    }
+
     private NewsResponseDTO entityToDTO(News news) {
         return NewsResponseDTO.builder()
                 .id(news.getId())
@@ -33,6 +42,5 @@ public class NewsServiceImpl implements NewsService {
                 .title(news.getTitle())
                 .description(news.getDescription())
                 .build();
-
     }
 }

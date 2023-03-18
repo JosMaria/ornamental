@@ -7,4 +7,6 @@ import java.util.List;
 public interface NewsService {
 
     List<NewsResponseDTO> findAllNews();
+
+    NewsResponseDTO findNewsById(Long id);
 }
