@@ -2,7 +2,7 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.controller.CreateNewsDTO;
+import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.domain.News;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.repository.NewsRepository;
@@ -19,7 +19,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
 
     @Override
-    public List<NewsResponseDTO> findAllNews() {
+    public List<NewsResponseDTO> findAll() {
         log.info("Returning all news");
         return newsRepository.findAll()
                 .stream()
@@ -28,7 +28,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponseDTO findNewsById(Long id) {
+    public NewsResponseDTO findById(Long id) {
         News newsFounded = newsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Item with ID: %s does not exists", id)));
         log.info("Returning news with ID: {}", id);
@@ -36,11 +36,17 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponseDTO createNews(CreateNewsDTO createNewsDTO) {
+    public NewsResponseDTO create(CreateNewsDTO createNewsDTO) {
         News newsToPersist = dtoToEntity(createNewsDTO);
         News newsPersisted = newsRepository.save(newsToPersist);
         log.info("Entity with ID {} saved", newsPersisted.getId());
         return entityToDTO(newsPersisted);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        newsRepository.deleteById(id);
+        log.info("Delete news with ID: {}", id);
     }
 
     private NewsResponseDTO entityToDTO(News news) {

@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.controller;
+package org.fdryt.ornamental.dto.news;
 
 import lombok.*;
 

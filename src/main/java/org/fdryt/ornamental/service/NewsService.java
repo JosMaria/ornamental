@@ -1,15 +1,17 @@
 package org.fdryt.ornamental.service;
 
-import org.fdryt.ornamental.controller.CreateNewsDTO;
+import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 
 import java.util.List;
 
 public interface NewsService {
 
-    List<NewsResponseDTO> findAllNews();
+    List<NewsResponseDTO> findAll();
 
-    NewsResponseDTO findNewsById(Long id);
+    NewsResponseDTO findById(Long id);
 
-    NewsResponseDTO createNews(CreateNewsDTO createNewsDTO);
+    NewsResponseDTO create(CreateNewsDTO createNewsDTO);
+
+    void deleteById(Long id);
 }
