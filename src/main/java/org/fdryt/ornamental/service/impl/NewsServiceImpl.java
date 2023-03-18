@@ -2,6 +2,7 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fdryt.ornamental.controller.CreateNewsDTO;
 import org.fdryt.ornamental.domain.News;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.repository.NewsRepository;
@@ -9,7 +10,6 @@ import org.fdryt.ornamental.service.NewsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -35,12 +35,28 @@ public class NewsServiceImpl implements NewsService {
         return entityToDTO(newsFounded);
     }
 
+    @Override
+    public NewsResponseDTO createNews(CreateNewsDTO createNewsDTO) {
+        News newsToPersist = dtoToEntity(createNewsDTO);
+        News newsPersisted = newsRepository.save(newsToPersist);
+        log.info("Entity with ID {} saved", newsPersisted.getId());
+        return entityToDTO(newsPersisted);
+    }
+
     private NewsResponseDTO entityToDTO(News news) {
         return NewsResponseDTO.builder()
                 .id(news.getId())
                 .urlImage(news.getUrlImage())
                 .title(news.getTitle())
                 .description(news.getDescription())
+                .build();
+    }
+
+    private News dtoToEntity(CreateNewsDTO dto) {
+        return News.builder()
+                .urlImage(dto.getUrlImage())
+                .title(dto.getTitle())
+                .description(dto.getDescription())
                 .build();
     }
 }

@@ -1,8 +1,6 @@
 package org.fdryt.ornamental.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,7 +8,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 public class News {
 

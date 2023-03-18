@@ -3,13 +3,13 @@ package org.fdryt.ornamental.controller;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.service.NewsService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,5 +28,10 @@ public class NewsController {
     @GetMapping("{id}")
     public ResponseEntity<NewsResponseDTO> findNewsById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(newsService.findNewsById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<NewsResponseDTO> createNews(@RequestBody CreateNewsDTO createNewsDTO) {
+        return new ResponseEntity<>(newsService.createNews(createNewsDTO), CREATED);
     }
 }
