@@ -1,14 +1,19 @@
 package org.fdryt.ornamental.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 
-import javax.persistence.*;
-
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter

@@ -1,15 +1,25 @@
 package org.fdryt.ornamental.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter

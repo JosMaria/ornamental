@@ -4,19 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.auth.AppUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity
+public class SecurityConfiguration {
 
     private final PasswordEncoder passwordEncoder;
     private final AppUserService appUserService;
@@ -24,23 +25,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String CATALOG = "/api/v1/ornamental_plants/**";
     private static final String CLASSIFICATIONS = "/api/v1/classifications";
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()*/
         http/*.cors().and()*/
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers(CATALOG, CLASSIFICATIONS).permitAll()
+                .authorizeHttpRequests()
+                .requestMatchers(CATALOG, CLASSIFICATIONS).permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .httpBasic();
+
+        return http.build();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-        super.configure(auth);
+    @Bean
+    @Primary
+    public AuthenticationManagerBuilder authenticationManager(AuthenticationManagerBuilder auth) {
+        return auth.authenticationProvider(daoAuthenticationProvider());
     }
 
     @Bean
