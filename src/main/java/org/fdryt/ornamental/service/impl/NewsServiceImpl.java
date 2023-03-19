@@ -2,10 +2,11 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.domain.News;
+import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
+import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.NewsRepository;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.stereotype.Service;
@@ -31,8 +32,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsResponseDTO findById(Long id) {
-        News newsFounded = newsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Item with ID: %s does not exists", id)));
+        News newsFounded = findByIdOrThrowException(id);
         log.info("Returning news with ID: {}", id);
         return entityToDTO(newsFounded);
     }
@@ -54,13 +54,17 @@ public class NewsServiceImpl implements NewsService {
     @Transactional
     @Override
     public NewsResponseDTO update(Long id, UpdateNewsDTO updateNewsDTO) {
-        News newsFounded = newsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Item with ID: %s does not exists", id)));
+        News newsFounded = findByIdOrThrowException(id);
         newsFounded.setUrlImage(updateNewsDTO.getUrlImage());
         newsFounded.setTitle(updateNewsDTO.getTitle());
         newsFounded.setDescription(updateNewsDTO.getDescription());
         log.info("Updated news with ID: {}", id);
         return entityToDTO(newsFounded);
+    }
+
+    private News findByIdOrThrowException(Long id) {
+        return newsRepository.findById(id)
+                .orElseThrow(() -> new DomainNotFoundException(News.class, id));
     }
 
     private NewsResponseDTO entityToDTO(News news) {

@@ -44,6 +44,7 @@ public class NewsController {
         return ResponseEntity.noContent().build();
     }
 
+    // TODO: endpoint private, only access with authorization
     @PutMapping("{id}")
     public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") Long id, @RequestBody UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
