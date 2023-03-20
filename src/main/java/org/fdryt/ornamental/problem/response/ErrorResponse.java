@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @SuperBuilder
-public class ErrorResponse {
+public abstract class ErrorResponse {
 
-    private LocalDateTime timestamp;
-    private int value;
-    private String name;
-    private String path;
+    protected LocalDateTime timestamp;
+    protected int value;
+    protected String name;
+    protected String path;
 }

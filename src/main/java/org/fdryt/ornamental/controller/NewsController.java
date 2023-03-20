@@ -1,5 +1,6 @@
 package org.fdryt.ornamental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
@@ -33,7 +34,7 @@ public class NewsController {
 
     // TODO: endpoint private, only access with authorization
     @PostMapping
-    public ResponseEntity<NewsResponseDTO> create(@RequestBody CreateNewsDTO createNewsDTO) {
+    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid CreateNewsDTO createNewsDTO) {
         return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
     }
 

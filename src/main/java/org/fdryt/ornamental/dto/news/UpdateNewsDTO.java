@@ -1,11 +1,11 @@
 package org.fdryt.ornamental.dto.news;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class UpdateNewsDTO {
 
