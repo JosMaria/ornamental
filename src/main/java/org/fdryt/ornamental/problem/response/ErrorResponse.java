@@ -1,17 +1,16 @@
 package org.fdryt.ornamental.problem.response;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class ErrorResponse {
+@SuperBuilder
+public abstract class ErrorResponse {
 
-    private LocalDateTime timestamp;
-    private int status;
-    private String error;
-    private String path;
+    protected LocalDateTime timestamp;
+    protected int value;
+    protected String name;
+    protected String path;
 }

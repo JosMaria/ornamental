@@ -5,6 +5,7 @@ import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface NewsService {
 
@@ -17,4 +18,6 @@ public interface NewsService {
     void deleteById(Long id);
 
     NewsResponseDTO update(Long id, UpdateNewsDTO updateNewsDTO);
+
+    NewsResponseDTO updateByFields(Long id, Map<String, Object> fields);
 }

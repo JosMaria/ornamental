@@ -27,9 +27,11 @@ public class News {
     private Long id;
 
     private String urlImage;
+
+    @Column(nullable = false)
     private String title;
 
-    @Column(length = 2000)
+    @Column(nullable = false, length = 2000)
     private String description;
 
     public News(String urlImage, String title, String description) {
