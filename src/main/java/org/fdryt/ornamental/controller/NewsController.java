@@ -28,26 +28,26 @@ public class NewsController {
 
     // TODO: endpoint access public
     @GetMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Long id) {
         return ResponseEntity.ok(newsService.findById(id));
     }
 
     // TODO: endpoint private, only access with authorization
     @PostMapping
-    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid CreateNewsDTO createNewsDTO) {
+    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid final CreateNewsDTO createNewsDTO) {
         return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
     }
 
     // TODO: endpoint private, only access with authorization
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") final Long id) {
         newsService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     // TODO: endpoint private, only access with authorization
     @PutMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") Long id, @RequestBody UpdateNewsDTO updateNewsDTO) {
+    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Long id, @RequestBody final UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
     }
 }

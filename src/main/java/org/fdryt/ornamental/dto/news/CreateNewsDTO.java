@@ -15,6 +15,6 @@ public class CreateNewsDTO {
     @NotBlank(message = "TITLE field should not be null, empty or blank")
     private String title;
 
-    @NotBlank(message = "TITLE field should not be null, empty or blank")
+    @NotBlank(message = "DESCRIPTION field should not be null, empty or blank")
     private String description;
 }
