@@ -1,5 +1,7 @@
 package org.fdryt.ornamental.utils;
 
+import org.fdryt.ornamental.problem.exception.PreconditionsException;
+
 public final class Preconditions {
 
     private Preconditions() {}
@@ -9,12 +11,11 @@ public final class Preconditions {
      *
      * @param expression the required expression evaluated in the client.
      * @param errorMessage the error message to set if it does not meet the condition.
-     * @throws IllegalArgumentException when it does not meet the condition.
+     * @throws PreconditionsException when it does not meet the condition.
      */
     public static void checkArgument(boolean expression, String errorMessage) {
-        // TODO: create PreconditionsException class
         if (!expression) {
-            throw new IllegalArgumentException(errorMessage);
+            throw new PreconditionsException(errorMessage);
         }
     }
 }
