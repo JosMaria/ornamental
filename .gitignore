@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/db/**
+
+src/main/java/org/fdryt/ornamental/configuration/DataLoad.java
