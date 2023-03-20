@@ -12,6 +12,7 @@ public final class Preconditions {
      * @throws IllegalArgumentException when it does not meet the condition.
      */
     public static void checkArgument(boolean expression, String errorMessage) {
+        // TODO: create PreconditionsException class
         if (!expression) {
             throw new IllegalArgumentException(errorMessage);
         }

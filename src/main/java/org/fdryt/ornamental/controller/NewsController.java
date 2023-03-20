@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -47,7 +48,13 @@ public class NewsController {
 
     // TODO: endpoint private, only access with authorization
     @PutMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Long id, @RequestBody final UpdateNewsDTO updateNewsDTO) {
+    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Long id, @RequestBody @Valid final UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
+    }
+
+    // TODO: endpoint private, only access with authorization
+    @PatchMapping("{id}")
+    public ResponseEntity<NewsResponseDTO> updateByFields(@PathVariable("id") Long id, @RequestBody final Map<String, Object> fields) {
+        return ResponseEntity.ok(newsService.updateByFields(id, fields));
     }
 }

@@ -11,8 +11,12 @@ import org.fdryt.ornamental.repository.NewsRepository;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -60,6 +64,28 @@ public class NewsServiceImpl implements NewsService {
         newsFounded.setDescription(updateNewsDTO.getDescription());
         log.info("Updated news with ID: {}", id);
         return entityToDTO(newsFounded);
+    }
+
+    @Transactional
+    @Override
+    public NewsResponseDTO updateByFields(Long id, Map<String, Object> fields) {
+        News newsFounded = findByIdOrThrowException(id);
+        fields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(News.class, key);
+
+            if (field != null && canChangeField(field.getName())) {
+                // TODO: verify type of field example Long to Int to ID
+                //Preconditions.checkArgument(field.getType() == String.class, "");
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, newsFounded, value);
+            }
+        });
+        return entityToDTO(newsFounded);
+    }
+
+    private boolean canChangeField(String fieldName) {
+        List<String> fieldAvailableToChange = Arrays.asList("urlImage", "title", "description");
+        return fieldAvailableToChange.contains(fieldName);
     }
 
     private News findByIdOrThrowException(Long id) {
