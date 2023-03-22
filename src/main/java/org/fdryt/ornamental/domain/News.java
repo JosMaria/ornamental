@@ -1,10 +1,6 @@
 package org.fdryt.ornamental.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,11 +15,12 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "news")
 public class News {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "news_generator")
-    @SequenceGenerator(name = "news_generator", sequenceName = "news_generator")
+    @GeneratedValue(strategy = SEQUENCE, generator = "news_sequence")
+    @SequenceGenerator(name = "news_sequence", sequenceName = "news_sequence", allocationSize = 1)
     private Long id;
 
     private String urlImage;

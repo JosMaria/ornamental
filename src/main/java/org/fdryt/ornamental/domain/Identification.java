@@ -1,23 +1,12 @@
 package org.fdryt.ornamental.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -28,8 +17,8 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class Identification {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "identification_generator")
-    @SequenceGenerator(name = "identification_generator")
+    @GeneratedValue(strategy = SEQUENCE, generator = "identification_sequence")
+    @SequenceGenerator(name = "identification_sequence", sequenceName = "identification_sequence", allocationSize = 1)
     private Long id;
 
     @Column(length = 50, nullable = false, unique = true)
@@ -38,19 +27,15 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
-    @Enumerated(STRING)
+    @ManyToOne
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_families"))
     private Family family;
 
-    @JoinTable(
-            name = "identifications_classifications",
-            joinColumns =
-                @JoinColumn(
-                    foreignKey = @ForeignKey(name = "fk_identification"),
-                    name = "identification_id"),
-            inverseJoinColumns =
-                @JoinColumn(
-                    foreignKey = @ForeignKey(name = "fk_classification"),
-                    name = "classification_id"))
     @ManyToMany(fetch = LAZY)
-    private final Set<Classification> classificationsByUtility = new HashSet<>();
+    @JoinTable(
+        name = "identifications_classifications",
+        joinColumns = @JoinColumn(name = "identification_id", foreignKey = @ForeignKey(name = "fk_identification")),
+        inverseJoinColumns = @JoinColumn(name = "classification_id"), foreignKey = @ForeignKey(name = "fk_classification")
+    )
+    private final Set<Classification> classifications = new HashSet<>();
 }

@@ -1,6 +1,6 @@
 package org.fdryt.ornamental.configuration;
 
-import org.fdryt.ornamental.domain.OrnamentalPlant;
+import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -17,7 +17,7 @@ public class BeansConfiguration {
         ModelMapper model = new ModelMapper();
         model.getConfiguration().setMatchingStrategy(STRICT);
 
-        model.addMappings(new PropertyMap<OrnamentalPlant, ProductResponseDTO>() {
+        model.addMappings(new PropertyMap<Plant, ProductResponseDTO>() {
             @Override
             protected void configure() {
                 map().setCommonName(source.getIdentification().getCommonName());

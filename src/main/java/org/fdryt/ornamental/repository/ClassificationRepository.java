@@ -12,7 +12,8 @@ import java.util.Collection;
 public interface ClassificationRepository extends JpaRepository<Classification, Long> {
 
     @Query("""
-            SELECT c.classificationByUtility
-            FROM Classification c""")
-    Collection<ClassificationByUtility> findAllClassificationByUtility();
+            SELECT c.utility
+            FROM Classification c"""
+    )
+    Collection<ClassificationByUtility> findClassificationsByUtility();
 }
