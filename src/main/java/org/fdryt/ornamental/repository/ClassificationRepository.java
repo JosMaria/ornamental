@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 
 @Repository
-public interface ClassificationRepository extends JpaRepository<Classification, Long> {
+public interface ClassificationRepository extends JpaRepository<Classification, Integer> {
 
     @Query("""
             SELECT c.utility

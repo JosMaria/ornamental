@@ -24,9 +24,9 @@ public class Classification {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "classification_sequence")
     @SequenceGenerator(name = "classification_sequence", sequenceName = "classification_sequence", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private ClassificationByUtility utility;
 }

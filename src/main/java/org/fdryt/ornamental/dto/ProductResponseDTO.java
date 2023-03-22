@@ -12,7 +12,7 @@ import org.fdryt.ornamental.domain.Family;
 @AllArgsConstructor
 public class ProductResponseDTO {
 
-    private Long id;
+    private Integer id;
     private String commonName;
     private String scientificName;
     private Family family;

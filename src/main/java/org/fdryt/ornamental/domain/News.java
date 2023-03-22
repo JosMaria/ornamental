@@ -21,7 +21,7 @@ public class News {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "news_sequence")
     @SequenceGenerator(name = "news_sequence", sequenceName = "news_sequence", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     private String urlImage;
 

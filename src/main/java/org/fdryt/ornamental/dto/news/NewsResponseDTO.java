@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class NewsResponseDTO {
 
-    private Long id;
+    private Integer id;
     private String urlImage;
     private String title;
     private String description;

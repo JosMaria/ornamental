@@ -19,7 +19,7 @@ public class Identification {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "identification_sequence")
     @SequenceGenerator(name = "identification_sequence", sequenceName = "identification_sequence", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     @Column(length = 50, nullable = false, unique = true)
     private String commonName;

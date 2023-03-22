@@ -20,15 +20,16 @@ public class Plant {
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "plant_sequence")
     @SequenceGenerator(name = "plant_sequence", sequenceName = "plant_sequence", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     @OnDelete(action = CASCADE)
     @OneToOne(cascade = PERSIST)
     @JoinColumn(name = "identification_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_identifications"))
     private Identification identification;
 
+    @Column(length = 15)
     @Enumerated(EnumType.STRING)
-    private Status inConservation;
+    private Status status;
 
     @OneToMany(mappedBy = "plant")
     private Set<Picture> pictures;

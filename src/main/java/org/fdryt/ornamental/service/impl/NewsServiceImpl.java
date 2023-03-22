@@ -35,7 +35,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponseDTO findById(Long id) {
+    public NewsResponseDTO findById(Integer id) {
         News newsFounded = findByIdOrThrowException(id);
         log.info("Returning news with ID: {}", id);
         return entityToDTO(newsFounded);
@@ -50,14 +50,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         newsRepository.deleteById(id);
         log.info("Delete news with ID: {}", id);
     }
 
     @Transactional
     @Override
-    public NewsResponseDTO update(Long id, UpdateNewsDTO updateNewsDTO) {
+    public NewsResponseDTO update(Integer id, UpdateNewsDTO updateNewsDTO) {
         News newsFounded = findByIdOrThrowException(id);
         newsFounded.setUrlImage(updateNewsDTO.getUrlImage());
         newsFounded.setTitle(updateNewsDTO.getTitle());
@@ -68,7 +68,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public NewsResponseDTO updateByFields(Long id, Map<String, Object> fields) {
+    public NewsResponseDTO updateByFields(Integer id, Map<String, Object> fields) {
         News newsFounded = findByIdOrThrowException(id);
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(News.class, key);
@@ -88,7 +88,7 @@ public class NewsServiceImpl implements NewsService {
         return fieldAvailableToChange.contains(fieldName);
     }
 
-    private News findByIdOrThrowException(Long id) {
+    private News findByIdOrThrowException(Integer id) {
         return newsRepository.findById(id)
                 .orElseThrow(() -> new DomainNotFoundException(News.class, id));
     }
