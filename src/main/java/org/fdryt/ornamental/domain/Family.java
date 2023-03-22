@@ -1,19 +1,27 @@
 package org.fdryt.ornamental.domain;
 
-public enum Family {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 
-    Euphorbiaceae, Fabaceae, Asparagaceae, Solanaceae,
-    Lamiaceae, Salicaceae, Asphodelaceae, Amaryllidaceae,
-    Commelinaceae, Araceae, Ruscaceae, Begoniaceae,
-    Verbenaceae, Apocynaceae, Malvaceae, Bromeliaceae,
-    Nyctaginaceae, Cactaceae, Rubiaceae, Marantaceae,
-    Sapindaceae, Araliaceae, Annonaceae, Rutaceae,
-    Vitaceae, Polypodiaceae, Crassulaceae, Rosaceae,
-    Myrtaceae, Moraceae, Oleaceae, Onagraceae, Gesneriaceae,
-    Xanthorrhoeaceae, Aspleniaceae, Davalliceae,
-    Amaranthaceae, Bignoniaceae, Agavaceae, Pasifloraceae,
-    Anacardiaceae, Phytokaccaceae, Portulacaceae, Lauraceae,
-    Caricaceae, Cyperaceae, Geraniaceae, Cupressaceae,
-    Pinaceae, Urticaceae, Asteraceae, Saxifragaceae,
-    Mimosaceae, Balsaminaceae, Passifloraceae, Acanthaceae
+import static jakarta.persistence.GenerationType.SEQUENCE;
+
+@Entity
+@Table(name = "families")
+public class Family {
+
+    @Id
+    @GeneratedValue(strategy = SEQUENCE, generator = "family_sequence")
+    @SequenceGenerator(name = "family_sequence", sequenceName = "family_sequence", allocationSize = 1)
+    private Long id;
+
+    @Column(unique = true)
+    private String name;
+
+    public Family(String name) {
+        this.name = name;
+    }
 }

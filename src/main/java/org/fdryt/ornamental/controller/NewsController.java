@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/news")
