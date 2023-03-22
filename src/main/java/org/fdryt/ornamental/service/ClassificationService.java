@@ -4,5 +4,5 @@ import java.util.Set;
 
 public interface ClassificationService {
 
-    Set<String> findAllClassificationByUtility();
+    Set<String> findAllByUtility();
 }

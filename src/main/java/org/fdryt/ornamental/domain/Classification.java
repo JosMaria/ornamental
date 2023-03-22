@@ -29,4 +29,8 @@ public class Classification {
     @Column(unique = true, length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private ClassificationByUtility utility;
+
+    public Classification(ClassificationByUtility utility) {
+        this.utility = utility;
+    }
 }

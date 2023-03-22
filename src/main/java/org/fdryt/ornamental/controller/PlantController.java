@@ -1,34 +1,41 @@
 package org.fdryt.ornamental.controller;
-    /*
-    import lombok.RequiredArgsConstructor;
-    import org.fdryt.ornamental.dto.CreatePlantDTO;
-    import org.fdryt.ornamental.dto.PlantResponseDTO;
-    import org.fdryt.ornamental.service.PlantService;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.security.access.prepost.PreAuthorize;
-    import org.springframework.web.bind.annotation.*;
 
-    import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.ProductResponseDTO;
+import org.fdryt.ornamental.dto.identification.IdentificationResponseDTO;
+import org.fdryt.ornamental.service.PlantService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-    @RestController
-    @RequiredArgsConstructor
-    @RequestMapping("api/v1/nursery")
-    public class PlantController {
+import java.util.List;
 
-        private final PlantService plantService;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
-        @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-        @PostMapping
-        public ResponseEntity<PlantResponseDTO> insert(@Valid @RequestBody CreatePlantDTO createPlantDTO) {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(plantService.insert(createPlantDTO));
-        }
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/v1/plants")
+public class PlantController {
 
-        @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-        @PostMapping("family")
-        public ResponseEntity<String> insertFamily(@RequestParam("family") String family) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Created " + "'" + family + "'");
-        }
-    }*/
+    private final PlantService plantService;
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
+    }
+
+    @GetMapping("classifications/{classification}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlantsByClassification(
+            @PathVariable("classification") String classification,
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllOrnamentalPlantsByClassification(classification, pageable));
+    }
+
+    @GetMapping("identifications")
+    public ResponseEntity<IdentificationResponseDTO> test() {
+        return ResponseEntity.ok(plantService.test());
+    }
+}

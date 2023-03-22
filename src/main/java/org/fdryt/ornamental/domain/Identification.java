@@ -27,8 +27,10 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
+    private Character plusScientificName;
+
     @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "fk_families"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
     private Family family;
 
     @ManyToMany(fetch = LAZY)
@@ -38,4 +40,7 @@ public class Identification {
         inverseJoinColumns = @JoinColumn(name = "classification_id"), foreignKey = @ForeignKey(name = "fk_classification")
     )
     private final Set<Classification> classifications = new HashSet<>();
+
+    @OneToOne(mappedBy = "identification")
+    private Plant plant;
 }
