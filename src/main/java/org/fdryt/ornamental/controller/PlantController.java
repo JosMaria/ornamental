@@ -2,7 +2,7 @@ package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.fdryt.ornamental.dto.identification.IdentificationResponseDTO;
+import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -35,7 +35,7 @@ public class PlantController {
     }
 
     @GetMapping("identifications")
-    public ResponseEntity<IdentificationResponseDTO> test() {
-        return ResponseEntity.ok(plantService.test());
+    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList() {
+        return ResponseEntity.ok(plantService.findAllItemsToList());
     }
 }

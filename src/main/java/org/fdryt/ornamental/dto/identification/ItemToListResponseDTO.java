@@ -1,10 +1,12 @@
 package org.fdryt.ornamental.dto.identification;
 
 import lombok.Builder;
+import lombok.Getter;
 import org.fdryt.ornamental.domain.Status;
 
+@Getter
 @Builder
-public class IdentificationResponseDTO {
+public class ItemToListResponseDTO {
 
     private Integer id;
     private String commonName;

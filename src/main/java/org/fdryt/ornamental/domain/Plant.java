@@ -34,7 +34,7 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "plant")
+    @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
     private final Set<Picture> pictures = new HashSet<>();
 
     public Plant(Identification identification, Status status) {

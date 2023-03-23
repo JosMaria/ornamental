@@ -5,7 +5,7 @@ import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Identification;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.fdryt.ornamental.dto.identification.IdentificationResponseDTO;
+import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.repository.IdentificationRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
@@ -39,9 +39,21 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public IdentificationResponseDTO test() {
-        List<Identification> all = identificationRepository.findAll();
-        System.out.println("value");
-        return null;
+    public List<ItemToListResponseDTO> findAllItemsToList() {
+        return identificationRepository.findAll()
+                .stream()
+                .map(this::entityToDTO)
+                .toList();
+    }
+
+    private ItemToListResponseDTO entityToDTO(Identification entity) {
+        return ItemToListResponseDTO.builder()
+                .id(entity.getId())
+                .commonName(entity.getCommonName())
+                .scientificName(entity.getScientificName())
+                .plusScientificName(entity.getPlusScientificName())
+                .familyName(entity.getFamily().getName())
+                .status(entity.getPlant().getStatus())
+                .build();
     }
 }
