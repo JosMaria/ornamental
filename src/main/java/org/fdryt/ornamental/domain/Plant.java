@@ -2,9 +2,11 @@ package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;
@@ -13,6 +15,7 @@ import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "plants")
 public class Plant {
@@ -32,5 +35,10 @@ public class Plant {
     private Status status;
 
     @OneToMany(mappedBy = "plant")
-    private Set<Picture> pictures;
+    private final Set<Picture> pictures = new HashSet<>();
+
+    public Plant(Identification identification, Status status) {
+        this.identification = identification;
+        this.status = status;
+    }
 }

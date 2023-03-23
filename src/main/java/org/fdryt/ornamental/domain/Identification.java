@@ -2,6 +2,7 @@ package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "identifications")
 public class Identification {
@@ -43,4 +45,15 @@ public class Identification {
 
     @OneToOne(mappedBy = "identification")
     private Plant plant;
+
+    public Identification(String commonName, String scientificName, Character plusScientificName, Family family) {
+        this.commonName = commonName;
+        this.scientificName = scientificName;
+        this.plusScientificName = plusScientificName;
+        this.family = family;
+    }
+
+    public void addClassification(Classification classification) {
+        classifications.add(classification);
+    }
 }

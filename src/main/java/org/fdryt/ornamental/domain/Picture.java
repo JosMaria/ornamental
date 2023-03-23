@@ -1,9 +1,12 @@
 package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "pictures")
 public class Picture {
@@ -15,7 +18,12 @@ public class Picture {
 
     private String url;
 
-    @ManyToOne
+    @ManyToOne(cascade = PERSIST)
     @JoinColumn(name = "plant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_plants"))
     private Plant plant;
+
+    public Picture(String url, Plant plant) {
+        this.url = url;
+        this.plant = plant;
+    }
 }
