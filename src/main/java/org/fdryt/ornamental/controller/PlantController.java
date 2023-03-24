@@ -35,7 +35,7 @@ public class PlantController {
     }
 
     @GetMapping("identifications")
-    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList() {
-        return ResponseEntity.ok(plantService.findAllItemsToList());
+    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
     }
 }

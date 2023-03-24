@@ -12,5 +12,5 @@ public interface PlantService {
 
     List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable);
 
-    List<ItemToListResponseDTO> findAllItemsToList();
+    List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable);
 }
