@@ -1,12 +1,12 @@
 package org.fdryt.ornamental.dto.identification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 import org.fdryt.ornamental.domain.Status;
 
 @Getter
-@Builder
+@SuperBuilder
 public class ItemToListResponseDTO {
 
     private Integer id;
@@ -20,3 +20,4 @@ public class ItemToListResponseDTO {
     private String familyName;
     private Status status;
 }
+

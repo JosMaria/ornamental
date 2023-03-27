@@ -3,6 +3,7 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Identification;
+import org.fdryt.ornamental.domain.Picture;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
@@ -23,28 +24,36 @@ public class PlantServiceImpl implements PlantService {
     private final ModelMapper ornamentalPlantMapper;
 
     @Override
-    public List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable) {
-        Page<Plant> ornamentalPlantsObtained = plantRepository.findAll(pageable);
-        return ornamentalPlantsObtained.stream()
-                .map(ornamentalPlant -> ornamentalPlantMapper.map(ornamentalPlant, ProductResponseDTO.class))
-                .toList();
-    }
-
-    @Override
     public List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable) {
         ClassificationByUtility enumType = ClassificationByUtility.valueOf(type.trim().toUpperCase());
         return plantRepository.findAllByClassification(enumType, pageable).toList();
     }
 
     @Override
-    public List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable) {
+    public List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable) {
         return plantRepository.findAll(pageable)
                 .stream()
-                .map(this::entityToDTO)
+                .map(this::plantToProductResponseDTO)
                 .toList();
     }
 
-    private ItemToListResponseDTO entityToDTO(Plant entity) {
+    @Override
+    public List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable) {
+        return plantRepository.findAll(pageable)
+                .stream()
+                .map(this::plantToItemToListResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public ProductResponseDTO findProductById(Integer id) {
+        Plant plant = plantRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Plant with ID: %s does not exists", id)));
+        return plantToProductResponseDTO(plant);
+
+    }
+
+    private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
         Identification identification = entity.getIdentification();
         return ItemToListResponseDTO.builder()
                 .id(entity.getId())
@@ -53,6 +62,24 @@ public class PlantServiceImpl implements PlantService {
                 .plusScientificName(identification.getPlusScientificName())
                 .familyName(identification.getFamily().getName())
                 .status(identification.getPlant().getStatus())
+                .build();
+    }
+
+    private ProductResponseDTO plantToProductResponseDTO(Plant entity) {
+        Identification identification = entity.getIdentification();
+        return ProductResponseDTO.builder()
+                .id(entity.getId())
+                .commonName(identification.getCommonName())
+                .scientificName(identification.getScientificName())
+                .plusScientificName(identification.getPlusScientificName())
+                .familyName(identification.getFamily().getName())
+                .status(identification.getPlant().getStatus())
+                .firstUrlPicture(
+                    entity.getPictures().stream()
+                        .findFirst()
+                        .map(Picture::getUrl)
+                        .orElse("https://picture-404")
+                )
                 .build();
     }
 }

@@ -22,9 +22,13 @@ public class PlantController {
     private final PlantService plantService;
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(
-            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 16) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(plantService.findProductById(id));
     }
 
     @GetMapping("classifications/{classification}")

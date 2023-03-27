@@ -1,11 +1,13 @@
 package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "pictures")

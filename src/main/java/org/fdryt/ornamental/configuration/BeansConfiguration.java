@@ -20,9 +20,7 @@ public class BeansConfiguration {
         model.addMappings(new PropertyMap<Plant, ProductResponseDTO>() {
             @Override
             protected void configure() {
-                map().setCommonName(source.getIdentification().getCommonName());
-                map().setScientificName(source.getIdentification().getScientificName());
-                map().setFamily(source.getIdentification().getFamily());
+
             }
         });
         return model;
