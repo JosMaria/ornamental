@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -35,7 +36,7 @@ public class Identification {
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
     private Family family;
 
-    @ManyToMany(fetch = LAZY)
+    @ManyToMany(fetch = EAGER)
     @JoinTable(
         name = "identifications_classifications",
         joinColumns = @JoinColumn(name = "identification_id", foreignKey = @ForeignKey(name = "fk_identification")),

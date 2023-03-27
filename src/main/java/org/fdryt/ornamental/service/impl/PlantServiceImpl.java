@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Service
@@ -34,6 +35,21 @@ public class PlantServiceImpl implements PlantService {
         return plantRepository.findAll(pageable)
                 .stream()
                 .map(this::plantToProductResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponseDTO> findAllByClassification(String type, Pageable pageable) {
+        Predicate<Plant> existsPlantByClassification = plant ->
+                plant.getIdentification().getClassifications()
+                        .stream()
+                        .anyMatch(classification -> classification.getUtility().getType().equals(type));
+
+        return plantRepository.findAll()
+                .stream()
+                .filter(existsPlantByClassification)
+                .map(this::plantToProductResponseDTO)
+                .limit(15)
                 .toList();
     }
 

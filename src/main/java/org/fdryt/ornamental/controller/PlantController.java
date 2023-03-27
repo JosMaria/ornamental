@@ -21,9 +21,15 @@ public class PlantController {
 
     private final PlantService plantService;
 
+    // TODO: I should talk about count of products in number page
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 16) Pageable pageable) {
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 6) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
+    }
+
+    @GetMapping("types/{type}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PageableDefault(size = 6) Pageable pageable, @PathVariable("type") String type) {
+        return ResponseEntity.ok(plantService.findAllByClassification(type, pageable));
     }
 
     @GetMapping("{id}")

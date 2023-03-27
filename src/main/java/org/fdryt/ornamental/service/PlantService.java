@@ -10,6 +10,8 @@ public interface PlantService {
 
     List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable);
 
+    List<ProductResponseDTO> findAllByClassification(String type, Pageable pageable);
+
     List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable);
 
     List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable);
