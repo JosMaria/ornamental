@@ -1,10 +1,7 @@
 package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.domain.ClassificationByUtility;
-import org.fdryt.ornamental.domain.Identification;
-import org.fdryt.ornamental.domain.Picture;
-import org.fdryt.ornamental.domain.Plant;
+import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.repository.PlantRepository;
@@ -71,24 +68,26 @@ public class PlantServiceImpl implements PlantService {
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
         Identification identification = entity.getIdentification();
+        Family family = identification.getFamily();
         return ItemToListResponseDTO.builder()
                 .id(entity.getId())
                 .commonName(identification.getCommonName())
                 .scientificName(identification.getScientificName())
                 .plusScientificName(identification.getPlusScientificName())
-                .familyName(identification.getFamily().getName())
+                .familyName(family != null ? family.getName() : "")
                 .status(identification.getPlant().getStatus())
                 .build();
     }
 
     private ProductResponseDTO plantToProductResponseDTO(Plant entity) {
         Identification identification = entity.getIdentification();
+        Family family = identification.getFamily();
         return ProductResponseDTO.builder()
                 .id(entity.getId())
                 .commonName(identification.getCommonName())
                 .scientificName(identification.getScientificName())
                 .plusScientificName(identification.getPlusScientificName())
-                .familyName(identification.getFamily().getName())
+                .familyName(family != null ? family.getName() : "")
                 .status(identification.getPlant().getStatus())
                 .firstUrlPicture(
                     entity.getPictures().stream()

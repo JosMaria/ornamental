@@ -57,4 +57,8 @@ public class Identification {
     public void addClassification(Classification classification) {
         classifications.add(classification);
     }
+
+    public void addClassifications(Set<Classification> classifications) {
+        this.classifications.addAll(classifications);
+    }
 }
