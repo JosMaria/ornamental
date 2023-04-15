@@ -78,19 +78,14 @@ public class PlantServiceImpl implements PlantService {
 
     @Override
     public ProductResponseDTO create(CreatePlantDTO createPlantDTO) {
-        Family familyObtained = familyRepository.findByName(createPlantDTO.family())
-                .orElseThrow(() -> new IllegalArgumentException(format("Family %s does not exist.", createPlantDTO.family())));
+        Family familyObtained = findFamilyByName(createPlantDTO.family());
 
-        if (!isValidEnum(Status.class, createPlantDTO.status())) {
-            throw new IllegalArgumentException(format("Status %s does not valid.", createPlantDTO.status()));
-        }
-        Status status = getEnum(Status.class, createPlantDTO.status());
+        Status status = convertToEnum(Status.class, createPlantDTO.status());
 
         Identification identification = new Identification(createPlantDTO.commonName(), createPlantDTO.scientificName(), createPlantDTO.lastNameScientific(), familyObtained);
 
-        Set<Classification> classifications = createPlantDTO.classifications()
-                .stream()
-                .map(this::getClassification)
+        Set<Classification> classifications = createPlantDTO.classifications().stream()
+                .map(this::findClassificationByUtility)
                 .collect(Collectors.toSet());
 
         identification.addClassifications(classifications);
@@ -100,13 +95,23 @@ public class PlantServiceImpl implements PlantService {
         return plantToProductResponseDTO(plantPersisted);
     }
 
-    private Classification getClassification(String classification) {
-        if (!isValidEnum(ClassificationByUtility.class, classification)) {
-            throw new IllegalArgumentException(format("type %s does not exist.", classification));
+    private Family findFamilyByName(String name) {
+        return familyRepository.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException(format("Family \"%s\" does not founded.", name)));
+    }
+
+    private <T extends Enum<T>> T convertToEnum(Class<T> enumClass, String status) {
+        if (!isValidEnum(enumClass, status)) {
+            throw new IllegalArgumentException(format("%s %s does not valid.", enumClass.getName(), status));
         }
-        ClassificationByUtility utility = getEnum(ClassificationByUtility.class, classification);
+        return getEnum(enumClass, status);
+    }
+
+    private Classification findClassificationByUtility(String classification) {
+        ClassificationByUtility utility = convertToEnum(ClassificationByUtility.class, classification);
+
         return classificationRepository.findByUtility(utility)
-                .orElseThrow(() -> new IllegalArgumentException(format("%s does not founded.", utility)));
+                .orElseThrow(() -> new IllegalArgumentException(format("Classification \"%s\" does not founded.", utility)));
     }
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
