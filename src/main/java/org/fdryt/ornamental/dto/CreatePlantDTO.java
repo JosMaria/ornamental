@@ -1,31 +1,19 @@
 package org.fdryt.ornamental.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import org.fdryt.ornamental.domain.ClassificationByUtility;
-import org.fdryt.ornamental.domain.Family;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
+import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
-@Getter
-@Builder
-public class CreatePlantDTO {
+public record CreatePlantDTO(
 
-    @NotNull(message = "commonName field must not have a null value")
-    @Pattern(regexp = "^[A-Z][a-z_ ]+",
-            message = "commonName field must have a format 'first capital letter and the rest lowercase'")
-    private String commonName;
+        @NotBlank(message = "commonName field must not have a empty, blank or null value")
+        String commonName,
 
-    @Pattern(regexp = "^[A-Z][a-z_ ]+",
-            message = "scientificName field must have a format 'first capital letter and the rest lowercase'")
-    private String scientificName;
+        String scientificName,
+        Character lastNameScientific,
+        String family,
+        Set<String> classifications,
 
-    @NotNull(message = "family field must not have a null value")
-    private Family family;
+        @NotBlank(message = "status field must not have a empty, blank or null value")
+        String status) {
 
-    @NotNull(message = "classifications field must not have a null value")
-    private Set<ClassificationByUtility> classifications;
 }

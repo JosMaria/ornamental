@@ -1,12 +1,15 @@
 package org.fdryt.ornamental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.CreatePlantDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,5 +50,10 @@ public class PlantController {
     @GetMapping("identifications")
     public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
+        return ResponseEntity.ok(plantService.create(createPlantDTO));
     }
 }

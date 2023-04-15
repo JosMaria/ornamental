@@ -2,23 +2,33 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.dto.CreatePlantDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.repository.ClassificationRepository;
+import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
+import static org.apache.commons.lang3.EnumUtils.getEnum;
+import static org.apache.commons.lang3.EnumUtils.isValidEnum;
 
 @RequiredArgsConstructor
 @Service
 public class PlantServiceImpl implements PlantService {
 
     private final PlantRepository plantRepository;
+    private final FamilyRepository familyRepository;
+    private final ClassificationRepository classificationRepository;
     private final ModelMapper ornamentalPlantMapper;
 
     @Override
@@ -61,9 +71,42 @@ public class PlantServiceImpl implements PlantService {
     @Override
     public ProductResponseDTO findProductById(Integer id) {
         Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Plant with ID: %s does not exists", id)));
+                .orElseThrow(() -> new IllegalArgumentException(format("Plant with ID: %s does not exists", id)));
         return plantToProductResponseDTO(plant);
 
+    }
+
+    @Override
+    public ProductResponseDTO create(CreatePlantDTO createPlantDTO) {
+        Family familyObtained = familyRepository.findByName(createPlantDTO.family())
+                .orElseThrow(() -> new IllegalArgumentException(format("Family %s does not exist.", createPlantDTO.family())));
+
+        if (!isValidEnum(Status.class, createPlantDTO.status())) {
+            throw new IllegalArgumentException(format("Status %s does not valid.", createPlantDTO.status()));
+        }
+        Status status = getEnum(Status.class, createPlantDTO.status());
+
+        Identification identification = new Identification(createPlantDTO.commonName(), createPlantDTO.scientificName(), createPlantDTO.lastNameScientific(), familyObtained);
+
+        Set<Classification> classifications = createPlantDTO.classifications()
+                .stream()
+                .map(this::getClassification)
+                .collect(Collectors.toSet());
+
+        identification.addClassifications(classifications);
+        Plant plant = new Plant(identification, status);
+
+        Plant plantPersisted = plantRepository.save(plant);
+        return plantToProductResponseDTO(plantPersisted);
+    }
+
+    private Classification getClassification(String classification) {
+        if (!isValidEnum(ClassificationByUtility.class, classification)) {
+            throw new IllegalArgumentException(format("type %s does not exist.", classification));
+        }
+        ClassificationByUtility utility = getEnum(ClassificationByUtility.class, classification);
+        return classificationRepository.findByUtility(utility)
+                .orElseThrow(() -> new IllegalArgumentException(format("%s does not founded.", utility)));
     }
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
@@ -88,7 +131,7 @@ public class PlantServiceImpl implements PlantService {
                 .scientificName(identification.getScientificName())
                 .plusScientificName(identification.getPlusScientificName())
                 .familyName(family != null ? family.getName() : "")
-                .status(identification.getPlant().getStatus())
+                .status(entity.getStatus())
                 .firstUrlPicture(
                     entity.getPictures().stream()
                         .findFirst()
