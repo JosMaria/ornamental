@@ -3,6 +3,7 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.CreatePlantDTO;
+import org.fdryt.ornamental.dto.PlantResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.repository.ClassificationRepository;
@@ -29,7 +30,7 @@ public class PlantServiceImpl implements PlantService {
     private final PlantRepository plantRepository;
     private final FamilyRepository familyRepository;
     private final ClassificationRepository classificationRepository;
-    private final ModelMapper ornamentalPlantMapper;
+    private final ModelMapper plantMapper;
 
     @Override
     public List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable) {
@@ -77,22 +78,17 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public ProductResponseDTO create(CreatePlantDTO createPlantDTO) {
+    public PlantResponseDTO create(CreatePlantDTO createPlantDTO) {
         Family familyObtained = findFamilyByName(createPlantDTO.family());
-
         Status status = convertToEnum(Status.class, createPlantDTO.status());
 
         Identification identification = new Identification(createPlantDTO.commonName(), createPlantDTO.scientificName(), createPlantDTO.lastNameScientific(), familyObtained);
+        identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
 
-        Set<Classification> classifications = createPlantDTO.classifications().stream()
-                .map(this::findClassificationByUtility)
-                .collect(Collectors.toSet());
-
-        identification.addClassifications(classifications);
         Plant plant = new Plant(identification, status);
-
         Plant plantPersisted = plantRepository.save(plant);
-        return plantToProductResponseDTO(plantPersisted);
+
+        return plantMapper.map(plantPersisted, PlantResponseDTO.class);
     }
 
     private Family findFamilyByName(String name) {
@@ -100,11 +96,10 @@ public class PlantServiceImpl implements PlantService {
                 .orElseThrow(() -> new IllegalArgumentException(format("Family \"%s\" does not founded.", name)));
     }
 
-    private <T extends Enum<T>> T convertToEnum(Class<T> enumClass, String status) {
-        if (!isValidEnum(enumClass, status)) {
-            throw new IllegalArgumentException(format("%s %s does not valid.", enumClass.getName(), status));
-        }
-        return getEnum(enumClass, status);
+    private Set<Classification> convertClassifications(Set<String> classifications) {
+        return classifications.stream()
+                .map(this::findClassificationByUtility)
+                .collect(Collectors.toSet());
     }
 
     private Classification findClassificationByUtility(String classification) {
@@ -112,6 +107,13 @@ public class PlantServiceImpl implements PlantService {
 
         return classificationRepository.findByUtility(utility)
                 .orElseThrow(() -> new IllegalArgumentException(format("Classification \"%s\" does not founded.", utility)));
+    }
+
+    private <T extends Enum<T>> T convertToEnum(Class<T> enumClass, String status) {
+        if (!isValidEnum(enumClass, status)) {
+            throw new IllegalArgumentException(format("%s %s does not valid.", enumClass.getName(), status));
+        }
+        return getEnum(enumClass, status);
     }
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
