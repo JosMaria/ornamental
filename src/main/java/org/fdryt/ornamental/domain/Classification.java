@@ -5,13 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
@@ -21,11 +22,15 @@ import lombok.Setter;
 public class Classification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classification_sequence")
+    @GeneratedValue(strategy = SEQUENCE, generator = "classification_sequence")
     @SequenceGenerator(name = "classification_sequence", sequenceName = "classification_sequence", allocationSize = 1)
-    private Long id;
+    private Integer id;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
-    private ClassificationByUtility classificationByUtility;
+    private ClassificationByUtility utility;
+
+    public Classification(ClassificationByUtility utility) {
+        this.utility = utility;
+    }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/news")
@@ -29,7 +30,7 @@ public class NewsController {
 
     // TODO: endpoint access public
     @GetMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Long id) {
+    public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Integer id) {
         return ResponseEntity.ok(newsService.findById(id));
     }
 
@@ -41,20 +42,20 @@ public class NewsController {
 
     // TODO: endpoint private, only access with authorization
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") final Integer id) {
         newsService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     // TODO: endpoint private, only access with authorization
     @PutMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Long id, @RequestBody @Valid final UpdateNewsDTO updateNewsDTO) {
+    public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Integer id, @RequestBody @Valid final UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
     }
 
     // TODO: endpoint private, only access with authorization
     @PatchMapping("{id}")
-    public ResponseEntity<NewsResponseDTO> updateByFields(@PathVariable("id") Long id, @RequestBody final Map<String, Object> fields) {
+    public ResponseEntity<NewsResponseDTO> updateByFields(@PathVariable("id") Integer id, @RequestBody final Map<String, Object> fields) {
         return ResponseEntity.ok(newsService.updateByFields(id, fields));
     }
 }
