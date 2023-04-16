@@ -9,12 +9,14 @@ import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RestController
@@ -54,6 +56,12 @@ public class PlantController {
 
     @PostMapping
     public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
-        return ResponseEntity.ok(plantService.create(createPlantDTO));
+        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        plantService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

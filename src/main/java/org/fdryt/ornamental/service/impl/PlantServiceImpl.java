@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.CreatePlantDTO;
 import org.fdryt.ornamental.dto.PlantResponseDTO;
@@ -23,6 +24,7 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.EnumUtils.getEnum;
 import static org.apache.commons.lang3.EnumUtils.isValidEnum;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PlantServiceImpl implements PlantService {
@@ -74,21 +76,31 @@ public class PlantServiceImpl implements PlantService {
         Plant plant = plantRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(format("Plant with ID: %s does not exists", id)));
         return plantToProductResponseDTO(plant);
-
     }
 
     @Override
-    public PlantResponseDTO create(CreatePlantDTO createPlantDTO) {
+    public PlantResponseDTO create(final CreatePlantDTO createPlantDTO) {
         Family familyObtained = findFamilyByName(createPlantDTO.family());
         Status status = convertToEnum(Status.class, createPlantDTO.status());
-
-        Identification identification = new Identification(createPlantDTO.commonName(), createPlantDTO.scientificName(), createPlantDTO.lastNameScientific(), familyObtained);
+        Identification identification = new Identification(
+                createPlantDTO.commonName(),
+                createPlantDTO.scientificName(),
+                createPlantDTO.lastNameScientific(),
+                familyObtained
+        );
         identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
 
         Plant plant = new Plant(identification, status);
         Plant plantPersisted = plantRepository.save(plant);
+        log.info("Plant with ID {} persisted", plantPersisted.getId());
 
         return plantMapper.map(plantPersisted, PlantResponseDTO.class);
+    }
+
+    @Override
+    public void delete(final Integer id) {
+        //TODO:
+        plantRepository.deleteById(id);
     }
 
     private Family findFamilyByName(String name) {

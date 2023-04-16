@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
@@ -25,8 +27,7 @@ public class Plant {
     @SequenceGenerator(name = "plant_sequence", sequenceName = "plant_sequence", allocationSize = 1)
     private Integer id;
 
-    @OnDelete(action = CASCADE)
-    @OneToOne(cascade = PERSIST)
+    @OneToOne(cascade = { PERSIST }, orphanRemoval = true)
     @JoinColumn(name = "identification_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_identifications"))
     private Identification identification;
 

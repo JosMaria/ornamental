@@ -21,4 +21,6 @@ public interface PlantService {
     ProductResponseDTO findProductById(Integer id);
 
     PlantResponseDTO create(CreatePlantDTO createPlantDTO);
+
+    void delete(Integer id);
 }
