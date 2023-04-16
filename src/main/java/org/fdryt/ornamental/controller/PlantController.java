@@ -1,34 +1,67 @@
 package org.fdryt.ornamental.controller;
-    /*
-    import lombok.RequiredArgsConstructor;
-    import org.fdryt.ornamental.dto.CreatePlantDTO;
-    import org.fdryt.ornamental.dto.PlantResponseDTO;
-    import org.fdryt.ornamental.service.PlantService;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.security.access.prepost.PreAuthorize;
-    import org.springframework.web.bind.annotation.*;
 
-    import javax.validation.Valid;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.CreatePlantDTO;
+import org.fdryt.ornamental.dto.PlantResponseDTO;
+import org.fdryt.ornamental.dto.ProductResponseDTO;
+import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.service.PlantService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-    @RestController
-    @RequiredArgsConstructor
-    @RequestMapping("api/v1/nursery")
-    public class PlantController {
+import java.util.List;
 
-        private final PlantService plantService;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.http.HttpStatus.CREATED;
 
-        @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-        @PostMapping
-        public ResponseEntity<PlantResponseDTO> insert(@Valid @RequestBody CreatePlantDTO createPlantDTO) {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(plantService.insert(createPlantDTO));
-        }
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/v1/plants")
+public class PlantController {
 
-        @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
-        @PostMapping("family")
-        public ResponseEntity<String> insertFamily(@RequestParam("family") String family) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Created " + "'" + family + "'");
-        }
-    }*/
+    private final PlantService plantService;
+
+    // TODO: I should talk about count of products in number page
+    @GetMapping
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 6) Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
+    }
+
+    @GetMapping("types/{type}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PageableDefault(size = 6) Pageable pageable, @PathVariable("type") String type) {
+        return ResponseEntity.ok(plantService.findAllByClassification(type, pageable));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(plantService.findProductById(id));
+    }
+
+    @GetMapping("classifications/{classification}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlantsByClassification(
+            @PathVariable("classification") String classification,
+            @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllOrnamentalPlantsByClassification(classification, pageable));
+    }
+
+    @GetMapping("identifications")
+    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
+        return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
+    }
+
+    @PostMapping
+    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
+        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        plantService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}

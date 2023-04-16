@@ -1,21 +1,14 @@
 package org.fdryt.ornamental.dto;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.fdryt.ornamental.domain.Family;
+import lombok.experimental.SuperBuilder;
+import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductResponseDTO {
+@SuperBuilder
+public class ProductResponseDTO extends ItemToListResponseDTO {
 
-    private Long id;
-    private String commonName;
-    private String scientificName;
-    private Family family;
-    private String urlImage;
-    private boolean inConservation;
+    @JsonProperty("urlPicture")
+    private String firstUrlPicture;
 }

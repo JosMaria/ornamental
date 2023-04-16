@@ -11,13 +11,13 @@ public interface NewsService {
 
     List<NewsResponseDTO> findAll();
 
-    NewsResponseDTO findById(Long id);
+    NewsResponseDTO findById(Integer id);
 
     NewsResponseDTO create(CreateNewsDTO createNewsDTO);
 
-    void deleteById(Long id);
+    void deleteById(Integer id);
 
-    NewsResponseDTO update(Long id, UpdateNewsDTO updateNewsDTO);
+    NewsResponseDTO update(Integer id, UpdateNewsDTO updateNewsDTO);
 
-    NewsResponseDTO updateByFields(Long id, Map<String, Object> fields);
+    NewsResponseDTO updateByFields(Integer id, Map<String, Object> fields);
 }

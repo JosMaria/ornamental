@@ -7,12 +7,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
 @Repository
-public interface ClassificationRepository extends JpaRepository<Classification, Long> {
+public interface ClassificationRepository extends JpaRepository<Classification, Integer> {
 
     @Query("""
-            SELECT c.classificationByUtility
-            FROM Classification c""")
-    Collection<ClassificationByUtility> findAllClassificationByUtility();
+            SELECT c.utility
+            FROM Classification c"""
+    )
+    Set<ClassificationByUtility> findAllByUtility();
+
+    Optional<Classification> findByUtility(ClassificationByUtility utility);
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/classifications")
@@ -19,7 +19,7 @@ public class ClassificationController {
     private final ClassificationService classificationService;
 
     @GetMapping
-    public ResponseEntity<Set<String>> findAllClassificationByUtility() {
-        return ResponseEntity.ok(classificationService.findAllClassificationByUtility());
+    public ResponseEntity<Set<String>> findAllByUtility() {
+        return ResponseEntity.ok(classificationService.findAllByUtility());
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    HttpStatus httpStatusBadRequest = HttpStatus.BAD_REQUEST;
+    private final HttpStatus httpStatusBadRequest = HttpStatus.BAD_REQUEST;
 
     @ExceptionHandler(DomainNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainNotFoundException(DomainNotFoundException exception, HttpServletRequest request) {
