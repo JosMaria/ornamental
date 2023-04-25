@@ -21,7 +21,7 @@ public class ClassificationServiceImpl implements ClassificationService {
     public Set<String> findAllByUtility() {
         log.info("return set of classifications by utility");
         return classificationRepository.findAllByUtility().stream()
-                .map(ClassificationByUtility::getType)
+                .map(classification -> classification.name())
                 .collect(Collectors.toSet());
     }
 }

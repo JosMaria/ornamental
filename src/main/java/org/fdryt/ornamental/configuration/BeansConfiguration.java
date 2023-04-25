@@ -70,4 +70,9 @@ public class BeansConfiguration {
 
         return modelMapper;
     }
+
+    @Bean("newsMapper")
+    public ModelMapper newsMapper() {
+        return new ModelMapper();
+    }
 }
