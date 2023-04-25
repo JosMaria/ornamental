@@ -1,15 +1,11 @@
 package org.fdryt.ornamental.configuration;
 
-import org.fdryt.ornamental.domain.Classification;
-import org.fdryt.ornamental.domain.Family;
-import org.fdryt.ornamental.domain.Identification;
-import org.fdryt.ornamental.domain.Plant;
+import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.PlantResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
+import org.fdryt.ornamental.dto.news.CreateNewsDTO;
+import org.modelmapper.*;
+import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -73,6 +69,15 @@ public class BeansConfiguration {
 
     @Bean("newsMapper")
     public ModelMapper newsMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
+        modelMapper.addConverter(new AbstractConverter<CreateNewsDTO, News>() {
+            @Override
+            protected News convert(CreateNewsDTO source) {
+                return new News(source.urlImage(), source.title(), source.description());
+            }
+        });
+
+        return modelMapper;
     }
 }

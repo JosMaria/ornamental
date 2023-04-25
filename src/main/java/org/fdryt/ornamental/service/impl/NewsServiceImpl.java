@@ -47,9 +47,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsResponseDTO create(CreateNewsDTO createNewsDTO) {
-        News newsToPersist = dtoToEntity(createNewsDTO);
+        News newsToPersist = newsMapper.map(createNewsDTO, News.class);
         News newsPersisted = newsRepository.save(newsToPersist);
-        log.info("Entity with ID {} saved", newsPersisted.getId());
+        log.info("News with ID {} saved", newsPersisted.getId());
 
         return newsMapper.map(newsPersisted, NewsResponseDTO.class);
     }
@@ -98,22 +98,5 @@ public class NewsServiceImpl implements NewsService {
     private News findByIdOrThrowException(Integer id) {
         return newsRepository.findById(id)
                 .orElseThrow(() -> new DomainNotFoundException(News.class, id));
-    }
-
-    private NewsResponseDTO entityToDTO(News news) {
-        return NewsResponseDTO.builder()
-                .id(news.getId())
-                .urlImage(news.getUrlImage())
-                .title(news.getTitle())
-                .description(news.getDescription())
-                .build();
-    }
-
-    private News dtoToEntity(CreateNewsDTO dto) {
-        return News.builder()
-                .urlImage(dto.getUrlImage())
-                .title(dto.getTitle())
-                .description(dto.getDescription())
-                .build();
     }
 }

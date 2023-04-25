@@ -1,20 +1,16 @@
 package org.fdryt.ornamental.dto.news;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@Getter
-@Setter
-@Builder
-public class CreateNewsDTO {
 
-    private String urlImage;
+public record CreateNewsDTO (
+        String urlImage,
 
-    @NotBlank(message = "TITLE field should not be null, empty or blank")
-    private String title;
+        @NotBlank(message = "TITLE field should not be null, empty or blank")
+        String title,
 
-    @NotBlank(message = "DESCRIPTION field should not be null, empty or blank")
-    private String description;
-}
+        @NotBlank(message = "DESCRIPTION field should not be null, empty or blank")
+        String description
+) {}
