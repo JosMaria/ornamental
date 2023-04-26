@@ -18,20 +18,6 @@ import static org.modelmapper.convention.MatchingStrategies.STRICT;
 @Configuration
 public class BeansConfiguration {
 
-    @Bean("ornamentalPlantMapper")
-    public ModelMapper ornamentalPlantMapper() {
-        ModelMapper model = new ModelMapper();
-        model.getConfiguration().setMatchingStrategy(STRICT);
-
-        model.addMappings(new PropertyMap<Plant, ProductResponseDTO>() {
-            @Override
-            protected void configure() {
-
-            }
-        });
-        return model;
-    }
-
     @Bean("plantMapper")
     public ModelMapper plantMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -74,7 +60,11 @@ public class BeansConfiguration {
         modelMapper.addConverter(new AbstractConverter<CreateNewsDTO, News>() {
             @Override
             protected News convert(CreateNewsDTO source) {
-                return new News(source.urlImage(), source.title(), source.description());
+                return News.builder()
+                        .urlImage(source.urlImage())
+                        .title(source.title())
+                        .description(source.description())
+                        .build();
             }
         });
 
