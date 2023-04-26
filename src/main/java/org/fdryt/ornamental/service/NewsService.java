@@ -9,11 +9,11 @@ import java.util.Map;
 
 public interface NewsService {
 
+    NewsResponseDTO create(CreateNewsDTO createNewsDTO);
+
     List<NewsResponseDTO> findAll();
 
     NewsResponseDTO findById(Integer id);
-
-    NewsResponseDTO create(CreateNewsDTO createNewsDTO);
 
     void deleteById(Integer id);
 

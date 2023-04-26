@@ -1,15 +1,11 @@
 package org.fdryt.ornamental.configuration;
 
-import org.fdryt.ornamental.domain.Classification;
-import org.fdryt.ornamental.domain.Family;
-import org.fdryt.ornamental.domain.Identification;
-import org.fdryt.ornamental.domain.Plant;
+import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.PlantResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
-import org.modelmapper.TypeMap;
+import org.fdryt.ornamental.dto.news.CreateNewsDTO;
+import org.modelmapper.*;
+import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,20 +17,6 @@ import static org.modelmapper.convention.MatchingStrategies.STRICT;
 
 @Configuration
 public class BeansConfiguration {
-
-    @Bean("ornamentalPlantMapper")
-    public ModelMapper ornamentalPlantMapper() {
-        ModelMapper model = new ModelMapper();
-        model.getConfiguration().setMatchingStrategy(STRICT);
-
-        model.addMappings(new PropertyMap<Plant, ProductResponseDTO>() {
-            @Override
-            protected void configure() {
-
-            }
-        });
-        return model;
-    }
 
     @Bean("plantMapper")
     public ModelMapper plantMapper() {
@@ -67,6 +49,24 @@ public class BeansConfiguration {
 
         typeMap.addMappings(propertyMap -> propertyMap.using(toSetClassifications)
                 .map(src -> src.getIdentification().getClassifications(), PlantResponseDTO::setClassifications));
+
+        return modelMapper;
+    }
+
+    @Bean("newsMapper")
+    public ModelMapper newsMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
+        modelMapper.addConverter(new AbstractConverter<CreateNewsDTO, News>() {
+            @Override
+            protected News convert(CreateNewsDTO source) {
+                return News.builder()
+                        .urlImage(source.urlImage())
+                        .title(source.title())
+                        .description(source.description())
+                        .build();
+            }
+        });
 
         return modelMapper;
     }
