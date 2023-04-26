@@ -22,6 +22,12 @@ public class NewsController {
 
     private final NewsService newsService;
 
+    // TODO: endpoint private, only access with authorization
+    @PostMapping
+    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid final CreateNewsDTO createNewsDTO) {
+        return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
+    }
+
     // TODO: endpoint access public
     @GetMapping
     public ResponseEntity<List<NewsResponseDTO>> findAll() {
@@ -32,12 +38,6 @@ public class NewsController {
     @GetMapping("{id}")
     public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Integer id) {
         return ResponseEntity.ok(newsService.findById(id));
-    }
-
-    // TODO: endpoint private, only access with authorization
-    @PostMapping
-    public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid final CreateNewsDTO createNewsDTO) {
-        return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
     }
 
     // TODO: endpoint private, only access with authorization
