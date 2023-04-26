@@ -38,10 +38,10 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsResponseDTO> findAll() {
-        log.info("Returning all news");
+        List<News> newsList = newsRepository.findAll();
+        log.info("All news returned.");
 
-        return newsRepository.findAll()
-                .stream()
+        return newsList.stream()
                 .map(news -> newsMapper.map(news, NewsResponseDTO.class))
                 .toList();
     }

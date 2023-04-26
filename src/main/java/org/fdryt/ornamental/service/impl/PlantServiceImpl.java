@@ -53,7 +53,7 @@ public class PlantServiceImpl implements PlantService {
         Predicate<Plant> existsPlantByClassification = plant ->
                 plant.getIdentification().getClassifications()
                         .stream()
-                        .anyMatch(classification -> classification.getUtility().getType().equals(type));
+                        .anyMatch(classification -> classification.getUtility().name().equals(type));
 
         return plantRepository.findAll()
                 .stream()

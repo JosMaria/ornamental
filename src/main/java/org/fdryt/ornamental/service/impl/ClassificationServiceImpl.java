@@ -19,9 +19,11 @@ public class ClassificationServiceImpl implements ClassificationService {
 
     @Override
     public Set<String> findAllByUtility() {
-        log.info("return set of classifications by utility");
-        return classificationRepository.findAllByUtility().stream()
-                .map(classification -> classification.name())
+        Set<ClassificationByUtility> classificationsObtained = classificationRepository.findAllByUtility();
+        log.info("Set of classifications by utility returned.");
+
+        return classificationsObtained.stream()
+                .map(Enum::name)
                 .collect(Collectors.toSet());
     }
 }
