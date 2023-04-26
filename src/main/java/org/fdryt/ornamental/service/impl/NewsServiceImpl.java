@@ -28,6 +28,15 @@ public class NewsServiceImpl implements NewsService {
     private final ModelMapper newsMapper;
 
     @Override
+    public NewsResponseDTO create(final CreateNewsDTO createNewsDTO) {
+        News newsToPersist = newsMapper.map(createNewsDTO, News.class);
+        News newsPersisted = newsRepository.save(newsToPersist);
+        log.info("News with ID {} saved", newsPersisted.getId());
+
+        return newsMapper.map(newsPersisted, NewsResponseDTO.class);
+    }
+
+    @Override
     public List<NewsResponseDTO> findAll() {
         log.info("Returning all news");
 
@@ -38,35 +47,26 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponseDTO findById(Integer id) {
+    public NewsResponseDTO findById(final Integer id) {
         News newsObtained = findByIdOrThrowException(id);
-        log.info("Returning news with ID: {}", id);
+        log.info("News returns with ID: {}", id);
 
         return newsMapper.map(newsObtained, NewsResponseDTO.class);
     }
 
     @Override
-    public NewsResponseDTO create(CreateNewsDTO createNewsDTO) {
-        News newsToPersist = newsMapper.map(createNewsDTO, News.class);
-        News newsPersisted = newsRepository.save(newsToPersist);
-        log.info("News with ID {} saved", newsPersisted.getId());
-
-        return newsMapper.map(newsPersisted, NewsResponseDTO.class);
-    }
-
-    @Override
-    public void deleteById(Integer id) {
+    public void deleteById(final Integer id) {
         newsRepository.deleteById(id);
-        log.info("Delete news with ID: {}", id);
+        log.info("News with ID: {} deleted ", id);
     }
 
     @Transactional
     @Override
-    public NewsResponseDTO update(Integer id, UpdateNewsDTO updateNewsDTO) {
+    public NewsResponseDTO update(final Integer id, final UpdateNewsDTO updateNewsDTO) {
         News newsObtained = findByIdOrThrowException(id);
-        newsObtained.setUrlImage(updateNewsDTO.getUrlImage());
-        newsObtained.setTitle(updateNewsDTO.getTitle());
-        newsObtained.setDescription(updateNewsDTO.getDescription());
+        newsObtained.setUrlImage(updateNewsDTO.urlImage());
+        newsObtained.setTitle(updateNewsDTO.title());
+        newsObtained.setDescription(updateNewsDTO.description());
         log.info("Updated news with ID: {}", id);
 
         return newsMapper.map(newsObtained, NewsResponseDTO.class);
@@ -74,13 +74,12 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public NewsResponseDTO updateByFields(Integer id, Map<String, Object> fields) {
+    public NewsResponseDTO updateByFields(final Integer id, final Map<String, Object> fields) {
         News newsObtained = findByIdOrThrowException(id);
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(News.class, key);
 
             if (field != null && canChangeField(field.getName())) {
-                // TODO: verify type of field example Long to Int to ID
                 //Preconditions.checkArgument(field.getType() == String.class, "");
                 field.setAccessible(true);
                 ReflectionUtils.setField(field, newsObtained, value);
