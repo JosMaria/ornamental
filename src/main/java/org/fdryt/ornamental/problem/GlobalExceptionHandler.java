@@ -25,6 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainNotFoundException(DomainNotFoundException exception, HttpServletRequest request) {
         log.warn(exception.getMessage());
+
         return ResponseEntity
                 .badRequest()
                 .body(ProcessErrorResponse.builder()

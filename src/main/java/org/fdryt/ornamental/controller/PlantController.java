@@ -36,15 +36,10 @@ public class PlantController {
         plantService.delete(id);
         return ResponseEntity.noContent().build();
     }
-/*
+/*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
     @GetMapping("types/{type}")
     public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PageableDefault(size = 6) Pageable pageable, @PathVariable("type") String type) {
         return ResponseEntity.ok(plantService.findAllByClassification(type, pageable));
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<ProductResponseDTO> findProductById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(plantService.findProductById(id));
     }
 
     @GetMapping("classifications/{classification}")

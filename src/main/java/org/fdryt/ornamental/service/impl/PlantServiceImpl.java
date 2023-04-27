@@ -111,9 +111,7 @@ public class PlantServiceImpl implements PlantService {
 
     @Override
     public ProductResponseDTO findProductById(Integer id) {
-        Plant plant = plantRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException(format("Plant with ID: %s does not exists", id)));
-        return plantToProductResponseDTO(plant);
+
     }
 
 

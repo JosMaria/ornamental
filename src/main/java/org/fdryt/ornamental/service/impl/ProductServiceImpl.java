@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.ProductService;
 import org.modelmapper.ModelMapper;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,5 +43,14 @@ public class ProductServiceImpl implements ProductService {
         return plantsObtainedPage.stream()
                     .map(plant -> productMapper.map(plant, ProductResponseDTO.class))
                     .toList();
+    }
+
+    @Override
+    public ProductResponseDTO findById(Integer id) {
+        Plant plantObtained = plantRepository.findById(id)
+                .orElseThrow(() -> new DomainNotFoundException(Plant.class, "ID", id));
+        log.info("Plant returned with ID: {}", id);
+
+        return productMapper.map(plantObtained, ProductResponseDTO.class);
     }
 }

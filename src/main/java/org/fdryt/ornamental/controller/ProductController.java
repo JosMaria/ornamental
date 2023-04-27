@@ -7,10 +7,7 @@ import org.fdryt.ornamental.service.ProductService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,5 +27,10 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> findAll(@PageableDefault(size = 12) Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(pageable));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProductResponseDTO> findById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(productService.findById(id));
     }
 }
