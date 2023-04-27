@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.PlantResponseDTO;
-import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
+import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
@@ -22,8 +22,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static org.apache.commons.lang3.EnumUtils.getEnum;
-import static org.apache.commons.lang3.EnumUtils.isValidEnum;
+import static org.fdryt.ornamental.utils.Utils.convertToEnum;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,14 +73,6 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable) {
-        return plantRepository.findAll(pageable)
-                .stream()
-                .map(this::plantToProductResponseDTO)
-                .toList();
-    }
-
-    @Override
     public List<ProductResponseDTO> findAllByClassification(String type, Pageable pageable) {
         Predicate<Plant> existsPlantByClassification = plant ->
                 plant.getIdentification().getClassifications()
@@ -127,13 +118,6 @@ public class PlantServiceImpl implements PlantService {
 
         return classificationRepository.findByUtility(utility)
                 .orElseThrow(() -> new IllegalArgumentException(format("Classification \"%s\" does not founded.", utility)));
-    }
-
-    private <T extends Enum<T>> T convertToEnum(Class<T> enumClass, String status) {
-        if (!isValidEnum(enumClass, status)) {
-            throw new IllegalArgumentException(format("%s %s does not valid.", enumClass.getName(), status));
-        }
-        return getEnum(enumClass, status);
     }
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {

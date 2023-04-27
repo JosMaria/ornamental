@@ -1,11 +1,9 @@
 package org.fdryt.ornamental.configuration;
 
 import org.fdryt.ornamental.domain.*;
-import org.fdryt.ornamental.dto.PlantResponseDTO;
-import org.fdryt.ornamental.dto.ProductResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.modelmapper.*;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

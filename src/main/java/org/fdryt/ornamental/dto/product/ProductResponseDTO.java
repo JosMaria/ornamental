@@ -1,9 +1,9 @@
-package org.fdryt.ornamental.dto;
+package org.fdryt.ornamental.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 
 @Getter
 @SuperBuilder

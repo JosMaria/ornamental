@@ -3,9 +3,9 @@ package org.fdryt.ornamental.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.PlantResponseDTO;
-import org.fdryt.ornamental.dto.ProductResponseDTO;
-import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
+import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -35,11 +35,6 @@ public class PlantController {
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         plantService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 6) Pageable pageable) {
-        return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
     }
 
     @GetMapping("types/{type}")

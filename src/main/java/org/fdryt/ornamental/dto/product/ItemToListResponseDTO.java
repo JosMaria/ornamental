@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.identification;
+package org.fdryt.ornamental.dto.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
