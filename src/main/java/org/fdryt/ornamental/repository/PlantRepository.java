@@ -13,14 +13,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Integer> {
 
-    @Query("""
+    /*@Query("""
             SELECT new org.fdryt.ornamental.dto.ProductResponseDTO
                 (o.id, i.commonName, i.scientificName, i.family)
             FROM Plant o
             INNER JOIN o.identification i
             INNER JOIN i.classifications c
             WHERE c.utility = :type""")
-    Page<ProductResponseDTO> findAllByClassification(@Param("type") ClassificationByUtility type, Pageable pageable);
+    Page<ProductResponseDTO> findAllByClassification(@Param("type") ClassificationByUtility type, Pageable pageable);*/
 
     /*@Query(nativeQuery = true,
             value = """

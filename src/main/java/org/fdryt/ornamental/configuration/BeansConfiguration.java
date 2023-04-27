@@ -3,6 +3,7 @@ package org.fdryt.ornamental.configuration;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
+import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.modelmapper.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +27,12 @@ public class BeansConfiguration {
 
         Converter<Identification, String> toScientificNameComplete = mappingContext -> {
             Identification source = mappingContext.getSource();
-            boolean haveScientific = source.getPlusScientificName() != null;
+            boolean haveScientific = source.getScientistSurnameInitial() != null;
             String formatToString = haveScientific ? "%s %s." : "%s";
 
             return format(formatToString,
                     source.getScientificName() != null ? source.getScientificName() : "",
-                    haveScientific ? source.getPlusScientificName() : "");
+                    haveScientific ? source.getScientistSurnameInitial() : "");
         };
 
         TypeMap<Plant, PlantResponseDTO> typeMap = modelMapper.createTypeMap(Plant.class, PlantResponseDTO.class);
@@ -65,6 +66,25 @@ public class BeansConfiguration {
                         .build();
             }
         });
+
+        return modelMapper;
+    }
+
+    @Bean("productMapper")
+    public ModelMapper productMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
+
+        modelMapper.createTypeMap(Plant.class, ItemToListResponseDTO.class)
+                .addMapping(Plant::getId, ItemToListResponseDTO::setId)
+                .addMapping(src -> src.getIdentification().getCommonName(), ItemToListResponseDTO::setCommonName)
+                .addMapping(src -> src.getIdentification().getScientificName(), ItemToListResponseDTO::setScientificName)
+                .addMapping(src -> src.getIdentification().getScientistSurnameInitial(), ItemToListResponseDTO::setScientistSurnameInitial)
+                .addMapping(Plant::getStatus, ItemToListResponseDTO::setStatus)
+                .addMapping(src -> {
+                    Family family = src.getIdentification().getFamily();
+                    return family != null ? family.getName() : "";
+                }, ItemToListResponseDTO::setFamilyName);
 
         return modelMapper;
     }

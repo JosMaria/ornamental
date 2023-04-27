@@ -36,7 +36,7 @@ public class PlantController {
         plantService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+/*
     @GetMapping("types/{type}")
     public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PageableDefault(size = 6) Pageable pageable, @PathVariable("type") String type) {
         return ResponseEntity.ok(plantService.findAllByClassification(type, pageable));
@@ -57,5 +57,5 @@ public class PlantController {
     @GetMapping("identifications")
     public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
-    }
+    }*/
 }

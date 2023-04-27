@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.FetchType.EAGER;
-import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
@@ -30,7 +29,7 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
-    private Character plusScientificName;
+    private Character scientistSurnameInitial;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))

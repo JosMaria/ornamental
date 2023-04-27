@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.service.ProductService;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    @GetMapping("identifications")
+    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
+        return ResponseEntity.ok(productService.findAllItemsToList(pageable));
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> findAll(@PageableDefault(size = 6) Pageable pageable) {

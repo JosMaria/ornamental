@@ -5,20 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
-import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
-import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -51,11 +46,16 @@ public class PlantServiceImpl implements PlantService {
         log.info("Plant with ID: {} deleted", id);
     }
 
+    private Family findFamilyByNameOrThrowException(String name) {
+        return familyRepository.findByName(name)
+                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name));
+    }
+
     private Plant createPlant(CreatePlantDTO createPlantDTO, Family family, Status status) {
         Identification identification = Identification.builder()
                 .commonName(createPlantDTO.commonName())
                 .scientificName(createPlantDTO.scientificName())
-                .plusScientificName(createPlantDTO.lastNameScientific())
+                .scientistSurnameInitial(createPlantDTO.lastNameScientific())
                 .family(family)
                 .build();
         identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
@@ -66,10 +66,24 @@ public class PlantServiceImpl implements PlantService {
                 .build();
     }
 
-    @Override
+    private Set<Classification> convertClassifications(Set<String> classifications) {
+        return classifications.stream()
+                .map(this::findClassificationByUtility)
+                .collect(Collectors.toSet());
+    }
+
+    private Classification findClassificationByUtility(String classification) {
+        ClassificationByUtility utility = convertToEnum(ClassificationByUtility.class, classification);
+
+        return classificationRepository.findByUtility(utility)
+                .orElseThrow(() -> new IllegalArgumentException(format("Classification \"%s\" does not founded.", utility)));
+    }
+
+    /*@Override
     public List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable) {
         ClassificationByUtility enumType = ClassificationByUtility.valueOf(type.trim().toUpperCase());
-        return plantRepository.findAllByClassification(enumType, pageable).toList();
+        //return plantRepository.findAllByClassification(enumType, pageable).toList();
+        return null;
     }
 
     @Override
@@ -102,23 +116,11 @@ public class PlantServiceImpl implements PlantService {
         return plantToProductResponseDTO(plant);
     }
 
-    private Family findFamilyByNameOrThrowException(String name) {
-        return familyRepository.findByName(name)
-                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name));
-    }
 
-    private Set<Classification> convertClassifications(Set<String> classifications) {
-        return classifications.stream()
-                .map(this::findClassificationByUtility)
-                .collect(Collectors.toSet());
-    }
 
-    private Classification findClassificationByUtility(String classification) {
-        ClassificationByUtility utility = convertToEnum(ClassificationByUtility.class, classification);
 
-        return classificationRepository.findByUtility(utility)
-                .orElseThrow(() -> new IllegalArgumentException(format("Classification \"%s\" does not founded.", utility)));
-    }
+
+
 
     private ItemToListResponseDTO plantToItemToListResponseDTO(Plant entity) {
         Identification identification = entity.getIdentification();
@@ -150,5 +152,5 @@ public class PlantServiceImpl implements PlantService {
                         .orElse("https://picture-404")
                 )
                 .build();
-    }
+    }*/
 }
