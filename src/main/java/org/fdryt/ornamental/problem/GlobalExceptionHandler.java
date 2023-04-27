@@ -3,6 +3,7 @@ package org.fdryt.ornamental.problem;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
+import org.fdryt.ornamental.problem.exception.EnumNotPresentException;
 import org.fdryt.ornamental.problem.response.ErrorResponse;
 import org.fdryt.ornamental.problem.response.ProcessErrorResponse;
 import org.fdryt.ornamental.problem.response.ValidationErrorResponse;
@@ -25,6 +26,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainNotFoundException(DomainNotFoundException exception, HttpServletRequest request) {
         log.warn(exception.getMessage());
+
         return ResponseEntity
                 .badRequest()
                 .body(ProcessErrorResponse.builder()
@@ -54,6 +56,22 @@ public class GlobalExceptionHandler {
                         .name(httpStatusBadRequest.name())
                         .path(request.getRequestURI())
                         .fieldErrors(fieldErrors)
+                        .build()
+                );
+    }
+
+    @ExceptionHandler(EnumNotPresentException.class)
+    public ResponseEntity<ErrorResponse> handleEnumNotPresentException(EnumNotPresentException exception, HttpServletRequest request) {
+        log.warn(exception.getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(ProcessErrorResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .value(httpStatusBadRequest.value())
+                        .name(httpStatusBadRequest.name())
+                        .path(request.getRequestURI())
+                        .reason(exception.getMessage())
                         .build()
                 );
     }

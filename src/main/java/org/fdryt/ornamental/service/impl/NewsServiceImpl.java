@@ -31,7 +31,7 @@ public class NewsServiceImpl implements NewsService {
     public NewsResponseDTO create(final CreateNewsDTO createNewsDTO) {
         News newsToPersist = newsMapper.map(createNewsDTO, News.class);
         News newsPersisted = newsRepository.save(newsToPersist);
-        log.info("News with ID {} saved", newsPersisted.getId());
+        log.info("News with ID: {} persisted", newsPersisted.getId());
 
         return newsMapper.map(newsPersisted, NewsResponseDTO.class);
     }
@@ -39,7 +39,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public List<NewsResponseDTO> findAll() {
         List<News> newsList = newsRepository.findAll();
-        log.info("All news returned.");
+        log.info("All news returned");
 
         return newsList.stream()
                 .map(news -> newsMapper.map(news, NewsResponseDTO.class))
@@ -96,6 +96,6 @@ public class NewsServiceImpl implements NewsService {
 
     private News findByIdOrThrowException(Integer id) {
         return newsRepository.findById(id)
-                .orElseThrow(() -> new DomainNotFoundException(News.class, id));
+                .orElseThrow(() -> new DomainNotFoundException(News.class, "ID", id));
     }
 }

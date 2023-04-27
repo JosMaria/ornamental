@@ -30,10 +30,4 @@ public class News {
 
     @Column(nullable = false, length = 2000)
     private String description;
-
-    public News(String urlImage, String title, String description) {
-        this.urlImage = urlImage;
-        this.title = title;
-        this.description = description;
-    }
 }

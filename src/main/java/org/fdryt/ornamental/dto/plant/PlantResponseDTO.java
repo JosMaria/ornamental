@@ -1,12 +1,14 @@
-package org.fdryt.ornamental.dto;
+package org.fdryt.ornamental.dto.plant;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PlantResponseDTO {
 
     private String commonName;
