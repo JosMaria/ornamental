@@ -1,11 +1,11 @@
-package org.fdryt.ornamental.dto;
+package org.fdryt.ornamental.dto.plant;
 
 import jakarta.validation.constraints.NotBlank;
+
 import java.util.Set;
 
 public record CreatePlantDTO(
-
-        @NotBlank(message = "commonName field must not have a empty, blank or null value")
+        @NotBlank(message = "COMMON_NAME field should not be null, empty or blank")
         String commonName,
 
         String scientificName,
@@ -13,7 +13,6 @@ public record CreatePlantDTO(
         String family,
         Set<String> classifications,
 
-        @NotBlank(message = "status field must not have a empty, blank or null value")
-        String status) {
-
-}
+        @NotBlank(message = "STATUS field should not be null, empty or blank")
+        String status
+) {}

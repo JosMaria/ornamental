@@ -9,6 +9,7 @@ import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.NewsRepository;
 import org.fdryt.ornamental.service.NewsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -24,63 +25,68 @@ import java.util.Map;
 public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
+    private final ModelMapper newsMapper;
+
+    @Override
+    public NewsResponseDTO create(final CreateNewsDTO createNewsDTO) {
+        News newsToPersist = newsMapper.map(createNewsDTO, News.class);
+        News newsPersisted = newsRepository.save(newsToPersist);
+        log.info("News with ID: {} persisted", newsPersisted.getId());
+
+        return newsMapper.map(newsPersisted, NewsResponseDTO.class);
+    }
 
     @Override
     public List<NewsResponseDTO> findAll() {
-        log.info("Returning all news");
-        return newsRepository.findAll()
-                .stream()
-                .map(this::entityToDTO)
+        List<News> newsList = newsRepository.findAll();
+        log.info("All news returned");
+
+        return newsList.stream()
+                .map(news -> newsMapper.map(news, NewsResponseDTO.class))
                 .toList();
     }
 
     @Override
-    public NewsResponseDTO findById(Integer id) {
-        News newsFounded = findByIdOrThrowException(id);
-        log.info("Returning news with ID: {}", id);
-        return entityToDTO(newsFounded);
+    public NewsResponseDTO findById(final Integer id) {
+        News newsObtained = findByIdOrThrowException(id);
+        log.info("News returns with ID: {}", id);
+
+        return newsMapper.map(newsObtained, NewsResponseDTO.class);
     }
 
     @Override
-    public NewsResponseDTO create(CreateNewsDTO createNewsDTO) {
-        News newsToPersist = dtoToEntity(createNewsDTO);
-        News newsPersisted = newsRepository.save(newsToPersist);
-        log.info("Entity with ID {} saved", newsPersisted.getId());
-        return entityToDTO(newsPersisted);
-    }
-
-    @Override
-    public void deleteById(Integer id) {
+    public void deleteById(final Integer id) {
         newsRepository.deleteById(id);
-        log.info("Delete news with ID: {}", id);
+        log.info("News with ID: {} deleted ", id);
     }
 
     @Transactional
     @Override
-    public NewsResponseDTO update(Integer id, UpdateNewsDTO updateNewsDTO) {
-        News newsFounded = findByIdOrThrowException(id);
-        newsFounded.setUrlImage(updateNewsDTO.getUrlImage());
-        newsFounded.setTitle(updateNewsDTO.getTitle());
-        newsFounded.setDescription(updateNewsDTO.getDescription());
+    public NewsResponseDTO update(final Integer id, final UpdateNewsDTO updateNewsDTO) {
+        News newsObtained = findByIdOrThrowException(id);
+        newsObtained.setUrlImage(updateNewsDTO.urlImage());
+        newsObtained.setTitle(updateNewsDTO.title());
+        newsObtained.setDescription(updateNewsDTO.description());
         log.info("Updated news with ID: {}", id);
-        return entityToDTO(newsFounded);
+
+        return newsMapper.map(newsObtained, NewsResponseDTO.class);
     }
 
     @Transactional
     @Override
-    public NewsResponseDTO updateByFields(Integer id, Map<String, Object> fields) {
-        News newsFounded = findByIdOrThrowException(id);
+    public NewsResponseDTO updateByFields(final Integer id, final Map<String, Object> fields) {
+        News newsObtained = findByIdOrThrowException(id);
         fields.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(News.class, key);
 
             if (field != null && canChangeField(field.getName())) {
-                // TODO: verify type of field example Long to Int to ID
                 //Preconditions.checkArgument(field.getType() == String.class, "");
                 field.setAccessible(true);
-                ReflectionUtils.setField(field, newsFounded, value);
+                ReflectionUtils.setField(field, newsObtained, value);
             }
         });
-        return entityToDTO(newsFounded);
+
+        return newsMapper.map(newsObtained, NewsResponseDTO.class);
     }
 
     private boolean canChangeField(String fieldName) {
@@ -90,23 +96,6 @@ public class NewsServiceImpl implements NewsService {
 
     private News findByIdOrThrowException(Integer id) {
         return newsRepository.findById(id)
-                .orElseThrow(() -> new DomainNotFoundException(News.class, id));
-    }
-
-    private NewsResponseDTO entityToDTO(News news) {
-        return NewsResponseDTO.builder()
-                .id(news.getId())
-                .urlImage(news.getUrlImage())
-                .title(news.getTitle())
-                .description(news.getDescription())
-                .build();
-    }
-
-    private News dtoToEntity(CreateNewsDTO dto) {
-        return News.builder()
-                .urlImage(dto.getUrlImage())
-                .title(dto.getTitle())
-                .description(dto.getDescription())
-                .build();
+                .orElseThrow(() -> new DomainNotFoundException(News.class, "ID", id));
     }
 }

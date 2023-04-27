@@ -1,20 +1,19 @@
 package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.FetchType.EAGER;
-import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "identifications")
 public class Identification {
@@ -30,7 +29,7 @@ public class Identification {
     @Column(length = 50)
     private String scientificName;
 
-    private Character plusScientificName;
+    private Character scientistSurnameInitial;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
@@ -46,13 +45,6 @@ public class Identification {
 
     @OneToOne(mappedBy = "identification")
     private Plant plant;
-
-    public Identification(String commonName, String scientificName, Character plusScientificName, Family family) {
-        this.commonName = commonName;
-        this.scientificName = scientificName;
-        this.plusScientificName = plusScientificName;
-        this.family = family;
-    }
 
     public void addClassifications(Set<Classification> classifications) {
         this.classifications.addAll(classifications);
