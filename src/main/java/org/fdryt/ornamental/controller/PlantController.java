@@ -52,10 +52,5 @@ public class PlantController {
             @PathVariable("classification") String classification,
             @PageableDefault(size = 16, direction = ASC, sort = "identification.commonName") Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllOrnamentalPlantsByClassification(classification, pageable));
-    }
-
-    @GetMapping("identifications")
-    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
-        return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
     }*/
 }

@@ -1,10 +1,14 @@
 package org.fdryt.ornamental.configuration;
 
 import org.fdryt.ornamental.domain.*;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
-import org.modelmapper.*;
+import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.modelmapper.AbstractConverter;
+import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -75,6 +79,12 @@ public class BeansConfiguration {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(STRICT);
 
+        Converter<Set<Picture>, String> toUrlFirstPicture = mappingContext ->
+                mappingContext.getSource().stream()
+                        .findFirst()
+                        .map(Picture::getUrl)
+                        .orElse("https://picture-404");
+
         modelMapper.createTypeMap(Plant.class, ItemToListResponseDTO.class)
                 .addMapping(Plant::getId, ItemToListResponseDTO::setId)
                 .addMapping(src -> src.getIdentification().getCommonName(), ItemToListResponseDTO::setCommonName)
@@ -85,6 +95,20 @@ public class BeansConfiguration {
                     Family family = src.getIdentification().getFamily();
                     return family != null ? family.getName() : "";
                 }, ItemToListResponseDTO::setFamilyName);
+
+        modelMapper.createTypeMap(Plant.class, ProductResponseDTO.class)
+                .addMapping(Plant::getId, ItemToListResponseDTO::setId)
+                .addMapping(src -> src.getIdentification().getCommonName(), ProductResponseDTO::setCommonName)
+                .addMapping(src -> src.getIdentification().getScientificName(), ProductResponseDTO::setScientificName)
+                .addMapping(src -> src.getIdentification().getScientistSurnameInitial(), ProductResponseDTO::setScientistSurnameInitial)
+                .addMapping(Plant::getStatus, ProductResponseDTO::setStatus)
+                .addMapping(src -> {
+                    Family family = src.getIdentification().getFamily();
+                    return family != null ? family.getName() : "";
+                }, ProductResponseDTO::setFamilyName)
+                .addMappings(propertyMap -> propertyMap.using(toUrlFirstPicture)
+                        .map(Plant::getPictures, ProductResponseDTO::setFirstUrlPicture)
+                );
 
         return modelMapper;
     }

@@ -8,6 +8,8 @@ import lombok.experimental.SuperBuilder;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 
 @Getter
+@Setter
+@NoArgsConstructor
 @SuperBuilder
 public class ProductResponseDTO extends ItemToListResponseDTO {
 
