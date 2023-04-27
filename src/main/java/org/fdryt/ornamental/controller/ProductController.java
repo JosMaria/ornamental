@@ -24,6 +24,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.findAllItemsToList(pageable));
     }
 
+    @GetMapping("identifications/status/{status}")
+    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToListByStatus(
+            @PathVariable("status") String status, @PageableDefault(size = 30) Pageable pageable) {
+        return ResponseEntity.ok(productService.findAllItemsToListByStatus(status, pageable));
+    }
+
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> findAll(@PageableDefault(size = 12) Pageable pageable) {
         return ResponseEntity.ok(productService.findAll(pageable));
@@ -35,7 +41,8 @@ public class ProductController {
     }
 
     @GetMapping("classifications/{classification}")
-    public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PathVariable("classification") String classification, Pageable pageable) {
+    public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(
+            @PathVariable("classification") String classification, @PageableDefault(size = 30) Pageable pageable) {
         return ResponseEntity.ok(productService.findAllByClassification(classification, pageable));
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static org.fdryt.ornamental.utils.Utils.convertToEnum;
 
 @Slf4j

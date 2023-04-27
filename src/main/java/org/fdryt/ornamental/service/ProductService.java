@@ -10,6 +10,8 @@ public interface ProductService {
 
     List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable);
 
+    List<ItemToListResponseDTO> findAllItemsToListByStatus(String status, Pageable pageable);
+
     List<ProductResponseDTO> findAll(Pageable pageable);
 
     ProductResponseDTO findById(Integer id);
