@@ -33,4 +33,9 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> findById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(productService.findById(id));
     }
+
+    @GetMapping("classifications/{classification}")
+    public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(@PathVariable("classification") String classification, Pageable pageable) {
+        return ResponseEntity.ok(productService.findAllByClassification(classification, pageable));
+    }
 }

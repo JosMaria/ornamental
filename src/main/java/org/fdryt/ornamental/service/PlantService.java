@@ -13,12 +13,4 @@ public interface PlantService {
     PlantResponseDTO create(CreatePlantDTO createPlantDTO);
 
     void delete(Integer id);
-
-    /*List<ProductResponseDTO> findAllByClassification(String type, Pageable pageable);
-
-    List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable);
-
-    List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable);
-
-    ProductResponseDTO findProductById(Integer id);*/
 }

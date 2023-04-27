@@ -13,4 +13,6 @@ public interface ProductService {
     List<ProductResponseDTO> findAll(Pageable pageable);
 
     ProductResponseDTO findById(Integer id);
+
+    List<ProductResponseDTO> findAllByClassification(String classification, Pageable pageable);
 }

@@ -13,27 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Integer> {
 
-    /*@Query("""
-            SELECT new org.fdryt.ornamental.dto.ProductResponseDTO
-                (o.id, i.commonName, i.scientificName, i.family)
-            FROM Plant o
-            INNER JOIN o.identification i
+    @Query("""
+            SELECT p
+            FROM Plant p
+            INNER JOIN p.identification i
             INNER JOIN i.classifications c
-            WHERE c.utility = :type""")
-    Page<ProductResponseDTO> findAllByClassification(@Param("type") ClassificationByUtility type, Pageable pageable);*/
-
-    /*@Query(nativeQuery = true,
-            value = """
-                    SELECT o.id, in_conservation, url_image, common_name, family, scientific_name, classification_by_utility
-                    FROM ornamental_plants o
-                    INNER JOIN (
-                        SELECT id, common_name, family, scientific_name, classification_by_utility
-                        FROM identifications i
-                        INNER JOIN (
-                            SELECT identification_id, classification_by_utility
-                            FROM identifications_classifications ic
-                            INNER JOIN classifications c
-                              ON ic.classification_id = c.id AND classification_by_utility = :type) classification
-                            ON classification.identification_id = i.id) result
-                        ON result.id = o.identification_id""")*/
+            WHERE c.utility = :utility""")
+    Page<Plant> findAllByIdentificationClassifications(@Param("utility") ClassificationByUtility utility, Pageable pageable);
 }

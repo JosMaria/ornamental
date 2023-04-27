@@ -2,20 +2,20 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.ProductService;
+import org.fdryt.ornamental.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static java.lang.String.format;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,5 +52,16 @@ public class ProductServiceImpl implements ProductService {
         log.info("Plant returned with ID: {}", id);
 
         return productMapper.map(plantObtained, ProductResponseDTO.class);
+    }
+
+    @Override
+    public List<ProductResponseDTO> findAllByClassification(String classification, Pageable pageable) {
+        ClassificationByUtility utility = Utils.convertToEnum(ClassificationByUtility.class, classification);
+        Page<Plant> plantsObtainedPage = plantRepository.findAllByIdentificationClassifications(utility, pageable);
+        log.info("Products returned with utility: {} by page number: {} with size: {}", classification, plantsObtainedPage.getNumber(), plantsObtainedPage.getSize());
+
+        return plantsObtainedPage.stream()
+                .map(plant -> productMapper.map(plant, ProductResponseDTO.class))
+                .toList();
     }
 }
