@@ -1,23 +1,19 @@
 package org.fdryt.ornamental.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.GenerationType.SEQUENCE;
-import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "plants")
 public class Plant {

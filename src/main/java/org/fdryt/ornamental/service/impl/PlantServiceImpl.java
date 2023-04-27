@@ -7,6 +7,7 @@ import org.fdryt.ornamental.dto.CreatePlantDTO;
 import org.fdryt.ornamental.dto.PlantResponseDTO;
 import org.fdryt.ornamental.dto.ProductResponseDTO;
 import org.fdryt.ornamental.dto.identification.ItemToListResponseDTO;
+import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
@@ -33,6 +34,38 @@ public class PlantServiceImpl implements PlantService {
     private final FamilyRepository familyRepository;
     private final ClassificationRepository classificationRepository;
     private final ModelMapper plantMapper;
+
+    @Override
+    public PlantResponseDTO create(final CreatePlantDTO createPlantDTO) {
+        Status status = convertToEnum(Status.class, createPlantDTO.status());
+        Family familyObtained = findFamilyByNameOrThrowException(createPlantDTO.family());
+        Plant plantToPersist = createPlant(createPlantDTO, familyObtained, status);
+        Plant plantPersisted = plantRepository.save(plantToPersist);
+        log.info("Plant with ID: {} persisted", plantPersisted.getId());
+
+        return plantMapper.map(plantPersisted, PlantResponseDTO.class);
+    }
+
+    @Override
+    public void delete(final Integer id) {
+        plantRepository.deleteById(id);
+        log.info("Plant with ID: {} deleted", id);
+    }
+
+    private Plant createPlant(CreatePlantDTO createPlantDTO, Family family, Status status) {
+        Identification identification = Identification.builder()
+                .commonName(createPlantDTO.commonName())
+                .scientificName(createPlantDTO.scientificName())
+                .plusScientificName(createPlantDTO.lastNameScientific())
+                .family(family)
+                .build();
+        identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
+
+        return Plant.builder()
+                .identification(identification)
+                .status(status)
+                .build();
+    }
 
     @Override
     public List<ProductResponseDTO> findAllOrnamentalPlantsByClassification(String type, Pageable pageable) {
@@ -78,34 +111,9 @@ public class PlantServiceImpl implements PlantService {
         return plantToProductResponseDTO(plant);
     }
 
-    @Override
-    public PlantResponseDTO create(final CreatePlantDTO createPlantDTO) {
-        Family familyObtained = findFamilyByName(createPlantDTO.family());
-        Status status = convertToEnum(Status.class, createPlantDTO.status());
-        Identification identification = new Identification(
-                createPlantDTO.commonName(),
-                createPlantDTO.scientificName(),
-                createPlantDTO.lastNameScientific(),
-                familyObtained
-        );
-        identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
-
-        Plant plant = new Plant(identification, status);
-        Plant plantPersisted = plantRepository.save(plant);
-        log.info("Plant with ID {} persisted", plantPersisted.getId());
-
-        return plantMapper.map(plantPersisted, PlantResponseDTO.class);
-    }
-
-    @Override
-    public void delete(final Integer id) {
-        //TODO:
-        plantRepository.deleteById(id);
-    }
-
-    private Family findFamilyByName(String name) {
+    private Family findFamilyByNameOrThrowException(String name) {
         return familyRepository.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException(format("Family \"%s\" does not founded.", name)));
+                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name));
     }
 
     private Set<Classification> convertClassifications(Set<String> classifications) {

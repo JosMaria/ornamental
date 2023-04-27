@@ -27,6 +27,17 @@ public class PlantController {
     private final PlantService plantService;
 
     // TODO: I should talk about count of products in number page
+    @PostMapping
+    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
+        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        plantService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> findAllOrnamentalPlants(@PageableDefault(size = 6) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllOrnamentalPlants(pageable));
@@ -52,16 +63,5 @@ public class PlantController {
     @GetMapping("identifications")
     public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
         return ResponseEntity.ok(plantService.findAllItemsToList(pageable));
-    }
-
-    @PostMapping
-    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
-        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        plantService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

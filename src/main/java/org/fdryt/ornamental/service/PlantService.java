@@ -10,6 +10,10 @@ import java.util.List;
 
 public interface PlantService {
 
+    PlantResponseDTO create(CreatePlantDTO createPlantDTO);
+
+    void delete(Integer id);
+
     List<ProductResponseDTO> findAllOrnamentalPlants(Pageable pageable);
 
     List<ProductResponseDTO> findAllByClassification(String type, Pageable pageable);
@@ -19,8 +23,4 @@ public interface PlantService {
     List<ItemToListResponseDTO> findAllItemsToList(Pageable pageable);
 
     ProductResponseDTO findProductById(Integer id);
-
-    PlantResponseDTO create(CreatePlantDTO createPlantDTO);
-
-    void delete(Integer id);
 }
