@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
+import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.modelmapper.ModelMapper;
@@ -25,9 +26,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyResponseDTO create(CreateFamilyDTO createFamilyDTO) {
         if (familyRepository.existsByName(createFamilyDTO.name())) {
-            String message = format("Family with name: %s already exists", createFamilyDTO.name());
-            log.warn(message);
-            throw new IllegalArgumentException(message);
+            throw new EntityAlreadyException(Family.class, createFamilyDTO.name());
         }
         Family familyToPersist = familyMapper.map(createFamilyDTO, Family.class);
         Family familyPersisted = familyRepository.save(familyToPersist);
