@@ -7,7 +7,7 @@ import java.util.Set;
 
 public interface FamilyService {
 
-    Set<String> findAll();
-
     FamilyResponseDTO create(CreateFamilyDTO name);
+
+    Set<String> findAll();
 }
