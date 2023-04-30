@@ -54,7 +54,7 @@ public class PlantServiceImpl implements PlantService {
         Identification identification = Identification.builder()
                 .commonName(createPlantDTO.commonName())
                 .scientificName(createPlantDTO.scientificName())
-                .scientistSurnameInitial(createPlantDTO.lastNameScientific())
+                .scientistSurnameInitial(createPlantDTO.scientistSurnameInitial())
                 .family(family)
                 .build();
         identification.addClassifications(convertClassifications(createPlantDTO.classifications()));

@@ -3,6 +3,7 @@ package org.fdryt.ornamental.controller;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
 import org.fdryt.ornamental.service.ProductService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -36,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<ProductResponseDTO> findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<SingleProductResponseDTO> findById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
