@@ -2,8 +2,12 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fdryt.ornamental.domain.Family;
+import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -14,6 +18,7 @@ import java.util.Set;
 public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyRepository familyRepository;
+    private final ModelMapper familyMapper;
 
     @Override
     public Set<String> findAll() {
@@ -21,5 +26,14 @@ public class FamilyServiceImpl implements FamilyService {
         log.info("All families returned");
 
         return familiesObtained;
+    }
+
+    @Override
+    public FamilyResponseDTO create(CreateFamilyDTO createFamilyDTO) {
+        Family familyToPersist = familyMapper.map(createFamilyDTO, Family.class);
+        Family familyPersisted = familyRepository.save(familyToPersist);
+        log.info("Family with name: {} persisted", createFamilyDTO.name());
+
+        return familyMapper.map(familyPersisted, FamilyResponseDTO.class);
     }
 }

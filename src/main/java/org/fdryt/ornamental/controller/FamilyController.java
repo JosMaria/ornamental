@@ -1,12 +1,11 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -17,6 +16,11 @@ import java.util.Set;
 public class FamilyController {
 
     private final FamilyService familyService;
+
+    @PostMapping
+    public ResponseEntity<FamilyResponseDTO> create(@RequestBody CreateFamilyDTO createFamilyDTO) {
+        return ResponseEntity.ok(familyService.create(createFamilyDTO));
+    }
 
     @GetMapping
     public ResponseEntity<Set<String>> findAll() {
