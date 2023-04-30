@@ -3,7 +3,6 @@ package org.fdryt.ornamental.repository;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.domain.Status;
-import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

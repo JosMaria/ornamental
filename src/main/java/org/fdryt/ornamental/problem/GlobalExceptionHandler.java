@@ -3,6 +3,7 @@ package org.fdryt.ornamental.problem;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
+import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
 import org.fdryt.ornamental.problem.exception.EnumNotPresentException;
 import org.fdryt.ornamental.problem.response.ErrorResponse;
 import org.fdryt.ornamental.problem.response.ProcessErrorResponse;
@@ -26,17 +27,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DomainNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainNotFoundException(DomainNotFoundException exception, HttpServletRequest request) {
         log.warn(exception.getMessage());
-
-        return ResponseEntity
-                .badRequest()
-                .body(ProcessErrorResponse.builder()
-                        .timestamp(LocalDateTime.now())
-                        .value(httpStatusBadRequest.value())
-                        .name(httpStatusBadRequest.name())
-                        .path(request.getRequestURI())
-                        .reason(exception.getMessage())
-                        .build()
-                );
+        return responseBadRequest(request.getRequestURI(), exception.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -63,16 +54,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EnumNotPresentException.class)
     public ResponseEntity<ErrorResponse> handleEnumNotPresentException(EnumNotPresentException exception, HttpServletRequest request) {
         log.warn(exception.getMessage());
+        return responseBadRequest(request.getRequestURI(), exception.getMessage());
+    }
 
-        return ResponseEntity
-                .badRequest()
+    @ExceptionHandler(EntityAlreadyException.class)
+    public ResponseEntity<ErrorResponse> handleEntityAlreadyException(EntityAlreadyException exception, HttpServletRequest request) {
+        log.warn(exception.getMessage());
+        return responseBadRequest(request.getRequestURI(), exception.getMessage());
+    }
+
+    private ResponseEntity<ErrorResponse> responseBadRequest(String pathUri, String exceptionMessage) {
+        return ResponseEntity.badRequest()
                 .body(ProcessErrorResponse.builder()
                         .timestamp(LocalDateTime.now())
                         .value(httpStatusBadRequest.value())
                         .name(httpStatusBadRequest.name())
-                        .path(request.getRequestURI())
-                        .reason(exception.getMessage())
-                        .build()
-                );
+                        .path(pathUri)
+                        .reason(exceptionMessage)
+                        .build());
     }
 }

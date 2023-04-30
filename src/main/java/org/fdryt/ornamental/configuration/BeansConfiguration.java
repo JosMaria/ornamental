@@ -1,10 +1,12 @@
 package org.fdryt.ornamental.configuration;
 
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -85,6 +87,11 @@ public class BeansConfiguration {
                         .map(Picture::getUrl)
                         .orElse("https://picture-404");
 
+        Converter<Set<Picture>, Set<String>> toUrlPictures = mappingContext ->
+                mappingContext.getSource().stream()
+                        .map(Picture::getUrl)
+                        .collect(Collectors.toSet());
+
         modelMapper.createTypeMap(Plant.class, ItemToListResponseDTO.class)
                 .addMapping(Plant::getId, ItemToListResponseDTO::setId)
                 .addMapping(src -> src.getIdentification().getCommonName(), ItemToListResponseDTO::setCommonName)
@@ -109,6 +116,36 @@ public class BeansConfiguration {
                 .addMappings(propertyMap -> propertyMap.using(toUrlFirstPicture)
                         .map(Plant::getPictures, ProductResponseDTO::setFirstUrlPicture)
                 );
+
+        modelMapper.createTypeMap(Plant.class, SingleProductResponseDTO.class)
+                .addMapping(Plant::getId, ItemToListResponseDTO::setId)
+                .addMapping(src -> src.getIdentification().getCommonName(), SingleProductResponseDTO::setCommonName)
+                .addMapping(src -> src.getIdentification().getScientificName(), SingleProductResponseDTO::setScientificName)
+                .addMapping(src -> src.getIdentification().getScientistSurnameInitial(), SingleProductResponseDTO::setScientistSurnameInitial)
+                .addMapping(Plant::getStatus, SingleProductResponseDTO::setStatus)
+                .addMapping(src -> {
+                    Family family = src.getIdentification().getFamily();
+                    return family != null ? family.getName() : "";
+                }, SingleProductResponseDTO::setFamilyName)
+                .addMappings(propertyMap -> propertyMap.using(toUrlPictures)
+                        .map(Plant::getPictures, SingleProductResponseDTO::setUrlPictures)
+                );
+
+        return modelMapper;
+    }
+
+    @Bean("familyMapper")
+    public ModelMapper familyMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
+        modelMapper.addConverter(new AbstractConverter<CreateFamilyDTO, Family>() {
+            @Override
+            protected Family convert(CreateFamilyDTO createFamilyDTO) {
+                return Family.builder()
+                        .name(createFamilyDTO.name())
+                        .build();
+            }
+        });
 
         return modelMapper;
     }

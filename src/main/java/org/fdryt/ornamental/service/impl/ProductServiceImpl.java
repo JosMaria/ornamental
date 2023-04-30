@@ -7,6 +7,7 @@ import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.domain.Status;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
+import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.ProductService;
@@ -58,12 +59,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO findById(Integer id) {
+    public SingleProductResponseDTO findById(Integer id) {
         Plant plantObtained = plantRepository.findById(id)
                 .orElseThrow(() -> new DomainNotFoundException(Plant.class, "ID", id));
         log.info("Plant returned with ID: {}", id);
 
-        return productMapper.map(plantObtained, ProductResponseDTO.class);
+        return productMapper.map(plantObtained, SingleProductResponseDTO.class);
     }
 
     @Override

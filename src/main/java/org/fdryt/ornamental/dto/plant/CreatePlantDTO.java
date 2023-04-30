@@ -9,7 +9,7 @@ public record CreatePlantDTO(
         String commonName,
 
         String scientificName,
-        Character lastNameScientific,
+        Character scientistSurnameInitial,
         String family,
         Set<String> classifications,
 
