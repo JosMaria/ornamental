@@ -19,7 +19,7 @@ public class Family {
     @SequenceGenerator(name = "family_sequence", sequenceName = "family_sequence", allocationSize = 1)
     private Integer id;
 
-//    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 50)
     private String name;
 
     public Family(String name) {
