@@ -8,6 +8,7 @@ import org.fdryt.ornamental.auth.dto.AuthResponseDTO;
 import org.fdryt.ornamental.auth.dto.RegisterRequestDTO;
 import org.fdryt.ornamental.auth.repository.UserRepository;
 import org.fdryt.ornamental.auth.service.AuthService;
+import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
 import org.fdryt.ornamental.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
         if (userRepository.existsByUsername(registerRequestDTO.username())) {
-            throw new IllegalArgumentException(String.format("username: %s already exists", registerRequestDTO.username()));
+            throw new EntityAlreadyException(User.class, registerRequestDTO.username());
 
         } else {
             User userToPersist = registerDTOToUserEntity(registerRequestDTO);
