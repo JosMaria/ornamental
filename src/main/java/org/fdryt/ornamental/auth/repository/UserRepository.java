@@ -1,7 +1,6 @@
-package org.fdryt.ornamental.repository.auth;
+package org.fdryt.ornamental.auth.repository;
 
-
-import org.fdryt.ornamental.domain.auth.User;
+import org.fdryt.ornamental.auth.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

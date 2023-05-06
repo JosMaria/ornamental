@@ -1,12 +1,11 @@
-package org.fdryt.ornamental.controller.auth;
+package org.fdryt.ornamental.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/v1/auth")
-public class AuthenticationController {
-
+public class AuthController {
 }
