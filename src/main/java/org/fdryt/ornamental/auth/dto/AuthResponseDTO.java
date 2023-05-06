@@ -1,4 +1,3 @@
 package org.fdryt.ornamental.auth.dto;
 
-public class AuthResponseDTO {
-}
+public record AuthResponseDTO(String token) { }
