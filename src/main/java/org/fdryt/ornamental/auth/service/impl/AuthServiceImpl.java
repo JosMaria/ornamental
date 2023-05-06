@@ -40,8 +40,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO authenticate(AuthRequestDTO authRequestDTO) {
-        manager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
-        User userObtained = userRepository.findByUsername(authRequestDTO.getUsername())
+        manager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.username(), authRequestDTO.password()));
+        User userObtained = userRepository.findByUsername(authRequestDTO.username())
                 .orElseThrow(() -> new UsernameNotFoundException("Credentials incorrect"));
         String tokenGenerated = jwtService.generateToken(userObtained);
 
