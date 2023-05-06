@@ -1,7 +1,6 @@
 package org.fdryt.ornamental.auth.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.auth.domain.Role;
 import org.fdryt.ornamental.auth.domain.User;
 import org.fdryt.ornamental.auth.dto.AuthRequestDTO;
 import org.fdryt.ornamental.auth.dto.AuthResponseDTO;
@@ -10,10 +9,10 @@ import org.fdryt.ornamental.auth.repository.UserRepository;
 import org.fdryt.ornamental.auth.service.AuthService;
 import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
 import org.fdryt.ornamental.security.JwtService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -21,9 +20,9 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager manager;
+    private final ModelMapper userMapper;
 
     @Override
     public AuthResponseDTO register(RegisterRequestDTO registerRequestDTO) {
@@ -31,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
             throw new EntityAlreadyException(User.class, registerRequestDTO.username());
 
         } else {
-            User userToPersist = registerDTOToUserEntity(registerRequestDTO);
+            User userToPersist = userMapper.map(registerRequestDTO, User.class);
             User userPersisted = userRepository.save(userToPersist);
             String tokenGenerated = jwtService.generateToken(userPersisted);
 
@@ -47,17 +46,5 @@ public class AuthServiceImpl implements AuthService {
         String tokenGenerated = jwtService.generateToken(userObtained);
 
         return new AuthResponseDTO(tokenGenerated);
-    }
-
-    private User registerDTOToUserEntity(RegisterRequestDTO dto) {
-        return User.builder()
-                .username(dto.username())
-                .password(passwordEncoder.encode(dto.password()))
-                .isAccountNonExpired(true)
-                .isAccountNonLocked(true)
-                .isCredentialsNonExpired(true)
-                .isEnabled(true)
-                .role(Role.USER)
-                .build();
     }
 }
