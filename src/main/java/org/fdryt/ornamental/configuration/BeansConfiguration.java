@@ -1,7 +1,6 @@
 package org.fdryt.ornamental.configuration;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.auth.domain.Role;
 import org.fdryt.ornamental.auth.domain.User;
 import org.fdryt.ornamental.auth.dto.RegisterRequestDTO;
 import org.fdryt.ornamental.domain.*;
@@ -172,7 +171,7 @@ public class BeansConfiguration {
                         .isAccountNonLocked(true)
                         .isCredentialsNonExpired(true)
                         .isEnabled(true)
-                        .role(Role.USER)
+                        .role(source.role())
                         .build();
             }
         });

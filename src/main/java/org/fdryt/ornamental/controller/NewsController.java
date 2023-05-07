@@ -7,6 +7,7 @@ import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,44 +18,44 @@ import static org.springframework.http.HttpStatus.CREATED;
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/news")
+@RequestMapping("/api/v1/news")
 public class NewsController {
 
     private final NewsService newsService;
 
-    // TODO: endpoint private, only access with authorization
     @PostMapping
+    @PreAuthorize("hasAuthority('news:create')")
     public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid final CreateNewsDTO createNewsDTO) {
         return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
     }
 
-    // TODO: endpoint access public
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<NewsResponseDTO>> findAll() {
         return ResponseEntity.ok(newsService.findAll());
     }
 
-    // TODO: endpoint access public
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Integer id) {
         return ResponseEntity.ok(newsService.findById(id));
     }
 
-    // TODO: endpoint private, only access with authorization
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('news:delete')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") final Integer id) {
         newsService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // TODO: endpoint private, only access with authorization
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('news:update')")
     public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Integer id, @RequestBody @Valid final UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
     }
 
-    // TODO: endpoint private, only access with authorization
-    @PatchMapping("{id}")
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('news_fields:update')")
     public ResponseEntity<NewsResponseDTO> updateByFields(@PathVariable("id") Integer id, @RequestBody final Map<String, Object> fields) {
         return ResponseEntity.ok(newsService.updateByFields(id, fields));
     }

@@ -1,3 +1,5 @@
 package org.fdryt.ornamental.auth.dto;
 
-public record RegisterRequestDTO(String username, String password) { }
+import org.fdryt.ornamental.auth.domain.Role;
+
+public record RegisterRequestDTO(String username, String password, Role role) { }
