@@ -30,13 +30,11 @@ public class NewsController {
     }
 
     @GetMapping
-    @PreAuthorize("permitAll()")
     public ResponseEntity<List<NewsResponseDTO>> findAll() {
         return ResponseEntity.ok(newsService.findAll());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<NewsResponseDTO> findById(@PathVariable("id") final Integer id) {
         return ResponseEntity.ok(newsService.findById(id));
     }

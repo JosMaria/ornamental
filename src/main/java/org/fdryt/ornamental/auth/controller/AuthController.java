@@ -27,7 +27,6 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    @PreAuthorize("permitAll()")
     public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestDTO authRequestDTO) {
         return ResponseEntity.ok(authService.authenticate(authRequestDTO));
     }

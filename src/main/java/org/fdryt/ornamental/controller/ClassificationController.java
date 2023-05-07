@@ -20,7 +20,6 @@ public class ClassificationController {
     private final ClassificationService classificationService;
 
     @GetMapping
-    @PreAuthorize("permitAll()")
     public ResponseEntity<Set<String>> findAllByUtility() {
         return ResponseEntity.ok(classificationService.findAllByUtility());
     }
