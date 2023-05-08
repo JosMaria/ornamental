@@ -1,5 +1,8 @@
 package org.fdryt.ornamental.configuration;
 
+import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.auth.domain.User;
+import org.fdryt.ornamental.auth.dto.RegisterRequestDTO;
 import org.fdryt.ornamental.domain.*;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
@@ -13,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,8 +24,11 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static org.modelmapper.convention.MatchingStrategies.STRICT;
 
+@RequiredArgsConstructor
 @Configuration
 public class BeansConfiguration {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Bean("plantMapper")
     public ModelMapper plantMapper() {
@@ -143,6 +150,28 @@ public class BeansConfiguration {
             protected Family convert(CreateFamilyDTO createFamilyDTO) {
                 return Family.builder()
                         .name(createFamilyDTO.name())
+                        .build();
+            }
+        });
+
+        return modelMapper;
+    }
+
+    @Bean
+    public ModelMapper userMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(STRICT);
+        modelMapper.addConverter(new AbstractConverter<RegisterRequestDTO, User>() {
+            @Override
+            protected User convert(RegisterRequestDTO source) {
+                return User.builder()
+                        .username(source.username())
+                        .password(passwordEncoder.encode(source.password()))
+                        .isAccountNonExpired(true)
+                        .isAccountNonLocked(true)
+                        .isCredentialsNonExpired(true)
+                        .isEnabled(true)
+                        .role(source.role())
                         .build();
             }
         });
