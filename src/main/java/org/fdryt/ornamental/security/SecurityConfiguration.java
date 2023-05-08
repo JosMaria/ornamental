@@ -1,56 +1,44 @@
 package org.fdryt.ornamental.security;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.auth.AppUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@RequiredArgsConstructor
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private final PasswordEncoder passwordEncoder;
-    private final AppUserService appUserService;
-
-    private static final String CATALOG = "/api/v1/ornamental_plants/**";
-    private static final String CLASSIFICATIONS = "/api/v1/classifications";
+    private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        /*http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()*/
-        http/*.cors().and()*/
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(CATALOG, CLASSIFICATIONS).permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .httpBasic();
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(POST, "/api/v1/auth/authenticate").permitAll();
+                    auth.requestMatchers("/api/v1/products/**").permitAll();
+                    auth.requestMatchers(GET, "/api/v1/news/**").permitAll();
+                    auth.requestMatchers(GET, "/api/v1/classifications/**").permitAll();
+                    auth.anyRequest().authenticated();
+                })
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    @Primary
-    public AuthenticationManagerBuilder authenticationManager(AuthenticationManagerBuilder auth) {
-        return auth.authenticationProvider(daoAuthenticationProvider());
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(appUserService);
-        return provider;
     }
 }
