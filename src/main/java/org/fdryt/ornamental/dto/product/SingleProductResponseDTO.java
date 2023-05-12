@@ -14,4 +14,5 @@ import java.util.Set;
 public class SingleProductResponseDTO extends ItemToListResponseDTO {
 
     private Set<String> urlPictures;
+    private Set<String> classifications;
 }
