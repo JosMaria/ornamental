@@ -13,6 +13,8 @@ import org.fdryt.ornamental.service.PlantService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,16 @@ public class PlantServiceImpl implements PlantService {
         log.info("Plant with ID: {} deleted", id);
     }
 
+    @Override
+    public List<PlantResponseDTO> createAll(List<CreatePlantDTO> list) {
+        return list.stream()
+                .map(this::create)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     private Family findFamilyByNameOrThrowException(String name) {
-        return familyRepository.findByName(name)
-                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name));
+        return name != null ? familyRepository.findByName(name)
+                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name)) : null;
     }
 
     private Plant createPlant(CreatePlantDTO createPlantDTO, Family family, Status status) {

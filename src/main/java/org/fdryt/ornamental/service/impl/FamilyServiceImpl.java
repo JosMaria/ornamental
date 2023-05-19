@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static java.lang.String.format;
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
