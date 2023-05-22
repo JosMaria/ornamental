@@ -5,6 +5,7 @@ import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
 import org.fdryt.ornamental.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,13 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/identifications")
-    public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 30) Pageable pageable) {
+    public ResponseEntity<Page<ItemToListResponseDTO>> findAllItemsToList(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(productService.findAllItemsToList(pageable));
     }
 
     @GetMapping("/identifications/status/{status}")
         public ResponseEntity<List<ItemToListResponseDTO>> findAllItemsToListByStatus(
-            @PathVariable("status") String status, @PageableDefault(size = 30) Pageable pageable) {
+            @PathVariable("status") String status, @PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(productService.findAllItemsToListByStatus(status, pageable));
     }
 
@@ -43,7 +44,7 @@ public class ProductController {
 
     @GetMapping("/classifications/{classification}")
     public ResponseEntity<List<ProductResponseDTO>> findAllByClassification(
-            @PathVariable("classification") String classification, @PageableDefault(size = 30) Pageable pageable) {
+            @PathVariable("classification") String classification, @PageableDefault(size = 12) Pageable pageable) {
         return ResponseEntity.ok(productService.findAllByClassification(classification, pageable));
     }
 }
