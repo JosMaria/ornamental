@@ -10,14 +10,19 @@ import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.NewsRepository;
 import org.fdryt.ornamental.service.NewsService;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,13 +42,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsResponseDTO> findAll() {
-        List<News> newsList = newsRepository.findAll();
-        log.info("All news returned");
-
-        return newsList.stream()
+    public Page<NewsResponseDTO> findAll(Pageable pageable) {
+        Page<News> newsObtainedPage = newsRepository.findAll(pageable);
+        // TODO: log message
+        List<NewsResponseDTO> list = newsObtainedPage.stream()
                 .map(news -> newsMapper.map(news, NewsResponseDTO.class))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        return new PageImpl<>(list, pageable, newsObtainedPage.getTotalElements());
     }
 
     @Override

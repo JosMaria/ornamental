@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -99,6 +100,12 @@ public class BeansConfiguration {
                         .map(Picture::getUrl)
                         .collect(Collectors.toSet());
 
+        Converter<Set<Classification>, Set<String>> toSetStrings = mappingContext ->
+                mappingContext.getSource().stream()
+                                .map(classification -> classification.getUtility().name())
+                                .collect(Collectors.toCollection(HashSet::new));
+
+
         modelMapper.createTypeMap(Plant.class, ItemToListResponseDTO.class)
                 .addMapping(Plant::getId, ItemToListResponseDTO::setId)
                 .addMapping(src -> src.getIdentification().getCommonName(), ItemToListResponseDTO::setCommonName)
@@ -135,8 +142,9 @@ public class BeansConfiguration {
                     return family != null ? family.getName() : "";
                 }, SingleProductResponseDTO::setFamilyName)
                 .addMappings(propertyMap -> propertyMap.using(toUrlPictures)
-                        .map(Plant::getPictures, SingleProductResponseDTO::setUrlPictures)
-                );
+                        .map(Plant::getPictures, SingleProductResponseDTO::setUrlPictures))
+                .addMappings(propertyMap -> propertyMap.using(toSetStrings)
+                        .map(source -> source.getIdentification().getClassifications(), SingleProductResponseDTO::setClassifications));
 
         return modelMapper;
     }
