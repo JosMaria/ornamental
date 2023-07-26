@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
@@ -24,6 +26,11 @@ public class PlantController {
     @PreAuthorize("hasAuthority('plant:create')")
     public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
         return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
+    }
+
+    @PostMapping("/all")
+    public ResponseEntity<List<PlantResponseDTO>> createAll(@RequestBody List<CreatePlantDTO> list) {
+        return new ResponseEntity<>(plantService.createAll(list), CREATED);
     }
 
     @DeleteMapping("/{id}")
