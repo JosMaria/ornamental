@@ -11,4 +11,3 @@ public class  MyIdentification {
     @Embedded
     private ScientificName scientificName;
 }
-

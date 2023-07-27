@@ -3,6 +3,7 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.dto.MyCreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
@@ -52,6 +53,15 @@ public class PlantServiceImpl implements PlantService {
         return list.stream()
                 .map(this::create)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public void createComplete(final MyCreatePlantDTO createPlantDTO) {
+        log.info("Ready for create the plant with common name: {}", createPlantDTO.commonName());
+
+
+        log.info("Plant with ID: {} persisted", 0);
+
     }
 
     private Family findFamilyByNameOrThrowException(String name) {

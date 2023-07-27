@@ -18,5 +18,4 @@ public class MyPlant {
     @Embedded
     private MyIdentification identification;
     private List<String> notes;
-    private List<String> details;
 }
