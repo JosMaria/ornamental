@@ -34,8 +34,4 @@ public class Plant {
     @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
     private final Set<Picture> pictures = new HashSet<>();
 
-    public Plant(Identification identification, Status status) {
-        this.identification = identification;
-        this.status = status;
-    }
 }
