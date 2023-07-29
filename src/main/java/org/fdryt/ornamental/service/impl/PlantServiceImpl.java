@@ -3,12 +3,17 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.domain.plant.MyIdentification;
+import org.fdryt.ornamental.domain.plant.MyPlant;
+import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.MyCreatePlantDTO;
+import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
+import org.fdryt.ornamental.repository.MyPlantRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.modelmapper.ModelMapper;
@@ -30,6 +35,7 @@ public class PlantServiceImpl implements PlantService {
     private final FamilyRepository familyRepository;
     private final ClassificationRepository classificationRepository;
     private final ModelMapper plantMapper;
+    private final MyPlantRepository myPlantRepository;
 
     @Override
     public PlantResponseDTO create(final CreatePlantDTO createPlantDTO) {
@@ -56,12 +62,40 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public void createComplete(final MyCreatePlantDTO createPlantDTO) {
+    public MyPlantResponseDTO createComplete(final MyCreatePlantDTO createPlantDTO) {
         log.info("Ready for create the plant with common name: {}", createPlantDTO.commonName());
 
+        MyPlant plantToPersist = toMyPlant(createPlantDTO);
+        MyPlant plantPersisted = myPlantRepository.add(plantToPersist);
 
-        log.info("Plant with ID: {} persisted", 0);
+        log.info("Plant with ID: {} persisted", plantPersisted);
+        MyPlantResponseDTO response = toMyPlantResponseDTO(plantPersisted);
+        return response;
+    }
 
+    private MyPlant toMyPlant(MyCreatePlantDTO dto) {
+        ScientificName scientificName = ScientificName.builder()
+                .name(dto.scientificName())
+                .scientistLastnameInitial(dto.scientistLastnameInitial())
+                .build();
+
+        MyIdentification identification = new MyIdentification();
+        identification.setCommonName(dto.commonName());
+        identification.setScientificName(scientificName);
+
+        return MyPlant.builder()
+                .identification(identification)
+                .notes(dto.notes())
+                .build();
+    }
+
+    private MyPlantResponseDTO toMyPlantResponseDTO(MyPlant plant) {
+        MyPlantResponseDTO response = new MyPlantResponseDTO();
+        response.setId(plant.getId());
+        response.setCommonName(plant.getIdentification().getCommonName());
+        response.setScientificName(plant.getIdentification().getScientificName().toString());
+        response.setNotes(plant.getNotes());
+        return response;
     }
 
     private Family findFamilyByNameOrThrowException(String name) {

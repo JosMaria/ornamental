@@ -1,8 +1,8 @@
 package org.fdryt.ornamental.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.MyCreatePlantDTO;
+import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
@@ -42,8 +42,7 @@ public class PlantController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody MyCreatePlantDTO createPlantDTO) {
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<MyPlantResponseDTO> create(@RequestBody MyCreatePlantDTO createPlantDTO) {
+        return new ResponseEntity<>(plantService.createComplete(createPlantDTO), CREATED);
     }
 }

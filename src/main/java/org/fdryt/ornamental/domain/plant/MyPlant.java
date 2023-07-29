@@ -2,14 +2,19 @@ package org.fdryt.ornamental.domain.plant;
 
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.List;
+import java.util.Collection;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@Getter
+@Builder
 @Entity
 @Table(name = "my_plants")
 public class MyPlant {
+
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "my_plant_sequence")
     @SequenceGenerator(name = "my_plant_sequence", sequenceName = "my_plant_sequence", allocationSize = 1)
@@ -17,5 +22,6 @@ public class MyPlant {
 
     @Embedded
     private MyIdentification identification;
-    private List<String> notes;
+
+    private Collection<String> notes;
 }
