@@ -2,7 +2,7 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.News;
+import org.fdryt.ornamental.domain.news.News;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
@@ -70,7 +70,6 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsResponseDTO update(final Integer id, final UpdateNewsDTO updateNewsDTO) {
         News newsObtained = findByIdOrThrowException(id);
-        newsObtained.setUrlImage(updateNewsDTO.urlImage());
         newsObtained.setTitle(updateNewsDTO.title());
         newsObtained.setDescription(updateNewsDTO.description());
         log.info("Updated news with ID: {}", id);

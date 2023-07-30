@@ -1,27 +1,16 @@
 package org.fdryt.ornamental.repository;
 
-import org.fdryt.ornamental.domain.Family;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.fdryt.ornamental.commons.repository.NurseryRepository;
+import org.fdryt.ornamental.domain.plant.MyFamily;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-public interface FamilyRepository extends JpaRepository<Family, Integer> {
+public interface FamilyRepository extends NurseryRepository<MyFamily, Integer> {
 
-    Optional<Family> findByName(String name);
+    boolean existsByName(String name);
 
-    @Query("""
-            SELECT f.name
-            FROM Family f""")
-    Set<String> findAllNames();
+    List<String> getAllNames();
 
-    @Query("""
-            SELECT CASE WHEN COUNT(f) > 0
-                THEN TRUE
-                ELSE FALSE END
-            FROM Family f
-            WHERE f.name = :name""")
-    boolean existsByName(@Param("name") String name);
+    Optional<MyFamily> findByName(String name);
 }

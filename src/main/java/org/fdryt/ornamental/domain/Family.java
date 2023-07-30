@@ -21,8 +21,4 @@ public class Family {
 
     @Column(unique = true, length = 50)
     private String name;
-
-    public Family(String name) {
-        this.name = name;
-    }
 }
