@@ -7,7 +7,7 @@ import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
-import org.fdryt.ornamental.repository.MyFamilyRepository;
+import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class FamilyServiceImpl implements FamilyService {
 
-    private final MyFamilyRepository familyRepository;
+    private final FamilyRepository familyRepository;
 
     @Override
     public FamilyResponseDTO create(final CreateFamilyDTO payload) {

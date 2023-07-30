@@ -3,6 +3,7 @@ package org.fdryt.ornamental.commons.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;

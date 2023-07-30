@@ -3,13 +3,14 @@ package org.fdryt.ornamental.repository.impl;
 import jakarta.persistence.EntityManager;
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
 import org.fdryt.ornamental.domain.plant.MyFamily;
-import org.fdryt.ornamental.repository.MyFamilyRepository;
+import org.fdryt.ornamental.repository.FamilyRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements MyFamilyRepository {
+public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements FamilyRepository {
 
     protected FamilyRepositoryImpl(EntityManager em) {
         super(em, MyFamily.class);
@@ -41,5 +42,19 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
 
         return em.createQuery(jpqlQuery, String.class)
                 .getResultList();
+    }
+
+    @Override
+    public Optional<MyFamily> findByName(String name) {
+        var jpqlQuery = """
+                SELECT f
+                FROM MyFamily f
+                WHERE f.name = :name
+                """;
+
+        return em.createQuery(jpqlQuery, MyFamily.class)
+                .setParameter("name", name)
+                .getResultStream()
+                .findFirst();
     }
 }

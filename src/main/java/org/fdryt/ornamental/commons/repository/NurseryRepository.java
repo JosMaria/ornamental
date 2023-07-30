@@ -23,7 +23,8 @@ public interface NurseryRepository<TEntity, ID extends Serializable> {
 
     /**
      * Gets the entity for the given ID. If it does not exist, then it will return an empty {@link Optional} result.
-     *
+     *    public abstract Optional<MyFamily> findByName(String name);
+
      * @param id the entity identifier.
      * @return {@link Optional} of the TEntity
      */

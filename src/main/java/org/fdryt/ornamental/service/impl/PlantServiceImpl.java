@@ -12,7 +12,6 @@ import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.repository.ClassificationRepository;
-import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.MyPlantRepository;
 import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
@@ -32,7 +31,6 @@ import static org.fdryt.ornamental.utils.Utils.convertToEnum;
 public class PlantServiceImpl implements PlantService {
 
     private final PlantRepository plantRepository;
-    private final FamilyRepository familyRepository;
     private final ClassificationRepository classificationRepository;
     private final ModelMapper plantMapper;
     private final MyPlantRepository myPlantRepository;
@@ -99,8 +97,9 @@ public class PlantServiceImpl implements PlantService {
     }
 
     private Family findFamilyByNameOrThrowException(String name) {
-        return name != null ? familyRepository.findByName(name)
-                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name)) : null;
+        return null;
+//        return name != null ? familyRepository.findByName(name)
+//                .orElseThrow(() -> new DomainNotFoundException(Family.class, "name",  name)) : null;
     }
 
     private Plant createPlant(CreatePlantDTO createPlantDTO, Family family, Status status) {
