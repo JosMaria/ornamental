@@ -7,6 +7,8 @@ import org.fdryt.ornamental.repository.MyFamilyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class MyFamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements MyFamilyRepository {
 
@@ -18,16 +20,28 @@ public class MyFamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamil
     @Override
     public boolean existsByName(String name) {
         var jpqlQuery = """
-            SELECT
-                CASE WHEN COUNT(f) > 0
-                    THEN TRUE
-                    ELSE FALSE
-                END
-            FROM MyFamily f
-            WHERE f.name = :name""";
+                SELECT
+                    CASE WHEN COUNT(f) > 0
+                        THEN TRUE
+                        ELSE FALSE
+                    END
+                FROM MyFamily f
+                WHERE f.name = :name
+                """;
 
         return em.createQuery(jpqlQuery, Boolean.class)
                 .setParameter("name", name)
                 .getSingleResult();
+    }
+
+    @Override
+    public List<String> getAllNames() {
+        var jpqlQuery = """
+                SELECT f.name
+                FROM MyFamily f
+                """;
+
+        return em.createQuery(jpqlQuery, String.class)
+                .getResultList();
     }
 }

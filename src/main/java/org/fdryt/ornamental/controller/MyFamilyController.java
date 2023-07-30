@@ -6,10 +6,10 @@ import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.MyFamilyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -23,5 +23,10 @@ public class MyFamilyController {
     @PostMapping
     public ResponseEntity<FamilyResponseDTO> create(@RequestBody @Valid CreateFamilyDTO payload) {
         return new ResponseEntity<>(familyService.create(payload), CREATED);
+    }
+
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getAllNames() {
+        return ResponseEntity.ok(familyService.getAllNames());
     }
 }

@@ -11,6 +11,8 @@ import org.fdryt.ornamental.repository.MyFamilyRepository;
 import org.fdryt.ornamental.service.MyFamilyService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -24,13 +26,22 @@ public class MyFamilyServiceImpl implements MyFamilyService {
             throw new EntityAlreadyException(Family.class, payload.name());
         }
 
-        MyFamily familyTOPersist = toMyFamily(payload);
-        MyFamily familyPersisted = familyRepository.add(familyTOPersist);
+        MyFamily familyToPersist = toMyFamily(payload);
+        MyFamily familyPersisted = familyRepository.add(familyToPersist);
         log.info("Family with name: {} persisted", familyPersisted);
 
         return toFamilyResponseDTO(familyPersisted);
     }
 
+    @Override
+    public List<String> getAllNames() {
+        List<String> allNames = familyRepository.getAllNames();
+        log.info("Get all names of the families");
+
+        return allNames;
+    }
+
+    // TODO: delete methods below when I create the mapper
     private MyFamily toMyFamily(CreateFamilyDTO dto) {
         MyFamily family = new MyFamily();
         family.setName(dto.name());
