@@ -3,6 +3,7 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.Family;
+import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
@@ -23,7 +24,25 @@ public class MyFamilyServiceImpl implements MyFamilyService {
             throw new EntityAlreadyException(Family.class, payload.name());
         }
 
-        log.info("Podemos crear la familia");
-        return null;
+        MyFamily familyTOPersist = toMyFamily(payload);
+        MyFamily familyPersisted = familyRepository.add(familyTOPersist);
+        log.info("Family with name: {} persisted", familyPersisted);
+
+        return toFamilyResponseDTO(familyPersisted);
+    }
+
+    private MyFamily toMyFamily(CreateFamilyDTO dto) {
+        MyFamily family = new MyFamily();
+        family.setName(dto.name());
+
+        return family;
+    }
+
+    private FamilyResponseDTO toFamilyResponseDTO(MyFamily entity) {
+        FamilyResponseDTO response = new FamilyResponseDTO();
+        response.setId(entity.getId());
+        response.setName(entity.getName());
+
+        return response;
     }
 }

@@ -1,6 +1,9 @@
 package org.fdryt.ornamental.repository;
 
-public interface MyFamilyRepository {
+import org.fdryt.ornamental.commons.repository.NurseryRepository;
+import org.fdryt.ornamental.domain.plant.MyFamily;
+
+public interface MyFamilyRepository extends NurseryRepository<MyFamily, Integer> {
 
     boolean existsByName(String name);
 }
