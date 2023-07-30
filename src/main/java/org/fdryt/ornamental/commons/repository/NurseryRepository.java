@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.commons.repository;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -35,6 +36,14 @@ public interface NurseryRepository<TEntity, ID extends Serializable> {
      * @return the persisted entity.
      */
     TEntity add(TEntity entity);
+
+    /**
+     * Adds new records to the database table based on the given entities passed as parameter.
+     *
+     * @param entities the collection of entities.
+     * @return the persisted entities.
+     */
+    Collection<TEntity> addAll(Collection<TEntity> entities);
 
     /**
      * Updates an existing entity with the new information.

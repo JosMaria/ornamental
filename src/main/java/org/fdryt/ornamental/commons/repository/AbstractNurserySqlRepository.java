@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -79,6 +80,16 @@ public abstract class AbstractNurserySqlRepository<TEntity, ID extends Serializa
     public TEntity add(TEntity entity) {
         em.persist(entity);
         return entity;
+    }
+
+    @Transactional
+    @Override
+    public Collection<TEntity> addAll(Collection<TEntity> entities) {
+        for (TEntity family: entities) {
+            em.persist(family);
+        }
+
+        return entities;
     }
 
     /**

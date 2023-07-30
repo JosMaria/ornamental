@@ -4,18 +4,14 @@ import jakarta.persistence.EntityManager;
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
 import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.fdryt.ornamental.repository.MyFamilyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
-public class MyFamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements MyFamilyRepository {
+public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements MyFamilyRepository {
 
-    @Autowired
-    protected MyFamilyRepositoryImpl(EntityManager em) {
+    protected FamilyRepositoryImpl(EntityManager em) {
         super(em, MyFamily.class);
     }
 
@@ -45,15 +41,5 @@ public class MyFamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamil
 
         return em.createQuery(jpqlQuery, String.class)
                 .getResultList();
-    }
-
-    @Transactional
-    @Override
-    public Collection<MyFamily> addAll(Collection<MyFamily> families) {
-        for (MyFamily family: families) {
-            em.persist(family);
-        }
-
-        return families;
     }
 }

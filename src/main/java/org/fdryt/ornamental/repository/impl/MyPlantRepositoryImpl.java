@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MyPlantRepositoryImpl extends AbstractNurserySqlRepository<MyPlant, Integer> implements MyPlantRepository {
 
-    @Autowired
     public MyPlantRepositoryImpl(EntityManager em) {
         super(em, MyPlant.class);
     }
