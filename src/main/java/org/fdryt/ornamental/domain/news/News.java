@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.domain;
+package org.fdryt.ornamental.domain.news;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,8 +22,6 @@ public class News {
     @GeneratedValue(strategy = SEQUENCE, generator = "news_sequence")
     @SequenceGenerator(name = "news_sequence", sequenceName = "news_sequence", allocationSize = 1)
     private Integer id;
-
-    private String urlImage;
 
     @Column(nullable = false)
     private String title;

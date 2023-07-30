@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.auth.domain.User;
 import org.fdryt.ornamental.auth.dto.RegisterRequestDTO;
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.domain.news.News;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
@@ -74,7 +75,6 @@ public class BeansConfiguration {
             @Override
             protected News convert(CreateNewsDTO source) {
                 return News.builder()
-                        .urlImage(source.urlImage())
                         .title(source.title())
                         .description(source.description())
                         .build();

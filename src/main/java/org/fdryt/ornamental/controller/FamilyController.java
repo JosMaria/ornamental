@@ -1,33 +1,41 @@
 package org.fdryt.ornamental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
-@RestController
+import static org.springframework.http.HttpStatus.CREATED;
+
+// TODO: see authorizations
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/v1/families")
-@PreAuthorize("hasAnyRole('ADMINISTRATOR','ASSISTANT')")
 public class FamilyController {
 
     private final FamilyService familyService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('family:create')")
-    public ResponseEntity<FamilyResponseDTO> create(@RequestBody CreateFamilyDTO createFamilyDTO) {
-        return ResponseEntity.ok(familyService.create(createFamilyDTO));
+    public ResponseEntity<FamilyResponseDTO> save(@RequestBody @Valid CreateFamilyDTO payload) {
+        return new ResponseEntity<>(familyService.create(payload), CREATED);
     }
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('family:read')")
-    public ResponseEntity<Set<String>> findAll() {
-        return ResponseEntity.ok(familyService.findAll());
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getAllNames() {
+        return ResponseEntity.ok(familyService.getAllNames());
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody List<CreateFamilyDTO> payload) {
+        return new ResponseEntity<>(familyService.createAllByName(payload), CREATED);
     }
 }

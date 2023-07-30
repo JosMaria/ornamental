@@ -1,7 +1,8 @@
 package org.fdryt.ornamental.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.MyCreatePlantDTO;
+import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
@@ -22,11 +23,11 @@ public class PlantController {
 
     private final PlantService plantService;
 
-    @PostMapping
-    @PreAuthorize("hasAuthority('plant:create')")
-    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
-        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
-    }
+//    @PostMapping
+//    @PreAuthorize("hasAuthority('plant:create')")
+//    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
+//        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
+//    }
 
     @PostMapping("/all")
     public ResponseEntity<List<PlantResponseDTO>> createAll(@RequestBody List<CreatePlantDTO> list) {
@@ -38,5 +39,10 @@ public class PlantController {
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         plantService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<MyPlantResponseDTO> create(@RequestBody MyCreatePlantDTO createPlantDTO) {
+        return new ResponseEntity<>(plantService.createComplete(createPlantDTO), CREATED);
     }
 }
