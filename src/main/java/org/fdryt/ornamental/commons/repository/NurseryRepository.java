@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.repository.commons;
+package org.fdryt.ornamental.commons.repository;
 
 import java.io.Serializable;
 import java.util.Optional;

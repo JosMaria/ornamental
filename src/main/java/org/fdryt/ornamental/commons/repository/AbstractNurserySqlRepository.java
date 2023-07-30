@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.commons;
+package org.fdryt.ornamental.commons.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
