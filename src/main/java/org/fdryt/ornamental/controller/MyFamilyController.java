@@ -21,12 +21,17 @@ public class MyFamilyController {
     private final MyFamilyService familyService;
 
     @PostMapping
-    public ResponseEntity<FamilyResponseDTO> create(@RequestBody @Valid CreateFamilyDTO payload) {
+    public ResponseEntity<FamilyResponseDTO> save(@RequestBody @Valid CreateFamilyDTO payload) {
         return new ResponseEntity<>(familyService.create(payload), CREATED);
     }
 
     @GetMapping("/names")
     public ResponseEntity<List<String>> getAllNames() {
         return ResponseEntity.ok(familyService.getAllNames());
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<Set<FamilyResponseDTO>> saveAll(@RequestBody Set<String> names) {
+        return new ResponseEntity<>(familyService.createAllByName(names), CREATED);
     }
 }

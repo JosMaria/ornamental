@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,4 +25,8 @@ public class MyFamily {
 
     @Column(unique = true, length = 50)
     private String name;
+
+    public MyFamily(String name) {
+        this.name = name;
+    }
 }
