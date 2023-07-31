@@ -52,9 +52,10 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
                 WHERE f.name = :name
                 """;
 
-        return em.createQuery(jpqlQuery, MyFamily.class)
+        MyFamily recordObtained = em.createQuery(jpqlQuery, MyFamily.class)
                 .setParameter("name", name)
-                .getResultStream()
-                .findFirst();
+                .getSingleResult();
+
+        return Optional.of(recordObtained);
     }
 }

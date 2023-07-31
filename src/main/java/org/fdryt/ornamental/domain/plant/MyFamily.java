@@ -8,12 +8,14 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "my_families")
 public class MyFamily {

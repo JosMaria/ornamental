@@ -3,6 +3,9 @@ package org.fdryt.ornamental.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.*;
+import org.fdryt.ornamental.domain.Classification;
+import org.fdryt.ornamental.domain.Status;
+import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.MyCreatePlantDTO;
 import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
@@ -28,44 +31,59 @@ import static org.fdryt.ornamental.utils.Utils.convertToEnum;
 public class PlantServiceImpl implements PlantService {
 
     private final PlantRepository plantRepository;
-    private final ClassificationRepository classificationRepository;
-    private final ModelMapper plantMapper;
 
     private final MyPlantRepository myPlantRepository;
     private final FamilyRepository familyRepository;
 
     @Override
     public MyPlantResponseDTO create(final MyCreatePlantDTO payload) {
-
+        // common name is unique so verify if exists
         if (myPlantRepository.existsByCommonName(payload.commonName())) {
             // TODO: change exception or create new type exception
             throw new IllegalArgumentException("Plant with this common name: %s already exists.".formatted(payload.commonName()));
         }
-//
-//        if (payload.nameFamily() != null) {
-//            MyFamily familyObtained = familyRepository.findByName(payload.nameFamily())
-//                    .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(payload.nameFamily())));
-//        }
-//        MyPlant plantToPersist = null;
-//        MyPlant plantPersisted = myPlantRepository.add(plantToPersist);
 
-//        log.info("Plant with ID: {} persisted", plantPersisted.getId());
-        log.info("successfully to persist");
-        return null;
+        // verify if given the family name exists
+        MyFamily familyObtained = null;
+        if (payload.nameFamily() != null) {
+            familyObtained = familyRepository.findByName(payload.nameFamily())
+                    .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(payload.nameFamily())));
+        }
+
+        // create entity Plant to persist
+        ScientificName scientificName = new ScientificName(payload.scientificName(), payload.scientistLastnameInitial());
+        FundamentalData fundamentalData = new FundamentalData();
+        fundamentalData.setCommonName(payload.commonName());
+        fundamentalData.setScientificName(scientificName);
+        fundamentalData.setClassifications(payload.classifications());
+        fundamentalData.setFamily(familyObtained);
+
+        AdditionalData additionalData = new AdditionalData();
+        additionalData.setDetails(payload.details());
+        additionalData.setNotes(payload.notes());
+
+        MyPlant plantToPersist = MyPlant.builder()
+                .fundamentalData(fundamentalData)
+                .additionalData(additionalData)
+                .status(payload.status())
+                .build();
+
+        MyPlant plantPersisted = myPlantRepository.add(plantToPersist);
+        log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
+
+        // map entity Plant to response DTO for the client
+        MyPlantResponseDTO plantResponseDTO = new MyPlantResponseDTO();
+        plantResponseDTO.setId(plantPersisted.getId());
+        plantResponseDTO.setCommonName(plantPersisted.getFundamentalData().getCommonName());
+        plantResponseDTO.setScientificName(plantPersisted.getFundamentalData().getScientificName().toString());
+        plantResponseDTO.setFamily(plantPersisted.getFundamentalData().getFamily().getName());
+        plantResponseDTO.setClassifications(plantPersisted.getFundamentalData().getClassifications());
+        plantResponseDTO.setStatus(plantPersisted.getStatus());
+        plantResponseDTO.setDetails(plantPersisted.getAdditionalData().getDetails());
+        plantResponseDTO.setNotes(plantPersisted.getAdditionalData().getNotes());
+
+        return plantResponseDTO;
     }
-
-
-
-//    @Override
-//    public PlantResponseDTO create(final CreatePlantDTO createPlantDTO) {
-//        Status status = convertToEnum(Status.class, createPlantDTO.status());
-//        Family familyObtained = findFamilyByNameOrThrowException(createPlantDTO.family());
-//        Plant plantToPersist = createPlant(createPlantDTO, familyObtained, status);
-//        Plant plantPersisted = plantRepository.save(plantToPersist);
-//        log.info("Plant with ID: {} persisted", plantPersisted.getId());
-//
-//        return plantMapper.map(plantPersisted, PlantResponseDTO.class);
-//    }
 
     @Override
     public void delete(final Integer id) {
@@ -79,70 +97,5 @@ public class PlantServiceImpl implements PlantService {
         /*return list.stream()
                 .map(this::create)
                 .collect(Collectors.toCollection(ArrayList::new));*/
-    }
-
-//    public MyPlantResponseDTO createComplete(final MyCreatePlantDTO createPlantDTO) {
-//        log.info("Ready for create the plant with common name: {}", createPlantDTO.commonName());
-//
-//        MyPlant plantToPersist = toMyPlant(createPlantDTO);
-//        MyPlant plantPersisted = myPlantRepository.add(plantToPersist);
-//
-//        log.info("Plant with ID: {} persisted", plantPersisted);
-//        MyPlantResponseDTO response = toMyPlantResponseDTO(plantPersisted);
-//        return response;
-//    }
-
-//    private MyPlant toMyPlant(MyCreatePlantDTO dto) {
-//        ScientificName scientificName = ScientificName.builder()
-//                .name(dto.scientificName())
-//                .scientistLastnameInitial(dto.scientistLastnameInitial())
-//                .build();
-//
-//        MyIdentification identification = new MyIdentification();
-//        identification.setCommonName(dto.commonName());
-//        identification.setScientificName(scientificName);
-//
-//        return MyPlant.builder()
-//                .identification(identification)
-//                .notes(dto.notes())
-//                .build();
-//    }
-//
-//    private MyPlantResponseDTO toMyPlantResponseDTO(MyPlant plant) {
-//        MyPlantResponseDTO response = new MyPlantResponseDTO();
-//        response.setId(plant.getId());
-//        response.setCommonName(plant.getIdentification().getCommonName());
-//        response.setScientificName(plant.getIdentification().getScientificName().toString());
-//        response.setNotes(plant.getNotes());
-//        return response;
-//    }
-
-
-    private Plant createPlant(CreatePlantDTO createPlantDTO, Family family, Status status) {
-        Identification identification = Identification.builder()
-                .commonName(createPlantDTO.commonName())
-                .scientificName(createPlantDTO.scientificName())
-                .scientistSurnameInitial(createPlantDTO.scientistSurnameInitial())
-                .family(family)
-                .build();
-        identification.addClassifications(convertClassifications(createPlantDTO.classifications()));
-
-        return Plant.builder()
-                .identification(identification)
-                .status(status)
-                .build();
-    }
-
-    private Set<Classification> convertClassifications(Set<String> classifications) {
-        return classifications.stream()
-                .map(this::findClassificationByUtility)
-                .collect(Collectors.toSet());
-    }
-
-    private Classification findClassificationByUtility(String classification) {
-        ClassificationByUtility utility = convertToEnum(ClassificationByUtility.class, classification);
-
-        return classificationRepository.findByUtility(utility)
-                .orElseThrow(() -> new DomainNotFoundException(Classification.class, classification, utility.name()));
     }
 }

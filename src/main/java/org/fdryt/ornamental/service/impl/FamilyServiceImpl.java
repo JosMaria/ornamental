@@ -28,7 +28,7 @@ public class FamilyServiceImpl implements FamilyService {
         verifyIfFamilyNameExists(payload.name());
         MyFamily familyToPersist = toMyFamily(payload);
         MyFamily familyPersisted = familyRepository.add(familyToPersist);
-        log.info("Family with name: {} persisted", familyPersisted);
+        log.info("Family with name: {} persisted", familyPersisted.getName());
 
         return toFamilyResponseDTO(familyPersisted);
     }
@@ -41,6 +41,7 @@ public class FamilyServiceImpl implements FamilyService {
         return allNames;
     }
 
+    // TODO: implement of other matter
     @Override
     public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
         payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
