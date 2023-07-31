@@ -1,11 +1,8 @@
 package org.fdryt.ornamental.domain.plant;
 
-
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.util.Collection;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -21,7 +18,12 @@ public class MyPlant {
     private Integer id;
 
     @Embedded
-    private MyIdentification identification;
+    private FundamentalData fundamentalData;
 
-    private Collection<String> notes;
+    @Embedded
+    private AdditionalData additionalData;
+
+    @Column(length = 15)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

@@ -23,6 +23,10 @@ public class PlantController {
 
     private final PlantService plantService;
 
+    @PostMapping
+    public ResponseEntity<MyPlantResponseDTO> save(@RequestBody MyCreatePlantDTO payload) {
+        return new ResponseEntity<>(plantService.create(payload), CREATED);
+    }
 //    @PostMapping
 //    @PreAuthorize("hasAuthority('plant:create')")
 //    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
@@ -39,10 +43,5 @@ public class PlantController {
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         plantService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping
-    public ResponseEntity<MyPlantResponseDTO> create(@RequestBody MyCreatePlantDTO createPlantDTO) {
-        return new ResponseEntity<>(plantService.createComplete(createPlantDTO), CREATED);
     }
 }

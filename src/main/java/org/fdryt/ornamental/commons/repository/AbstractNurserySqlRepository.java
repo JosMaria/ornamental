@@ -46,12 +46,12 @@ public abstract class AbstractNurserySqlRepository<TEntity, ID extends Serializa
     @Override
     public boolean exists(ID id) {
         var queryFormat = """
-            SELECT CASE WHEN COUNT(e)
+            SELECT CASE WHEN COUNT(e) > 0
                 THEN TRUE
                 ELSE FALSE
                 END
             FROM %s e
-            WHERE e.id =:id""".formatted(clazz.getSimpleName());
+            WHERE e.id = :id""".formatted(clazz.getSimpleName());
 
         return em.createQuery(queryFormat, Boolean.class)
                 .setParameter("id", id)

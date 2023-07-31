@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface PlantService {
 
-    PlantResponseDTO create(CreatePlantDTO createPlantDTO);
+    MyPlantResponseDTO create(MyCreatePlantDTO payload);
+//    PlantResponseDTO create(CreatePlantDTO createPlantDTO);
 
     void delete(Integer id);
 
     List<PlantResponseDTO> createAll(List<CreatePlantDTO> list);
-
-    MyPlantResponseDTO createComplete(MyCreatePlantDTO createPlantDTO);
 }

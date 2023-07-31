@@ -13,4 +13,20 @@ public class MyPlantRepositoryImpl extends AbstractNurserySqlRepository<MyPlant,
     public MyPlantRepositoryImpl(EntityManager em) {
         super(em, MyPlant.class);
     }
+
+    @Override
+    public boolean existsByCommonName(String commonName) {
+        var jpqlQuery = """
+            SELECT CASE WHEN COUNT(p) > 0
+                THEN TRUE
+                ELSE FALSE
+                END
+            FROM MyPlant p
+            WHERE p.fundamentalData.commonName = :commonName
+            """;
+
+        return em.createQuery(jpqlQuery, Boolean.class)
+                .setParameter("commonName", commonName)
+                .getSingleResult();
+    }
 }
