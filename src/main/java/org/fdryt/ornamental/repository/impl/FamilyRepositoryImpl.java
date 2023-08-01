@@ -1,6 +1,5 @@
 package org.fdryt.ornamental.repository.impl;
 
-import jakarta.persistence.EntityManager;
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
 import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.fdryt.ornamental.repository.FamilyRepository;
@@ -12,8 +11,8 @@ import java.util.Optional;
 @Repository
 public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements FamilyRepository {
 
-    protected FamilyRepositoryImpl(EntityManager em) {
-        super(em, MyFamily.class);
+    protected FamilyRepositoryImpl() {
+        super(MyFamily.class);
     }
 
     @Override
@@ -56,6 +55,6 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
                 .setParameter("name", name)
                 .getSingleResult();
 
-        return Optional.of(recordObtained);
+        return Optional.ofNullable(recordObtained);
     }
 }

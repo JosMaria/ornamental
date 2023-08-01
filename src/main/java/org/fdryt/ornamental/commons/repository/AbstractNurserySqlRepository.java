@@ -3,8 +3,7 @@ package org.fdryt.ornamental.commons.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
-import org.fdryt.ornamental.domain.plant.MyFamily;
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -29,11 +28,9 @@ public abstract class AbstractNurserySqlRepository<TEntity, ID extends Serializa
      * The protected constructor of the abstract repository which should receive as parameters
      * two important dependencies.
      *
-     * @param em Represents the {@link EntityManager} implementation.
      * @param clazz Is the {@link Class} of the concrete entity that will be managed by JPA.
      */
-    protected AbstractNurserySqlRepository(EntityManager em, Class<TEntity> clazz) {
-        this.em = em;
+    protected AbstractNurserySqlRepository(Class<TEntity> clazz) {
         this.clazz = clazz;
     }
 
@@ -83,11 +80,17 @@ public abstract class AbstractNurserySqlRepository<TEntity, ID extends Serializa
         return entity;
     }
 
+    /**
+     * Adds new records to the database table based on the given entities passed as parameter.
+     *
+     * @param entities the collection of entities.
+     * @return the persisted entities.
+     */
     @Transactional
     @Override
     public Collection<TEntity> addAll(Collection<TEntity> entities) {
-        for (TEntity family: entities) {
-            em.persist(family);
+        for (TEntity entity: entities) {
+            em.persist(entity);
         }
 
         return entities;
