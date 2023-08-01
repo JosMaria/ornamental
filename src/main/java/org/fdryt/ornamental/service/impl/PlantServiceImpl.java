@@ -2,43 +2,30 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.*;
-import org.fdryt.ornamental.domain.Classification;
-import org.fdryt.ornamental.domain.Status;
-import org.fdryt.ornamental.domain.plant.*;
-import org.fdryt.ornamental.dto.MyCreatePlantDTO;
-import org.fdryt.ornamental.dto.MyPlantResponseDTO;
+import org.fdryt.ornamental.domain.plant.AdditionalData;
+import org.fdryt.ornamental.domain.plant.FundamentalData;
+import org.fdryt.ornamental.domain.plant.MyFamily;
+import org.fdryt.ornamental.domain.plant.MyPlant;
+import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
-import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
-import org.fdryt.ornamental.repository.ClassificationRepository;
+import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.MyPlantRepository;
-import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.fdryt.ornamental.utils.Utils.convertToEnum;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class PlantServiceImpl implements PlantService {
 
-    private final PlantRepository plantRepository;
-
-    private final MyPlantRepository myPlantRepository;
+    private final MyPlantRepository plantRepository;
     private final FamilyRepository familyRepository;
 
     @Override
-    public MyPlantResponseDTO create(final MyCreatePlantDTO payload) {
+    public MyPlantResponseDTO create(final CreatePlantDTO payload) {
         // common name is unique so verify if exists
-        if (myPlantRepository.existsByCommonName(payload.commonName())) {
+        if (plantRepository.existsByCommonName(payload.commonName())) {
             // TODO: change exception or create new type exception
             throw new IllegalArgumentException("Plant with this common name: %s already exists.".formatted(payload.commonName()));
         }
@@ -68,7 +55,7 @@ public class PlantServiceImpl implements PlantService {
                 .status(payload.status())
                 .build();
 
-        MyPlant plantPersisted = myPlantRepository.add(plantToPersist);
+        MyPlant plantPersisted = plantRepository.add(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
         // map entity Plant to response DTO for the client
@@ -87,15 +74,7 @@ public class PlantServiceImpl implements PlantService {
 
     @Override
     public void delete(final Integer id) {
-        plantRepository.deleteById(id);
+        // TODO: will done
         log.info("Plant with ID: {} deleted", id);
-    }
-
-    @Override
-    public List<PlantResponseDTO> createAll(List<CreatePlantDTO> list) {
-        return null;
-        /*return list.stream()
-                .map(this::create)
-                .collect(Collectors.toCollection(ArrayList::new));*/
     }
 }

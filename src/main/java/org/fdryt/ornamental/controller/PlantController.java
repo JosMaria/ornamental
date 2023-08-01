@@ -1,16 +1,13 @@
 package org.fdryt.ornamental.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.dto.MyCreatePlantDTO;
-import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
+import org.fdryt.ornamental.dto.MyPlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -24,18 +21,8 @@ public class PlantController {
     private final PlantService plantService;
 
     @PostMapping
-    public ResponseEntity<MyPlantResponseDTO> save(@RequestBody MyCreatePlantDTO payload) {
+    public ResponseEntity<MyPlantResponseDTO> save(@RequestBody @Valid CreatePlantDTO payload) {
         return new ResponseEntity<>(plantService.create(payload), CREATED);
-    }
-//    @PostMapping
-//    @PreAuthorize("hasAuthority('plant:create')")
-//    public ResponseEntity<PlantResponseDTO> create(@RequestBody @Valid CreatePlantDTO createPlantDTO) {
-//        return new ResponseEntity<>(plantService.create(createPlantDTO), CREATED);
-//    }
-
-    @PostMapping("/all")
-    public ResponseEntity<List<PlantResponseDTO>> createAll(@RequestBody List<CreatePlantDTO> list) {
-        return new ResponseEntity<>(plantService.createAll(list), CREATED);
     }
 
     @DeleteMapping("/{id}")

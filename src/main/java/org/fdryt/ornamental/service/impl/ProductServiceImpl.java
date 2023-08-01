@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.ClassificationByUtility;
 import org.fdryt.ornamental.domain.Plant;
 import org.fdryt.ornamental.domain.Status;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
 import org.fdryt.ornamental.dto.product.ProductResponseDTO;
 import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
