@@ -3,7 +3,7 @@ package org.fdryt.ornamental.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.MyPlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +21,7 @@ public class PlantController {
     private final PlantService plantService;
 
     @PostMapping
-    public ResponseEntity<MyPlantResponseDTO> save(@RequestBody @Valid CreatePlantDTO payload) {
+    public ResponseEntity<PlantResponseDTO> save(@RequestBody @Valid CreatePlantDTO payload) {
         return new ResponseEntity<>(plantService.create(payload), CREATED);
     }
 

@@ -1,11 +1,11 @@
 package org.fdryt.ornamental.service;
 
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.MyPlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 
 public interface PlantService {
 
-    MyPlantResponseDTO create(CreatePlantDTO payload);
+    PlantResponseDTO create(CreatePlantDTO payload);
 
     void delete(Integer id);
 }

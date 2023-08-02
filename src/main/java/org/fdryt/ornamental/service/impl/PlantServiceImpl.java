@@ -8,7 +8,7 @@ import org.fdryt.ornamental.domain.plant.MyFamily;
 import org.fdryt.ornamental.domain.plant.MyPlant;
 import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.MyPlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.repository.MyPlantRepository;
 import org.fdryt.ornamental.service.PlantService;
@@ -23,7 +23,7 @@ public class PlantServiceImpl implements PlantService {
     private final FamilyRepository familyRepository;
 
     @Override
-    public MyPlantResponseDTO create(final CreatePlantDTO payload) {
+    public PlantResponseDTO create(final CreatePlantDTO payload) {
         // common name is unique so verify if exists
         if (plantRepository.existsByCommonName(payload.commonName())) {
             // TODO: change exception or create new type exception
@@ -59,7 +59,7 @@ public class PlantServiceImpl implements PlantService {
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
         // map entity Plant to response DTO for the client
-        MyPlantResponseDTO plantResponseDTO = new MyPlantResponseDTO();
+        PlantResponseDTO plantResponseDTO = new PlantResponseDTO();
         plantResponseDTO.setId(plantPersisted.getId());
         plantResponseDTO.setCommonName(plantPersisted.getFundamentalData().getCommonName());
         plantResponseDTO.setScientificName(plantPersisted.getFundamentalData().getScientificName().toString());
