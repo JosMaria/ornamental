@@ -6,16 +6,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "my_families")
 public class MyFamily {
@@ -25,7 +21,7 @@ public class MyFamily {
     @SequenceGenerator(name = "my_family_sequence", sequenceName = "my_family_sequence", allocationSize = 1)
     private Integer id;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true)
     private String name;
 
     public MyFamily(String name) {
