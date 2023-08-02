@@ -31,10 +31,6 @@ public class Identification {
 
     private Character scientistSurnameInitial;
 
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
-    private Family family;
-
     @ManyToMany(fetch = EAGER)
     @JoinTable(
         name = "identifications_classifications",

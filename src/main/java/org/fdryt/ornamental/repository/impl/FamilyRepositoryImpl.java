@@ -1,7 +1,7 @@
 package org.fdryt.ornamental.repository.impl;
 
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
-import org.fdryt.ornamental.domain.plant.MyFamily;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements FamilyRepository {
+public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, Integer> implements FamilyRepository {
 
     protected FamilyRepositoryImpl() {
-        super(MyFamily.class);
+        super(Family.class);
     }
 
     @Override
@@ -44,14 +44,14 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
     }
 
     @Override
-    public Optional<MyFamily> findByName(String name) {
+    public Optional<Family> findByName(String name) {
         var jpqlQuery = """
                 SELECT f
                 FROM MyFamily f
                 WHERE f.name = :name
                 """;
 
-        MyFamily recordObtained = em.createQuery(jpqlQuery, MyFamily.class)
+        Family recordObtained = em.createQuery(jpqlQuery, Family.class)
                 .setParameter("name", name)
                 .getSingleResult();
 

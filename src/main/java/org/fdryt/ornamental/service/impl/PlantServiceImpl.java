@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.AdditionalData;
 import org.fdryt.ornamental.domain.plant.FundamentalData;
-import org.fdryt.ornamental.domain.plant.MyFamily;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.domain.plant.MyPlant;
 import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
@@ -31,7 +31,7 @@ public class PlantServiceImpl implements PlantService {
         }
 
         // verify if given the family name exists
-        MyFamily familyObtained = null;
+        Family familyObtained = null;
         if (payload.nameFamily() != null) {
             familyObtained = familyRepository.findByName(payload.nameFamily())
                     .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(payload.nameFamily())));

@@ -21,5 +21,5 @@ public class FundamentalData {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
-    private MyFamily family;
+    private Family family;
 }

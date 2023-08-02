@@ -2,8 +2,7 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.Family;
-import org.fdryt.ornamental.domain.plant.MyFamily;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
@@ -26,8 +25,8 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyResponseDTO create(final CreateFamilyDTO payload) {
         verifyIfFamilyNameExists(payload.name());
-        MyFamily familyToPersist = toMyFamily(payload);
-        MyFamily familyPersisted = familyRepository.add(familyToPersist);
+        Family familyToPersist = toMyFamily(payload);
+        Family familyPersisted = familyRepository.add(familyToPersist);
         log.info("Family with name: {} persisted", familyPersisted.getName());
 
         return toFamilyResponseDTO(familyPersisted);
@@ -46,11 +45,11 @@ public class FamilyServiceImpl implements FamilyService {
     public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
         payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
 
-        Collection<MyFamily> familiesToPersist = payload.stream()
-                .map(dto -> new MyFamily(dto.name()))
+        Collection<Family> familiesToPersist = payload.stream()
+                .map(this::toMyFamily)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        Collection<MyFamily> familiesPersisted = familyRepository.addAll(familiesToPersist);
+        Collection<Family> familiesPersisted = familyRepository.addAll(familiesToPersist);
         log.info("Families were persisted");
 
         return familiesPersisted.stream()
@@ -65,11 +64,14 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     // TODO: delete methods below when I create the mapper
-    private MyFamily toMyFamily(CreateFamilyDTO dto) {
-        return new MyFamily(dto.name());
+    private Family toMyFamily(CreateFamilyDTO dto) {
+        Family family = new Family();
+        family.setName(dto.name());
+
+        return family;
     }
 
-    private FamilyResponseDTO toFamilyResponseDTO(MyFamily entity) {
+    private FamilyResponseDTO toFamilyResponseDTO(Family entity) {
         FamilyResponseDTO response = new FamilyResponseDTO();
         response.setId(entity.getId());
         response.setName(entity.getName());
