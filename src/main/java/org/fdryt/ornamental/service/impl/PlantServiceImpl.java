@@ -2,11 +2,7 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.AdditionalData;
-import org.fdryt.ornamental.domain.plant.FundamentalData;
-import org.fdryt.ornamental.domain.plant.Family;
-import org.fdryt.ornamental.domain.plant.Plant;
-import org.fdryt.ornamental.domain.plant.ScientificName;
+import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
@@ -30,51 +26,62 @@ public class PlantServiceImpl implements PlantService {
             throw new IllegalArgumentException("Plant with this common name: %s already exists.".formatted(payload.commonName()));
         }
 
-        // verify if given the family name exists
-        Family familyObtained = null;
-        if (payload.nameFamily() != null) {
-            familyObtained = familyRepository.findByName(payload.nameFamily())
-                    .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(payload.nameFamily())));
-        }
-
-        // create entity Plant to persist
-        ScientificName scientificName = new ScientificName(payload.scientificName(), payload.scientistLastnameInitial());
-        FundamentalData fundamentalData = new FundamentalData();
-        fundamentalData.setCommonName(payload.commonName());
-        fundamentalData.setScientificName(scientificName);
-        fundamentalData.setClassifications(payload.classifications());
-        fundamentalData.setFamily(familyObtained);
-
-        AdditionalData additionalData = new AdditionalData();
-        additionalData.setDetails(payload.details());
-        additionalData.setNotes(payload.notes());
-
-        Plant plantToPersist = Plant.builder()
-                .fundamentalData(fundamentalData)
-                .additionalData(additionalData)
-                .status(payload.status())
-                .build();
-
+        Plant plantToPersist = toEntityPlant(payload);
         Plant plantPersisted = plantRepository.add(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
-        // map entity Plant to response DTO for the client
-        PlantResponseDTO plantResponseDTO = new PlantResponseDTO();
-        plantResponseDTO.setId(plantPersisted.getId());
-        plantResponseDTO.setCommonName(plantPersisted.getFundamentalData().getCommonName());
-        plantResponseDTO.setScientificName(plantPersisted.getFundamentalData().getScientificName().toString());
-        plantResponseDTO.setFamily(plantPersisted.getFundamentalData().getFamily().getName());
-        plantResponseDTO.setClassifications(plantPersisted.getFundamentalData().getClassifications());
-        plantResponseDTO.setStatus(plantPersisted.getStatus());
-        plantResponseDTO.setDetails(plantPersisted.getAdditionalData().getDetails());
-        plantResponseDTO.setNotes(plantPersisted.getAdditionalData().getNotes());
-
-        return plantResponseDTO;
+        return toPlantResponseDTO(plantPersisted);
     }
 
+    private Family findFamilyByNameOrElseThrowException(String name) {
+        Family familyObtained = null;
+
+        if (name != null) {
+            familyObtained = familyRepository.findByName(name)
+                    .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(name)));
+        }
+
+        return familyObtained;
+    }
     @Override
     public void delete(final Integer id) {
         // TODO: will done
         log.info("Plant with ID: {} deleted", id);
+    }
+
+    // create mapper to this
+    private Plant toEntityPlant(CreatePlantDTO dto) {
+        Family familyObtained = findFamilyByNameOrElseThrowException(dto.nameFamily());
+
+        ScientificName scientificName = new ScientificName(dto.scientificName(), dto.scientistLastnameInitial());
+        FundamentalData fundamentalData = new FundamentalData();
+        fundamentalData.setCommonName(dto.commonName());
+        fundamentalData.setScientificName(scientificName);
+        fundamentalData.setClassifications(dto.classifications());
+        fundamentalData.setFamily(familyObtained);
+
+        AdditionalData additionalData = new AdditionalData();
+        additionalData.setDetails(dto.details());
+        additionalData.setNotes(dto.notes());
+
+        return Plant.builder()
+                .fundamentalData(fundamentalData)
+                .additionalData(additionalData)
+                .status(dto.status())
+                .build();
+    }
+
+    private PlantResponseDTO toPlantResponseDTO(Plant entity) {
+        PlantResponseDTO plantResponseDTO = new PlantResponseDTO();
+        plantResponseDTO.setId(entity.getId());
+        plantResponseDTO.setCommonName(entity.getFundamentalData().getCommonName());
+        plantResponseDTO.setScientificName(entity.getFundamentalData().getScientificName().toString());
+        plantResponseDTO.setFamily(entity.getFundamentalData().getFamily().getName());
+        plantResponseDTO.setClassifications(entity.getFundamentalData().getClassifications());
+        plantResponseDTO.setStatus(entity.getStatus());
+        plantResponseDTO.setDetails(entity.getAdditionalData().getDetails());
+        plantResponseDTO.setNotes(entity.getAdditionalData().getNotes());
+
+        return plantResponseDTO;
     }
 }

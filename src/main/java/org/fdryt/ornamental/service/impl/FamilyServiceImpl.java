@@ -72,10 +72,9 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     private FamilyResponseDTO toFamilyResponseDTO(Family entity) {
-        FamilyResponseDTO response = new FamilyResponseDTO();
-        response.setId(entity.getId());
-        response.setName(entity.getName());
-
-        return response;
+        return new FamilyResponseDTO(
+                entity.getId(),
+                entity.getName()
+        );
     }
 }

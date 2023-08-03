@@ -2,9 +2,9 @@ package org.fdryt.ornamental.service;
 
 import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Status;
-import org.fdryt.ornamental.dto.product.ItemResponseDTO;
-import org.fdryt.ornamental.dto.product.ProductResponseDTO;
-import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

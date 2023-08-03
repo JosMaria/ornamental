@@ -2,9 +2,9 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
-import org.fdryt.ornamental.dto.product.ProductResponseDTO;
-import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
 import org.fdryt.ornamental.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
