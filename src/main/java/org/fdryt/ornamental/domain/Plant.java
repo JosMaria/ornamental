@@ -23,15 +23,8 @@ public class Plant {
     @SequenceGenerator(name = "plant_sequence", sequenceName = "plant_sequence", allocationSize = 1)
     private Integer id;
 
-    @OneToOne(cascade = { PERSIST }, orphanRemoval = true)
-    @JoinColumn(name = "identification_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "fk_identifications"))
-    private Identification identification;
-
     @Column(length = 15)
     @Enumerated(EnumType.STRING)
     private Status status;
-
-    @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
-    private final Set<Picture> pictures = new HashSet<>();
 
 }
