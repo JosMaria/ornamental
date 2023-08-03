@@ -1,18 +1,12 @@
-package org.fdryt.ornamental.domain;
+package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "plants")
@@ -23,8 +17,13 @@ public class Plant {
     @SequenceGenerator(name = "plant_sequence", sequenceName = "plant_sequence", allocationSize = 1)
     private Integer id;
 
+    @Embedded
+    private FundamentalData fundamentalData;
+
+    @Embedded
+    private AdditionalData additionalData;
+
     @Column(length = 15)
     @Enumerated(EnumType.STRING)
     private Status status;
-
 }

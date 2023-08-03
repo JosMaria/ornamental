@@ -23,7 +23,7 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, I
                         THEN TRUE
                         ELSE FALSE
                     END
-                FROM MyFamily f
+                FROM Family f
                 WHERE f.name = :name
                 """;
 
@@ -36,7 +36,7 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, I
     public List<String> getAllNames() {
         var jpqlQuery = """
                 SELECT f.name
-                FROM MyFamily f
+                FROM Family f
                 """;
 
         return em.createQuery(jpqlQuery, String.class)
@@ -47,7 +47,7 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, I
     public Optional<Family> findByName(String name) {
         var jpqlQuery = """
                 SELECT f
-                FROM MyFamily f
+                FROM Family f
                 WHERE f.name = :name
                 """;
 

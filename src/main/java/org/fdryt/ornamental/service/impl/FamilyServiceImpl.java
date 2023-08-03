@@ -25,7 +25,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyResponseDTO create(final CreateFamilyDTO payload) {
         verifyIfFamilyNameExists(payload.name());
-        Family familyToPersist = toMyFamily(payload);
+        Family familyToPersist = toFamily(payload);
         Family familyPersisted = familyRepository.add(familyToPersist);
         log.info("Family with name: {} persisted", familyPersisted.getName());
 
@@ -46,7 +46,7 @@ public class FamilyServiceImpl implements FamilyService {
         payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
 
         Collection<Family> familiesToPersist = payload.stream()
-                .map(this::toMyFamily)
+                .map(this::toFamily)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         Collection<Family> familiesPersisted = familyRepository.addAll(familiesToPersist);
@@ -64,7 +64,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     // TODO: delete methods below when I create the mapper
-    private Family toMyFamily(CreateFamilyDTO dto) {
+    private Family toFamily(CreateFamilyDTO dto) {
         Family family = new Family();
         family.setName(dto.name());
 

@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.AdditionalData;
 import org.fdryt.ornamental.domain.plant.FundamentalData;
 import org.fdryt.ornamental.domain.plant.Family;
-import org.fdryt.ornamental.domain.plant.MyPlant;
+import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
-import org.fdryt.ornamental.repository.MyPlantRepository;
+import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlantServiceImpl implements PlantService {
 
-    private final MyPlantRepository plantRepository;
+    private final PlantRepository plantRepository;
     private final FamilyRepository familyRepository;
 
     @Override
@@ -49,13 +49,13 @@ public class PlantServiceImpl implements PlantService {
         additionalData.setDetails(payload.details());
         additionalData.setNotes(payload.notes());
 
-        MyPlant plantToPersist = MyPlant.builder()
+        Plant plantToPersist = Plant.builder()
                 .fundamentalData(fundamentalData)
                 .additionalData(additionalData)
                 .status(payload.status())
                 .build();
 
-        MyPlant plantPersisted = plantRepository.add(plantToPersist);
+        Plant plantPersisted = plantRepository.add(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
         // map entity Plant to response DTO for the client

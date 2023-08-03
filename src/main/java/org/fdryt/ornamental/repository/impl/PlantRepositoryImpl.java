@@ -1,15 +1,15 @@
 package org.fdryt.ornamental.repository.impl;
 
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
-import org.fdryt.ornamental.domain.plant.MyPlant;
-import org.fdryt.ornamental.repository.MyPlantRepository;
+import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.repository.PlantRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class MyPlantRepositoryImpl extends AbstractNurserySqlRepository<MyPlant, Integer> implements MyPlantRepository {
+public class PlantRepositoryImpl extends AbstractNurserySqlRepository<Plant, Integer> implements PlantRepository {
 
-    public MyPlantRepositoryImpl() {
-        super(MyPlant.class);
+    public PlantRepositoryImpl() {
+        super(Plant.class);
     }
 
     @Override
@@ -19,7 +19,7 @@ public class MyPlantRepositoryImpl extends AbstractNurserySqlRepository<MyPlant,
                 THEN TRUE
                 ELSE FALSE
                 END
-            FROM MyPlant p
+            FROM Plant p
             WHERE p.fundamentalData.commonName = :commonName
             """;
 
