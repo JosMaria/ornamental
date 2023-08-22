@@ -10,6 +10,10 @@ import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -31,6 +35,13 @@ public class PlantServiceImpl implements PlantService {
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
         return toPlantResponseDTO(plantPersisted);
+    }
+
+    @Override
+    public List<PlantResponseDTO> createAll(final List<CreatePlantDTO> plants) {
+        return plants.stream()
+                .map(this::create)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private Family findFamilyByNameOrElseThrowException(String name) {

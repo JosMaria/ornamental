@@ -9,13 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/plants")
-@PreAuthorize("hasAnyRole('ADMINISTRATOR','ASSISTANT')")
 public class PlantController {
 
     private final PlantService plantService;
@@ -23,6 +24,12 @@ public class PlantController {
     @PostMapping
     public ResponseEntity<PlantResponseDTO> save(@RequestBody @Valid CreatePlantDTO payload) {
         return new ResponseEntity<>(plantService.create(payload), CREATED);
+    }
+
+    // TODO: Method test, this will delete
+    @PostMapping("/batch")
+    public ResponseEntity<List<PlantResponseDTO>> saveAll(@RequestBody List<CreatePlantDTO> payload) {
+        return ResponseEntity.ok(plantService.createAll(payload));
     }
 
     @DeleteMapping("/{id}")

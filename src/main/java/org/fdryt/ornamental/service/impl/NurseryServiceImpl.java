@@ -7,6 +7,7 @@ import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
+import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.NurseryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class NurseryServiceImpl implements NurseryService {
+
+    private final PlantRepository plantRepository;
 
     @Override
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable, Classification classification, Status status) {
@@ -28,8 +31,20 @@ public class NurseryServiceImpl implements NurseryService {
     }
 
     @Override
-    public Page<ItemResponseDTO> findAllItems(Pageable pageable, Classification classification, Status status) {
-
+    public Page<ItemResponseDTO> findAllItems(Pageable pageable, Status status) {
+        /*
+        * SELECT
+        *   id,
+        *   fundamentalData.commonName,
+        *   fundamentalData.scientificName,
+        *   fundamentalData.scientistLastnameInitial,
+        *   status,
+        *   familyName
+        *
+        * FROM Plant p
+        * INNER JOIN Family f
+        * WHERE p.status = :status
+        * */
         return null;
     }
 }

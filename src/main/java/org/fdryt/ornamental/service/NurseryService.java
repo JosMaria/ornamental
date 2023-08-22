@@ -13,5 +13,5 @@ public interface NurseryService {
 
     SingleProductResponseDTO findProductById(Integer id);
 
-    Page<ItemResponseDTO> findAllItems(Pageable pageable, Classification classification, Status status);
+    Page<ItemResponseDTO> findAllItems(Pageable pageable, Status status);
 }
