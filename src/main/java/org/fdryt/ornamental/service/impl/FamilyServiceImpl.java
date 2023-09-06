@@ -22,39 +22,29 @@ public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyRepository familyRepository;
 
-    @Override
-    public FamilyResponseDTO create(final CreateFamilyDTO payload) {
-        verifyIfFamilyNameExists(payload.name());
-        Family familyToPersist = toFamily(payload);
-        Family familyPersisted = familyRepository.add(familyToPersist);
-        log.info("Family with name: {} persisted", familyPersisted.getName());
-
-        return toFamilyResponseDTO(familyPersisted);
-    }
-
-    @Override
-    public List<String> getAllNames() {
-        List<String> allNames = familyRepository.getAllNames();
-        log.info("Get all names of the families");
-
-        return allNames;
-    }
-
     // TODO: implement of other matter
     @Override
     public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
         payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
 
         Collection<Family> familiesToPersist = payload.stream()
-                .map(this::toFamily)
+                .map(this::fromCreateFamilyDtoToFamily)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         Collection<Family> familiesPersisted = familyRepository.addAll(familiesToPersist);
-        log.info("Families were persisted");
+        log.info("All families were persisted.");
 
         return familiesPersisted.stream()
-                .map(this::toFamilyResponseDTO)
+                .map(this::fromFamilytoFamilyResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<String> getAllNames() {
+        List<String> allNames = familyRepository.getAllNames();
+        log.info("Fetch all names of the families");
+
+        return allNames;
     }
 
     private void verifyIfFamilyNameExists(String name) {
@@ -63,15 +53,14 @@ public class FamilyServiceImpl implements FamilyService {
         }
     }
 
-    // TODO: delete methods below when I create the mapper
-    private Family toFamily(CreateFamilyDTO dto) {
+    // TODO: Implement MAPPER better solution
+    private Family fromCreateFamilyDtoToFamily(CreateFamilyDTO dto) {
         Family family = new Family();
-        family.setName(dto.name());
-
+        family.setName(dto.name().toLowerCase());
         return family;
     }
 
-    private FamilyResponseDTO toFamilyResponseDTO(Family entity) {
+    private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
         return new FamilyResponseDTO(
                 entity.getId(),
                 entity.getName()
