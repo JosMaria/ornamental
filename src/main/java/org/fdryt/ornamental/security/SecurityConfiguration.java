@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers(GET, "/api/v1/news/**").permitAll();
                     auth.requestMatchers(GET, "/api/v1/classifications/**").permitAll();
                     auth.requestMatchers("/api/v1/families/**").permitAll();
+                    auth.requestMatchers("/api/v1/plants/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

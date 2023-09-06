@@ -1,8 +1,7 @@
 package org.fdryt.ornamental.repository.impl;
 
-import jakarta.persistence.EntityManager;
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
-import org.fdryt.ornamental.domain.plant.MyFamily;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily, Integer> implements FamilyRepository {
+public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, Integer> implements FamilyRepository {
 
-    protected FamilyRepositoryImpl(EntityManager em) {
-        super(em, MyFamily.class);
+    protected FamilyRepositoryImpl() {
+        super(Family.class);
     }
 
     @Override
@@ -24,7 +23,7 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
                         THEN TRUE
                         ELSE FALSE
                     END
-                FROM MyFamily f
+                FROM Family f
                 WHERE f.name = :name
                 """;
 
@@ -37,7 +36,7 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
     public List<String> getAllNames() {
         var jpqlQuery = """
                 SELECT f.name
-                FROM MyFamily f
+                FROM Family f
                 """;
 
         return em.createQuery(jpqlQuery, String.class)
@@ -45,16 +44,17 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<MyFamily,
     }
 
     @Override
-    public Optional<MyFamily> findByName(String name) {
+    public Optional<Family> findByName(String name) {
         var jpqlQuery = """
                 SELECT f
-                FROM MyFamily f
+                FROM Family f
                 WHERE f.name = :name
                 """;
 
-        return em.createQuery(jpqlQuery, MyFamily.class)
+        Family recordObtained = em.createQuery(jpqlQuery, Family.class)
                 .setParameter("name", name)
-                .getResultStream()
-                .findFirst();
+                .getSingleResult();
+
+        return Optional.ofNullable(recordObtained);
     }
 }
