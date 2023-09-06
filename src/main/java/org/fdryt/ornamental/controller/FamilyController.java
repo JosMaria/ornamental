@@ -29,7 +29,7 @@ public class FamilyController {
     }
 
     @GetMapping("/names")
-    public ResponseEntity<List<String>> fetchAllName() {
-        return ResponseEntity.ok(familyService.getAllNames());
+    public ResponseEntity<List<FamilyResponseDTO>> fetchAllName() {
+        return ResponseEntity.ok(familyService.getFamilies());
     }
 }

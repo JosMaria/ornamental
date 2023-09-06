@@ -40,11 +40,11 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public List<String> getAllNames() {
-        List<String> allNames = familyRepository.getAllNames();
+    public List<FamilyResponseDTO> getFamilies() {
+        List<FamilyResponseDTO> families = familyRepository.getFamilies();
         log.info("Fetch all names of the families");
 
-        return allNames;
+        return families;
     }
 
     private void verifyIfFamilyNameExists(String name) {

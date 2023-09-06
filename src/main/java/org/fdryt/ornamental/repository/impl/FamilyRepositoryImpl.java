@@ -2,6 +2,7 @@ package org.fdryt.ornamental.repository.impl;
 
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
 import org.fdryt.ornamental.domain.plant.Family;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.springframework.stereotype.Repository;
 
@@ -33,13 +34,8 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, I
     }
 
     @Override
-    public List<String> getAllNames() {
-        var jpqlQuery = """
-                SELECT f.name
-                FROM Family f
-                """;
-
-        return em.createQuery(jpqlQuery, String.class)
+    public List<FamilyResponseDTO> getFamilies() {
+        return em.createNamedQuery("getIdsAndNamesOfTheFamilies")
                 .getResultList();
     }
 

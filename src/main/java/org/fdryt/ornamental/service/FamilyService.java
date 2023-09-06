@@ -9,5 +9,5 @@ public interface FamilyService {
 
     List<FamilyResponseDTO> createAllByName(List<CreateFamilyDTO> payload);
 
-    List<String> getAllNames();
+    List<FamilyResponseDTO> getFamilies();
 }

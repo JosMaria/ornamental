@@ -1,15 +1,39 @@
 package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@NamedNativeQuery(
+    name="getIdsAndNamesOfTheFamilies",
+    query = """
+        SELECT f.id, f.name
+        FROM families f
+    """,
+    resultSetMapping = "FamilyResponseDTOMapping"
+)
+@SqlResultSetMapping(
+    name="FamilyResponseDTOMapping",
+    classes = @ConstructorResult(
+        targetClass = FamilyResponseDTO.class,
+        columns = {
+            @ColumnResult(name = "id"),
+            @ColumnResult(name="name")
+        }
+    )
+)
 @Getter
 @Setter
 @Entity
