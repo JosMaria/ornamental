@@ -1,12 +1,10 @@
 package org.fdryt.ornamental.service;
 
-import org.fdryt.ornamental.dto.product.ItemToListResponseDTO;
-import org.fdryt.ornamental.dto.product.ProductResponseDTO;
-import org.fdryt.ornamental.dto.product.SingleProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ItemToListResponseDTO;
+import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
+import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface ProductService {
 

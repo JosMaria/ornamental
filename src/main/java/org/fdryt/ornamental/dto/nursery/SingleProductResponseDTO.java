@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.product;
+package org.fdryt.ornamental.dto.nursery;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
