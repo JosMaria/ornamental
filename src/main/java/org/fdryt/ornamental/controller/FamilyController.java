@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
+import org.fdryt.ornamental.utils.ValidList;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class FamilyController {
     private final FamilyService familyService;
 
     @PostMapping("/batch")
-    public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody @Valid List<CreateFamilyDTO> payload) {
+    public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody @Valid ValidList<CreateFamilyDTO> payload) {
         return new ResponseEntity<>(familyService.createAllByName(payload), CREATED);
     }
 

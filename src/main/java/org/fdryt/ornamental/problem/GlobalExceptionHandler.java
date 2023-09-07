@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
 import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
 import org.fdryt.ornamental.problem.exception.EnumNotPresentException;
+import org.fdryt.ornamental.problem.exception.FamilyAlreadyExistsException;
 import org.fdryt.ornamental.problem.response.ErrorResponse;
 import org.fdryt.ornamental.problem.response.ProcessErrorResponse;
 import org.fdryt.ornamental.problem.response.ValidationErrorResponse;
@@ -61,6 +62,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleEntityAlreadyException(EntityAlreadyException exception, HttpServletRequest request) {
         log.warn(exception.getMessage());
         return responseBadRequest(request.getRequestURI(), exception.getMessage());
+    }
+
+    @ExceptionHandler(FamilyAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleFamilyAlreadyExists(FamilyAlreadyExistsException exception, HttpServletRequest request) {
+        log.warn(exception.getMessage());
+        return responseBadRequest(request.getRequestURI(), exception.getMessageToClient());
     }
 
     private ResponseEntity<ErrorResponse> responseBadRequest(String pathUri, String exceptionMessage) {

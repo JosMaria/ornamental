@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
-import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
+import org.fdryt.ornamental.problem.exception.FamilyAlreadyExistsException;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class FamilyServiceImpl implements FamilyService {
 
     private void verifyIfFamilyNameExists(String name) {
         if (familyRepository.existsByName(name)) {
-            throw new EntityAlreadyException(Family.class, name);
+            throw new FamilyAlreadyExistsException(name);
         }
     }
 
