@@ -1,9 +1,15 @@
 package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "details")
 public class Detail {
@@ -18,6 +24,6 @@ public class Detail {
     private String detail;
 
     @ManyToOne
-    @JoinColumn(name = "plant_id", nullable = false)
+    @JoinColumn(name = "plant_id")
     private Plant plant;
 }

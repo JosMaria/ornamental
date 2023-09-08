@@ -1,11 +1,10 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.Family;
-import org.fdryt.ornamental.domain.plant.FundamentalData;
-import org.fdryt.ornamental.domain.plant.Plant;
-import org.fdryt.ornamental.domain.plant.ScientificName;
+import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
@@ -27,17 +26,45 @@ public class PlantServiceImpl implements PlantService {
 
     @Override
     public PlantResponseDTO create(final CreatePlantDTO payload) {
-        // common name is unique so verify if exists
+        // verify common name does not repeat
         if (plantRepository.existsByCommonName(payload.commonName())) {
-            // TODO: change exception or create new type exception
-            throw new IllegalArgumentException("Plant with this common name: %s already exists.".formatted(payload.commonName()));
+            throw new EntityExistsException("Planta nombrada: %s ya existe, no puede ser repetida.".formatted(payload.commonName()));
         }
 
-        Plant plantToPersist = toEntityPlant(payload);
+        // verify family exists
+        Family familyFounded = null;
+        if (payload.nameFamily() != null) {
+            familyFounded = familyRepository
+                .findByName(payload.nameFamily())
+                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.nameFamily())));
+        }
+
+        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyFounded);
+
+        List<Note> notesToPersist = payload.notes().stream()
+                .map(note -> Note.builder().note(note).plant(plantToPersist).build())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        List<Detail> detailsToPersist = payload.details().stream()
+                .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        List<TechnicalSheet> technicalSheet = payload.technicalSheet().stream()
+                .map(technicalSheetDTO -> TechnicalSheet.builder()
+                        .word(technicalSheetDTO.word())
+                        .info(technicalSheetDTO.info())
+                        .plant(plantToPersist)
+                        .build())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        plantToPersist.addNotes(notesToPersist);
+        plantToPersist.addDetails(detailsToPersist);
+        plantToPersist.addTechnicalSheet(technicalSheet);
+
         Plant plantPersisted = plantRepository.add(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
-        return toPlantResponseDTO(plantPersisted);
+        return fromPlantEntitytoPlantResponseDTO(plantPersisted);
     }
 
     @Override
@@ -47,32 +74,20 @@ public class PlantServiceImpl implements PlantService {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private Family findFamilyByNameOrElseThrowException(String name) {
-        Family familyObtained = null;
-
-        if (name != null) {
-            familyObtained = familyRepository.findByName(name)
-                    .orElseThrow(() -> new IllegalArgumentException("Family with name %s does not found.".formatted(name)));
-        }
-
-        return familyObtained;
-    }
     @Override
     public void delete(final Integer id) {
         // TODO: will done
         log.info("Plant with ID: {} deleted", id);
     }
 
-    // create mapper to this
-    private Plant toEntityPlant(CreatePlantDTO dto) {
-        Family familyObtained = findFamilyByNameOrElseThrowException(dto.nameFamily());
-
+    // TODO: Create mapper
+    private Plant fromCreatePlantDtoToEntityPlant(CreatePlantDTO dto, Family family) {
         ScientificName scientificName = new ScientificName(dto.scientificName(), dto.scientistLastnameInitial());
         FundamentalData fundamentalData = new FundamentalData();
         fundamentalData.setCommonName(dto.commonName());
         fundamentalData.setScientificName(scientificName);
         fundamentalData.setClassifications(dto.classifications());
-        fundamentalData.setFamily(familyObtained);
+        fundamentalData.setFamily(family);
 
         return Plant.builder()
                 .fundamentalData(fundamentalData)
@@ -80,7 +95,7 @@ public class PlantServiceImpl implements PlantService {
                 .build();
     }
 
-    private PlantResponseDTO toPlantResponseDTO(Plant entity) {
+    private PlantResponseDTO fromPlantEntitytoPlantResponseDTO(Plant entity) {
         PlantResponseDTO plantResponseDTO = new PlantResponseDTO();
         plantResponseDTO.setId(entity.getId());
         plantResponseDTO.setCommonName(entity.getFundamentalData().getCommonName());

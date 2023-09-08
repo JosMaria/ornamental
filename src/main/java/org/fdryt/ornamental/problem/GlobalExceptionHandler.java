@@ -1,5 +1,7 @@
 package org.fdryt.ornamental.problem;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
@@ -24,6 +26,18 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private final HttpStatus httpStatusBadRequest = HttpStatus.BAD_REQUEST;
+
+    @ExceptionHandler(EntityExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEntityExists(EntityExistsException exception, HttpServletRequest request) {
+        log.warn(exception.getMessage());
+        return responseBadRequest(request.getRequestURI(), exception.getMessage());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
+        log.warn(exception.getMessage());
+        return responseBadRequest(request.getRequestURI(), exception.getMessage());
+    }
 
     @ExceptionHandler(DomainNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleDomainNotFoundException(DomainNotFoundException exception, HttpServletRequest request) {

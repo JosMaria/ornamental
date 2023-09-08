@@ -1,5 +1,6 @@
 package org.fdryt.ornamental.repository.impl;
 
+import jakarta.persistence.NoResultException;
 import org.fdryt.ornamental.commons.repository.AbstractNurserySqlRepository;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
@@ -47,10 +48,13 @@ public class FamilyRepositoryImpl extends AbstractNurserySqlRepository<Family, I
                 WHERE f.name = :name
                 """;
 
-        Family recordObtained = em.createQuery(jpqlQuery, Family.class)
-                .setParameter("name", name)
-                .getSingleResult();
-
-        return Optional.ofNullable(recordObtained);
+        try {
+            Family recordObtained = em.createQuery(jpqlQuery, Family.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+            return Optional.of(recordObtained);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

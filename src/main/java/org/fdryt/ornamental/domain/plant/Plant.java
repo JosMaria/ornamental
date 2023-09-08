@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -31,12 +31,27 @@ public class Plant {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "plant")
-    private Set<Note> notes = new HashSet<>();
+    @Lob
+    private String description;
 
-    @OneToMany(mappedBy = "plant")
-    private Set<Detail> details = new HashSet<>();
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST)
+    private final Collection<Note> notes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plant")
-    private Set<TechnicalSheet> technicalSheets = new HashSet<>();
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST)
+    private final Collection<Detail> details = new ArrayList<>();
+
+    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST)
+    private final Collection<TechnicalSheet> technicalSheets = new ArrayList<>();
+
+    public void addNotes(Collection<Note> newNotes) {
+        notes.addAll(newNotes);
+    }
+
+    public void addDetails(Collection<Detail> newDetails) {
+        details.addAll(newDetails);
+    }
+
+    public void addTechnicalSheet(Collection<TechnicalSheet> newTechnicalSheet) {
+        technicalSheets.addAll(newTechnicalSheet);
+    }
 }
