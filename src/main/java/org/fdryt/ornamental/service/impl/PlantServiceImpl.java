@@ -2,7 +2,10 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.*;
+import org.fdryt.ornamental.domain.plant.Family;
+import org.fdryt.ornamental.domain.plant.FundamentalData;
+import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.domain.plant.ScientificName;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyRepository;
@@ -71,13 +74,8 @@ public class PlantServiceImpl implements PlantService {
         fundamentalData.setClassifications(dto.classifications());
         fundamentalData.setFamily(familyObtained);
 
-        AdditionalData additionalData = new AdditionalData();
-        additionalData.setDetails(dto.details());
-        additionalData.setNotes(dto.notes());
-
         return Plant.builder()
                 .fundamentalData(fundamentalData)
-                .additionalData(additionalData)
                 .status(dto.status())
                 .build();
     }
@@ -90,8 +88,6 @@ public class PlantServiceImpl implements PlantService {
         plantResponseDTO.setFamily(entity.getFundamentalData().getFamily().getName());
         plantResponseDTO.setClassifications(entity.getFundamentalData().getClassifications());
         plantResponseDTO.setStatus(entity.getStatus());
-        plantResponseDTO.setDetails(entity.getAdditionalData().getDetails());
-        plantResponseDTO.setNotes(entity.getAdditionalData().getNotes());
 
         return plantResponseDTO;
     }
