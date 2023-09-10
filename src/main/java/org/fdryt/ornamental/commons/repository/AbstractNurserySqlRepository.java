@@ -115,11 +115,11 @@ public abstract class AbstractNurserySqlRepository<TEntity, ID extends Serializa
      */
     @Transactional
     @Override
-    public void deleteById(ID id) {
+    public void deleteById(ID id) throws IllegalArgumentException {
         TEntity foundEntity = em.find(clazz, id);
 
         if (null == foundEntity) {
-            throw new EntityNotFoundException("Entity %s with ID: %s does not found.".formatted(clazz.getSimpleName(), id));
+            throw new IllegalArgumentException();
         }
 
         em.remove(foundEntity);

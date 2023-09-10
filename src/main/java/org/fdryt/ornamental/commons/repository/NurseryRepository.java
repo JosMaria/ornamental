@@ -1,5 +1,7 @@
 package org.fdryt.ornamental.commons.repository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
@@ -59,6 +61,5 @@ public interface NurseryRepository<TEntity, ID extends Serializable> {
      *
      * @param id the entity ID.
      */
-    void deleteById(ID id);
-
+    void deleteById(ID id) throws EntityNotFoundException;
 }

@@ -10,4 +10,6 @@ public interface FamilyService {
     List<FamilyResponseDTO> createAllByName(List<CreateFamilyDTO> payload);
 
     List<FamilyResponseDTO> getFamilies();
+
+    void deleteById(Integer id);
 }

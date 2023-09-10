@@ -1,5 +1,6 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
@@ -45,6 +46,15 @@ public class FamilyServiceImpl implements FamilyService {
         log.info("Fetch all names of the families");
 
         return families;
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        try {
+            familyRepository.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new EntityNotFoundException("Familia con ID: %s no existe.".formatted(id));
+        }
     }
 
     private void verifyIfFamilyNameExists(String name) {

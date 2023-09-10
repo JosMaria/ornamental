@@ -7,11 +7,7 @@ import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.utils.ValidList;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +26,13 @@ public class FamilyController {
     }
 
     @GetMapping("/names")
-    public ResponseEntity<List<FamilyResponseDTO>> fetchAllName() {
+    public ResponseEntity<List<FamilyResponseDTO>> fetchAllNames() {
         return ResponseEntity.ok(familyService.getFamilies());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        familyService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
