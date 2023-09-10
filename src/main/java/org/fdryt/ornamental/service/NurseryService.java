@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface NurseryService {
-    Page<ProductResponseDTO> findAllProducts(Pageable pageable, Classification classification, Status status);
+    Page<ProductResponseDTO> findAllProducts();
 
     SingleProductResponseDTO findProductById(Integer id);
 

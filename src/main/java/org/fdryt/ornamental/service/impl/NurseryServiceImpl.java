@@ -21,7 +21,8 @@ public class NurseryServiceImpl implements NurseryService {
     private final PlantRepository plantRepository;
 
     @Override
-    public Page<ProductResponseDTO> findAllProducts(Pageable pageable, Classification classification, Status status) {
+    public Page<ProductResponseDTO> findAllProducts() {
+
         return null;
     }
 

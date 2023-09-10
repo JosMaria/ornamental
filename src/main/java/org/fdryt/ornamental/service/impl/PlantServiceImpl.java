@@ -68,13 +68,6 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public List<PlantResponseDTO> createAll(final List<CreatePlantDTO> plants) {
-        return plants.stream()
-                .map(this::create)
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @Override
     public void delete(final Integer id) {
         // TODO: will done
         log.info("Plant with ID: {} deleted", id);
