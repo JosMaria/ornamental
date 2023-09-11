@@ -1,9 +1,9 @@
 package org.fdryt.ornamental.commons.repository;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.fdryt.ornamental.domain.plant.Family;
 
 import java.io.Serializable;
 import java.util.Collection;

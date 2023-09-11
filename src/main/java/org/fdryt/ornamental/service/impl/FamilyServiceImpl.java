@@ -1,11 +1,13 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
+import org.fdryt.ornamental.dto.family.UpdateFamilyDTO;
 import org.fdryt.ornamental.problem.exception.FamilyAlreadyExistsException;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
@@ -26,7 +28,7 @@ public class FamilyServiceImpl implements FamilyService {
     // TODO: implement of other matter
     @Override
     public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
-        payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
+        payload.forEach(dto -> throwExceptionIfFamilyNameExists(dto.name()));
 
         Collection<Family> familiesToPersist = payload.stream()
                 .map(this::fromCreateFamilyDtoToFamily)
@@ -49,22 +51,47 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(final Integer id) {
         try {
             familyRepository.deleteById(id);
+            log.info("Family with ID: {} deleted", id);
         } catch (IllegalArgumentException e) {
             throw new EntityNotFoundException("Familia con ID: %s no existe.".formatted(id));
         }
     }
 
-    private void verifyIfFamilyNameExists(String name) {
+    @Override
+    public FamilyResponseDTO updateName(final Integer id, final UpdateFamilyDTO payload) {
+        Family familyFounded = familyRepository.findById(id)
+                .orElseThrow((() -> new EntityNotFoundException("Familia %s con ID: %s no existe para actualizar.".formatted(payload.name(), id))));
+
+        if (familyFounded.getName().equals(payload.name().trim())) {
+            log.info("Familia: %s continua con el mismo nombre.".formatted(familyFounded.getName()));
+            return fromFamilytoFamilyResponseDTO(familyFounded);
+        }
+
+        throwExceptionIfFamilyNameExists(payload.name());
+        familyFounded.setName(payload.name());
+        Family familyUpdated = familyRepository.update(familyFounded);
+        log.info("Family with ID: {} change its name to {}.", familyUpdated.getId(), familyFounded.getName());
+
+        return fromFamilytoFamilyResponseDTO(familyUpdated);
+    }
+
+    private void throwExceptionIfFamilyNameExists(String name) {
         if (familyRepository.existsByName(name)) {
-            throw new FamilyAlreadyExistsException(name);
+            throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
         }
     }
 
     // TODO: Implement MAPPER better solution
     private Family fromCreateFamilyDtoToFamily(CreateFamilyDTO dto) {
+        Family family = new Family();
+        family.setName(dto.name().toLowerCase());
+        return family;
+    }
+
+    private Family fromUpdateFamilyDtoToFamily(UpdateFamilyDTO dto) {
         Family family = new Family();
         family.setName(dto.name().toLowerCase());
         return family;
