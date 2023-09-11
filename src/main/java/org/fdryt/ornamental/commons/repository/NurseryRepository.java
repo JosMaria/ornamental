@@ -1,7 +1,6 @@
 package org.fdryt.ornamental.commons.repository;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.fdryt.ornamental.domain.plant.Family;
 
 import java.io.Serializable;
 import java.util.Collection;
