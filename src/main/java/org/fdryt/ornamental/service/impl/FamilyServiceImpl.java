@@ -8,12 +8,12 @@ import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.dto.family.UpdateFamilyDTO;
+import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,20 +23,26 @@ import java.util.stream.Collectors;
 public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyRepository familyRepository;
+    private final FamilyJpaRepository familyJpaRepository;
 
-    // TODO: implement of other matter
     @Override
-    public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
+    public List<FamilyResponseDTO> createAll(final List<CreateFamilyDTO> payload) {
         payload.forEach(dto -> throwExceptionIfFamilyNameExists(dto.name()));
-
-        Collection<Family> familiesToPersist = payload.stream()
-                .map(this::fromCreateFamilyDtoToFamily)
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        Collection<Family> familiesPersisted = familyRepository.addAll(familiesToPersist);
+        List<Family> familiesToPersist = toCollectionFamilies(payload);
+        List<Family> familiesPersisted = familyJpaRepository.saveAll(familiesToPersist);
         log.info("All families were persisted.");
 
-        return familiesPersisted.stream()
+        return toCollectionFamiliesResponseDTO(familiesPersisted);
+    }
+
+    private List<Family> toCollectionFamilies(List<CreateFamilyDTO> payload) {
+        return payload.stream()
+                .map(this::fromCreateFamilyDtoToFamily)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private List<FamilyResponseDTO> toCollectionFamiliesResponseDTO(List<Family> families) {
+        return families.stream()
                 .map(this::fromFamilytoFamilyResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
     }

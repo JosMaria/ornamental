@@ -23,7 +23,7 @@ public class FamilyController {
 
     @PostMapping("/batch")
     public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody @Valid ValidList<CreateFamilyDTO> payload) {
-        return new ResponseEntity<>(familyService.createAllByName(payload), CREATED);
+        return new ResponseEntity<>(familyService.createAll(payload), CREATED);
     }
 
     @GetMapping("/names")

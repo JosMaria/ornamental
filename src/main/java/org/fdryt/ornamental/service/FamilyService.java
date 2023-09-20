@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FamilyService {
 
-    List<FamilyResponseDTO> createAllByName(List<CreateFamilyDTO> payload);
+    List<FamilyResponseDTO> createAll(List<CreateFamilyDTO> payload);
 
     List<FamilyResponseDTO> getFamilies();
 
