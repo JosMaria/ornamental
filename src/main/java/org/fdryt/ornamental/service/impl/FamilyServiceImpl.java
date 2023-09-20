@@ -27,24 +27,44 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public List<FamilyResponseDTO> createAll(final List<CreateFamilyDTO> payload) {
-        payload.forEach(dto -> throwExceptionIfFamilyNameExists(dto.name()));
-        List<Family> familiesToPersist = toCollectionFamilies(payload);
+        List<String> familyNames = payload.stream()
+                .map(createFamilyDTO -> createFamilyDTO.name().toLowerCase().trim())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        familyNames.forEach(this::throwExceptionIfFamilyNameExists);
+        List<Family> familiesToPersist = toCollectionFamilies(familyNames);
         List<Family> familiesPersisted = familyJpaRepository.saveAll(familiesToPersist);
         log.info("All families were persisted.");
 
         return toCollectionFamiliesResponseDTO(familiesPersisted);
     }
 
-    private List<Family> toCollectionFamilies(List<CreateFamilyDTO> payload) {
-        return payload.stream()
+    private void throwExceptionIfFamilyNameExists(String name) {
+        if (familyJpaRepository.existsByName(name)) {
+            throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
+        }
+    }
+
+    private List<Family> toCollectionFamilies(List<String> familyNames) {
+        return familyNames.stream()
                 .map(this::fromCreateFamilyDtoToFamily)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private Family fromCreateFamilyDtoToFamily(String familyName) {
+        Family family = new Family();
+        family.setName(familyName);
+        return family;
     }
 
     private List<FamilyResponseDTO> toCollectionFamiliesResponseDTO(List<Family> families) {
         return families.stream()
                 .map(this::fromFamilytoFamilyResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
+        return new FamilyResponseDTO(entity.getId(), entity.getName());
     }
 
     @Override
@@ -81,31 +101,5 @@ public class FamilyServiceImpl implements FamilyService {
         log.info("Family with ID: {} change its name to {}.", familyUpdated.getId(), familyFounded.getName());
 
         return fromFamilytoFamilyResponseDTO(familyUpdated);
-    }
-
-    private void throwExceptionIfFamilyNameExists(String name) {
-        if (familyRepository.existsByName(name)) {
-            throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
-        }
-    }
-
-    // TODO: Implement MAPPER better solution
-    private Family fromCreateFamilyDtoToFamily(CreateFamilyDTO dto) {
-        Family family = new Family();
-        family.setName(dto.name().toLowerCase());
-        return family;
-    }
-
-    private Family fromUpdateFamilyDtoToFamily(UpdateFamilyDTO dto) {
-        Family family = new Family();
-        family.setName(dto.name().toLowerCase());
-        return family;
-    }
-
-    private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
-        return new FamilyResponseDTO(
-                entity.getId(),
-                entity.getName()
-        );
     }
 }
