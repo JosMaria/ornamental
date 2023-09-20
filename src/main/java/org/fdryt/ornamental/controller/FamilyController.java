@@ -26,9 +26,9 @@ public class FamilyController {
         return new ResponseEntity<>(familyService.createAll(payload), CREATED);
     }
 
-    @GetMapping("/names")
-    public ResponseEntity<List<FamilyResponseDTO>> fetchAllNames() {
-        return ResponseEntity.ok(familyService.getFamilies());
+    @GetMapping
+    public ResponseEntity<List<FamilyResponseDTO>> fetchAllFamilies() {
+        return ResponseEntity.ok(familyService.getAllFamilies());
     }
 
     @DeleteMapping("/{id}")

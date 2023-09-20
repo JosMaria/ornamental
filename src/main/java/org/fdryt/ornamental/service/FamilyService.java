@@ -10,7 +10,7 @@ public interface FamilyService {
 
     List<FamilyResponseDTO> createAll(List<CreateFamilyDTO> payload);
 
-    List<FamilyResponseDTO> getFamilies();
+    List<FamilyResponseDTO> getAllFamilies();
 
     void deleteById(Integer id);
 

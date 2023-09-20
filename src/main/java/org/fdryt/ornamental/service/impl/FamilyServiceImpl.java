@@ -39,6 +39,14 @@ public class FamilyServiceImpl implements FamilyService {
         return toCollectionFamiliesResponseDTO(familiesPersisted);
     }
 
+    @Override
+    public List<FamilyResponseDTO> getAllFamilies() {
+        List<FamilyResponseDTO> familiesObtained = familyJpaRepository.getAllFamilies();
+        log.info("Fetch all the families");
+
+        return familiesObtained;
+    }
+
     private void throwExceptionIfFamilyNameExists(String name) {
         if (familyJpaRepository.existsByName(name)) {
             throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
@@ -65,14 +73,6 @@ public class FamilyServiceImpl implements FamilyService {
 
     private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
         return new FamilyResponseDTO(entity.getId(), entity.getName());
-    }
-
-    @Override
-    public List<FamilyResponseDTO> getFamilies() {
-        List<FamilyResponseDTO> families = familyRepository.getFamilies();
-        log.info("Fetch all names of the families");
-
-        return families;
     }
 
     @Override
