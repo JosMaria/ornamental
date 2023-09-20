@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
-import org.fdryt.ornamental.dto.family.UpdateFamilyDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
@@ -47,6 +46,12 @@ public class FamilyServiceImpl implements FamilyService {
         return familiesObtained;
     }
 
+    @Override
+    public void deleteById(final Integer id) {
+        familyJpaRepository.deleteById(id);
+        log.info("Family with ID: {} deleted", id);
+    }
+
     private void throwExceptionIfFamilyNameExists(String name) {
         if (familyJpaRepository.existsByName(name)) {
             throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
@@ -76,17 +81,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public void deleteById(final Integer id) {
-        try {
-            familyRepository.deleteById(id);
-            log.info("Family with ID: {} deleted", id);
-        } catch (IllegalArgumentException e) {
-            throw new EntityNotFoundException("Familia con ID: %s no existe.".formatted(id));
-        }
-    }
-
-    @Override
-    public FamilyResponseDTO updateName(final Integer id, final UpdateFamilyDTO payload) {
+    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
         Family familyFounded = familyRepository.findById(id)
                 .orElseThrow((() -> new EntityNotFoundException("Familia %s con ID: %s no existe para actualizar.".formatted(payload.name(), id))));
 

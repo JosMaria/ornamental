@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
-import org.fdryt.ornamental.dto.family.UpdateFamilyDTO;
 import org.fdryt.ornamental.service.FamilyService;
 import org.fdryt.ornamental.utils.ValidList;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class FamilyController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FamilyResponseDTO> updateName(@PathVariable("id") Integer id, @RequestBody @Valid UpdateFamilyDTO payload) {
-        return ResponseEntity.accepted().body(familyService.updateName(id, payload));
+    public ResponseEntity<FamilyResponseDTO> update(@PathVariable("id") Integer id, @RequestBody @Valid CreateFamilyDTO payload) {
+        return ResponseEntity.ok(familyService.updateName(id, payload));
     }
 }

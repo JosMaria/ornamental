@@ -2,7 +2,6 @@ package org.fdryt.ornamental.service;
 
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
-import org.fdryt.ornamental.dto.family.UpdateFamilyDTO;
 
 import java.util.List;
 
@@ -14,5 +13,5 @@ public interface FamilyService {
 
     void deleteById(Integer id);
 
-    FamilyResponseDTO updateName(Integer id, UpdateFamilyDTO payload);
+    FamilyResponseDTO updateName(Integer id, CreateFamilyDTO payload);
 }
