@@ -2,13 +2,13 @@ package org.fdryt.ornamental.service.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
-import org.fdryt.ornamental.repository.FamilyRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Service
 public class FamilyServiceImpl implements FamilyService {
 
-    private final FamilyRepository familyRepository;
     private final FamilyJpaRepository familyJpaRepository;
 
     @Override
@@ -80,21 +79,23 @@ public class FamilyServiceImpl implements FamilyService {
         return new FamilyResponseDTO(entity.getId(), entity.getName());
     }
 
+    @Transactional
     @Override
     public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
-        Family familyFounded = familyRepository.findById(id)
-                .orElseThrow((() -> new EntityNotFoundException("Familia %s con ID: %s no existe para actualizar.".formatted(payload.name(), id))));
+        String familyNewName = payload.name().toLowerCase().trim();
+        throwExceptionIfFamilyNameExists(familyNewName);
+        Family familyObtained = familyJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Family with ID: %s does not exists to update.".formatted(id)));
 
-        if (familyFounded.getName().equals(payload.name().trim())) {
-            log.info("Familia: %s continua con el mismo nombre.".formatted(familyFounded.getName()));
-            return fromFamilytoFamilyResponseDTO(familyFounded);
+        if (familyObtained.getName().equals(familyNewName)) {
+            log.info("Familia: %s continua con el mismo nombre.".formatted(familyObtained.getName()));
+            return fromFamilytoFamilyResponseDTO(familyObtained);
+
+        } else {
+            familyObtained.setName(familyNewName);
+            Family familyUpdated = familyJpaRepository.save(familyObtained);
+            log.info("Family with ID: {} change its name to {}.", familyObtained.getId(), familyObtained.getName());
+            return fromFamilytoFamilyResponseDTO(familyUpdated);
         }
-
-        throwExceptionIfFamilyNameExists(payload.name());
-        familyFounded.setName(payload.name());
-        Family familyUpdated = familyRepository.update(familyFounded);
-        log.info("Family with ID: {} change its name to {}.", familyUpdated.getId(), familyFounded.getName());
-
-        return fromFamilytoFamilyResponseDTO(familyUpdated);
     }
 }
