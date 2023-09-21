@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
@@ -95,7 +96,12 @@ public class PlantServiceImpl implements PlantService {
         plantResponseDTO.setFamily(entity.getFundamentalData().getFamily().getName());
         plantResponseDTO.setClassifications(entity.getFundamentalData().getClassifications());
         plantResponseDTO.setStatus(entity.getStatus());
-
+        plantResponseDTO.setDescription(entity.getDescription());
+        plantResponseDTO.setNotes(entity.getNotes().stream().map(Note::getNote).collect(Collectors.toCollection(ArrayList::new)));
+        plantResponseDTO.setDetails(entity.getDetails().stream().map(Detail::getDetail).collect(Collectors.toCollection(ArrayList::new)));
+        plantResponseDTO.setTechnicalSheet(entity.getTechnicalSheets().stream()
+                .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
+                .collect(Collectors.toCollection(ArrayList::new)));
         return plantResponseDTO;
     }
 }

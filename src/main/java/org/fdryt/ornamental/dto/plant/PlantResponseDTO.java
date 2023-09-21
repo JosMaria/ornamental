@@ -18,6 +18,8 @@ public class PlantResponseDTO {
     private String family;
     private Set<Classification> classifications;
     private Status status;
+    private String description;
     private Collection<String> details;
     private Collection<String> notes;
+    private Collection<TechnicalSheetDTO> technicalSheet;
 }
