@@ -25,7 +25,7 @@ public class NurseryController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<SingleProductResponseDTO> getProductById(@PathVariable("id") Integer id) {
+    public ResponseEntity<SingleProductResponseDTO> fetchProductById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(service.findProductById(id));
     }
 

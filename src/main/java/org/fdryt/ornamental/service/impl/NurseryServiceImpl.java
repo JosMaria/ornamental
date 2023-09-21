@@ -1,16 +1,25 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fdryt.ornamental.domain.plant.Detail;
+import org.fdryt.ornamental.domain.plant.Note;
+import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
+import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.NurseryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,8 +36,31 @@ public class NurseryServiceImpl implements NurseryService {
     }
 
     @Override
-    public SingleProductResponseDTO findProductById(Integer id) {
-        return null;
+    public SingleProductResponseDTO findProductById(final Integer id) {
+        Plant plantObtained = plantJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Planta con ID: %s no fue encontrada".formatted(id)));
+        log.info("Plant with ID: {} fetched", plantObtained.getId());
+
+        return new SingleProductResponseDTO(
+                plantObtained.getId(),
+                plantObtained.getFundamentalData().getCommonName(),
+                plantObtained.getFundamentalData().getScientificName().getName(),
+                plantObtained.getFundamentalData().getScientificName().getScientistLastnameInitial(),
+                plantObtained.getFundamentalData().getFamily().getName(),
+                plantObtained.getStatus(),
+                plantObtained.getFundamentalData().getClassifications(),
+                plantObtained.getDescription(),
+                Set.of("url1", "url2", "url3"),
+                plantObtained.getNotes().stream()
+                        .map(Note::getNote)
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                plantObtained.getDetails().stream()
+                        .map(Detail::getDetail)
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                plantObtained.getTechnicalSheets().stream()
+                        .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
     }
 
     @Override

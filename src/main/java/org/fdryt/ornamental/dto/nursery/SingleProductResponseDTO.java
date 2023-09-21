@@ -1,18 +1,25 @@
 package org.fdryt.ornamental.dto.nursery;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.fdryt.ornamental.domain.plant.Classification;
+import org.fdryt.ornamental.domain.plant.Status;
+import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
 
+import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuperBuilder
-public class SingleProductResponseDTO extends ItemToListResponseDTO {
-
-    private Set<String> urlPictures;
-    private Set<String> classifications;
-}
+public record SingleProductResponseDTO(
+    Integer id, ///
+    String commonName, //
+    String scientificName, //
+    Character scientistLastnameInitial, //
+    String family, //
+    Status status, //
+    Set<Classification> classifications, //
+    String description, //
+    @JsonProperty("photos_URL")
+    Set<String> photosUrl,
+    List<String> notes,
+    List<String> details,
+    List<TechnicalSheetDTO> technicalSheet
+) {}
