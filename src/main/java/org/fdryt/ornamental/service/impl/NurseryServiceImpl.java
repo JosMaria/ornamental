@@ -2,12 +2,10 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
-import org.fdryt.ornamental.repository.PlantRepository;
 import org.fdryt.ornamental.service.NurseryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class NurseryServiceImpl implements NurseryService {
 
-    private final PlantRepository plantRepository;
 
     @Override
     public Page<ProductResponseDTO> findAllProducts() {
