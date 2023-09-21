@@ -6,6 +6,7 @@ import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
+import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.NurseryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class NurseryServiceImpl implements NurseryService {
 
+    private final PlantJpaRepository plantJpaRepository;
 
     @Override
-    public Page<ProductResponseDTO> findAllProducts() {
-
-        return null;
+    public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
+        Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProducts(pageable);
+        log.info("Products fetched");
+        return productsPageable;
     }
 
     @Override

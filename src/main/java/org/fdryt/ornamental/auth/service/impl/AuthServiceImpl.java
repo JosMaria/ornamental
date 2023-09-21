@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.service.impl;
+/*package org.fdryt.ornamental.auth.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.auth.domain.User;
@@ -48,3 +48,4 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponseDTO(tokenGenerated);
     }
 }
+*/

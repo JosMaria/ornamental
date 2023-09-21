@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.repository;
+/*package org.fdryt.ornamental.auth.repository;
 
 import org.fdryt.ornamental.auth.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,3 +19,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             WHERE u.username = :username""")
     boolean existsByUsername(@Param("username") String username);
 }
+*/

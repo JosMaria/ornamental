@@ -89,19 +89,20 @@ public class PlantServiceImpl implements PlantService {
     }
 
     private PlantResponseDTO fromPlantEntitytoPlantResponseDTO(Plant entity) {
-        PlantResponseDTO plantResponseDTO = new PlantResponseDTO();
-        plantResponseDTO.setId(entity.getId());
-        plantResponseDTO.setCommonName(entity.getFundamentalData().getCommonName());
-        plantResponseDTO.setScientificName(entity.getFundamentalData().getScientificName().toString());
-        plantResponseDTO.setFamily(entity.getFundamentalData().getFamily().getName());
-        plantResponseDTO.setClassifications(entity.getFundamentalData().getClassifications());
-        plantResponseDTO.setStatus(entity.getStatus());
-        plantResponseDTO.setDescription(entity.getDescription());
-        plantResponseDTO.setNotes(entity.getNotes().stream().map(Note::getNote).collect(Collectors.toCollection(ArrayList::new)));
-        plantResponseDTO.setDetails(entity.getDetails().stream().map(Detail::getDetail).collect(Collectors.toCollection(ArrayList::new)));
-        plantResponseDTO.setTechnicalSheet(entity.getTechnicalSheets().stream()
-                .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
-                .collect(Collectors.toCollection(ArrayList::new)));
-        return plantResponseDTO;
+        FundamentalData fundamentalData = entity.getFundamentalData();
+        return new PlantResponseDTO(
+                entity.getId(),
+                fundamentalData.getCommonName(),
+                fundamentalData.getScientificName().toString(),
+                fundamentalData.getFamily().getName(),
+                fundamentalData.getClassifications(),
+                entity.getStatus(),
+                entity.getDescription(),
+                entity.getNotes().stream().map(Note::getNote).collect(Collectors.toCollection(ArrayList::new)),
+                entity.getDetails().stream().map(Detail::getDetail).collect(Collectors.toCollection(ArrayList::new)),
+                entity.getTechnicalSheets().stream()
+                        .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
+                        .collect(Collectors.toCollection(ArrayList::new))
+        );
     }
 }

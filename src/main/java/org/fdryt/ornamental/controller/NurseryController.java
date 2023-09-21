@@ -1,7 +1,6 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
@@ -21,12 +20,8 @@ public class NurseryController {
     private final NurseryService service;
 
     @GetMapping("/products")
-    public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(
-//        @PageableDefault(size = 12) Pageable pageable,
-//        @RequestParam(value = "classification", required = false) Classification classification,
-//        @RequestParam(value = "status", required = false) Status status
-    ) {
-        return ResponseEntity.ok(service.findAllProducts());
+    public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(@PageableDefault(size = 12) Pageable pageable) {
+        return ResponseEntity.ok(service.findAllProducts(pageable));
     }
 
     @GetMapping("/products/{id}")
