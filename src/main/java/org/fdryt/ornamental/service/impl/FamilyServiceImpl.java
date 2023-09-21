@@ -51,6 +51,30 @@ public class FamilyServiceImpl implements FamilyService {
         log.info("Family with ID: {} deleted", id);
     }
 
+    @Transactional
+    @Override
+    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
+        String familyNewName = payload.name().toLowerCase().trim();
+        throwExceptionIfFamilyNameExists(familyNewName);
+        Family familyObtained = findByIdOrElseThrowException(id);
+
+        if (familyObtained.getName().equals(familyNewName)) {
+            log.info("Family: %s continues with the same name.".formatted(familyObtained.getName()));
+            return fromFamilytoFamilyResponseDTO(familyObtained);
+
+        } else {
+            familyObtained.setName(familyNewName);
+            Family familyUpdated = familyJpaRepository.save(familyObtained);
+            log.info("Family with ID: {} change its name to {}.", familyObtained.getId(), familyObtained.getName());
+            return fromFamilytoFamilyResponseDTO(familyUpdated);
+        }
+    }
+
+    private Family findByIdOrElseThrowException(Integer id) {
+        return familyJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Family with ID: %s does not exists.".formatted(id)));
+    }
+
     private void throwExceptionIfFamilyNameExists(String name) {
         if (familyJpaRepository.existsByName(name)) {
             throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
@@ -77,25 +101,5 @@ public class FamilyServiceImpl implements FamilyService {
 
     private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
         return new FamilyResponseDTO(entity.getId(), entity.getName());
-    }
-
-    @Transactional
-    @Override
-    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
-        String familyNewName = payload.name().toLowerCase().trim();
-        throwExceptionIfFamilyNameExists(familyNewName);
-        Family familyObtained = familyJpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Family with ID: %s does not exists to update.".formatted(id)));
-
-        if (familyObtained.getName().equals(familyNewName)) {
-            log.info("Familia: %s continua con el mismo nombre.".formatted(familyObtained.getName()));
-            return fromFamilytoFamilyResponseDTO(familyObtained);
-
-        } else {
-            familyObtained.setName(familyNewName);
-            Family familyUpdated = familyJpaRepository.save(familyObtained);
-            log.info("Family with ID: {} change its name to {}.", familyObtained.getId(), familyObtained.getName());
-            return fromFamilytoFamilyResponseDTO(familyUpdated);
-        }
     }
 }

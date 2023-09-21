@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FamilyJpaRepository extends JpaRepository<Family, Integer> {
@@ -28,4 +29,6 @@ public interface FamilyJpaRepository extends JpaRepository<Family, Integer> {
         FROM Family f
     """)
     List<FamilyResponseDTO> getAllFamilies();
+
+    Optional<Family> findByName(String name);
 }

@@ -13,8 +13,8 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/families")
 public class FamilyController {
 

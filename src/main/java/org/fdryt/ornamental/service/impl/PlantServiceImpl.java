@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
-import org.fdryt.ornamental.repository.FamilyRepository;
-import org.fdryt.ornamental.repository.PlantRepository;
+import org.fdryt.ornamental.repository.FamilyJpaRepository;
+import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 
@@ -21,25 +21,23 @@ import java.util.stream.Collectors;
 @Service
 public class PlantServiceImpl implements PlantService {
 
-    private final PlantRepository plantRepository;
-    private final FamilyRepository familyRepository;
+    private final PlantJpaRepository plantJpaRepository;
+    private final FamilyJpaRepository familyJpaRepository;
 
     @Override
     public PlantResponseDTO create(final CreatePlantDTO payload) {
-        // verify common name does not repeat
-        if (plantRepository.existsByCommonName(payload.commonName())) {
+        if (plantJpaRepository.existsByCommonName(payload.commonName())) {
             throw new EntityExistsException("Planta nombrada: %s ya existe, no puede ser repetida.".formatted(payload.commonName()));
         }
 
-        // verify family exists
-        Family familyFounded = null;
-        if (payload.nameFamily() != null) {
-            familyFounded = familyRepository
-                .findByName(payload.nameFamily())
-                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.nameFamily())));
+        Family familyObtained = null;
+        if (payload.familyName() != null) {
+            familyObtained = familyJpaRepository
+                .findByName(payload.familyName())
+                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.familyName())));
         }
 
-        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyFounded);
+        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyObtained);
 
         List<Note> notesToPersist = payload.notes().stream()
                 .map(note -> Note.builder().note(note).plant(plantToPersist).build())
@@ -61,7 +59,7 @@ public class PlantServiceImpl implements PlantService {
         plantToPersist.addDetails(detailsToPersist);
         plantToPersist.addTechnicalSheet(technicalSheet);
 
-        Plant plantPersisted = plantRepository.add(plantToPersist);
+        Plant plantPersisted = plantJpaRepository.save(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
         return fromPlantEntitytoPlantResponseDTO(plantPersisted);
@@ -84,6 +82,7 @@ public class PlantServiceImpl implements PlantService {
 
         return Plant.builder()
                 .fundamentalData(fundamentalData)
+                .description(dto.description())
                 .status(dto.status())
                 .build();
     }

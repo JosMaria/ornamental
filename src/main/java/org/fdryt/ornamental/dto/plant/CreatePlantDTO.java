@@ -16,7 +16,7 @@ public record CreatePlantDTO(
     Character scientistLastnameInitial,
 
     @JsonProperty("family")
-    String nameFamily,
+    String familyName,
 
     Set<Classification> classifications,
     Status status,
