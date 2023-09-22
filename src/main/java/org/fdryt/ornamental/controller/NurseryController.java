@@ -30,10 +30,7 @@ public class NurseryController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<Page<ItemResponseDTO>> getAllItems(
-        @PageableDefault(size = 20) Pageable pageable,
-        @RequestParam(value = "status", required = false) Status status
-    ) {
-        return ResponseEntity.ok(service.findAllItems(pageable, status));
+    public ResponseEntity<Page<ItemResponseDTO>> fetchAllItems(@PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(service.findAllItems(pageable));
     }
 }

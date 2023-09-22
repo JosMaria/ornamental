@@ -64,7 +64,7 @@ public class NurseryServiceImpl implements NurseryService {
     }
 
     @Override
-    public Page<ItemResponseDTO> findAllItems(Pageable pageable, Status status) {
+    public Page<ItemResponseDTO> findAllItems(Pageable pageable) {
         /*
         * SELECT
         *   id,

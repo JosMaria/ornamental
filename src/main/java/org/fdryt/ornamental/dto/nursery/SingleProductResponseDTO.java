@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 public record SingleProductResponseDTO(
-    Integer id, ///
-    String commonName, //
-    String scientificName, //
-    Character scientistLastnameInitial, //
-    String family, //
-    Status status, //
-    Set<Classification> classifications, //
-    String description, //
+    Integer id,
+    String commonName,
+    String scientificName,
+    Character scientistLastnameInitial,
+    String family,
+    Status status,
+    Set<Classification> classifications,
+    String description,
     @JsonProperty("photos_URL")
     Set<String> photosUrl,
     List<String> notes,
