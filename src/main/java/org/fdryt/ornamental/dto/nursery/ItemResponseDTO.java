@@ -7,8 +7,8 @@ public record ItemResponseDTO(
         Integer id,
         String commonName,
         String scientificName,
-        String scientistLastnameInitial,
-        Status status,
+        Character scientistLastnameInitial,
+
         @JsonProperty("family")
         String familyName
 ) {}

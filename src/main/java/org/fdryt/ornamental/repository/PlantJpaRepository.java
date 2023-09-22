@@ -43,9 +43,8 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             p.fundamentalData.commonName,
             p.fundamentalData.scientificName.name,
             p.fundamentalData.scientificName.scientistLastnameInitial,
-            p.status,
             p.fundamentalData.family.name)
         FROM Plant p
         """)
-    Page<ItemResponseDTO> findAllItem(Pageable pageable);
+    Page<ItemResponseDTO> findAllItems(Pageable pageable);
 }

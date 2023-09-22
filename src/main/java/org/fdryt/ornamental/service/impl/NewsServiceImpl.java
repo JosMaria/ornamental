@@ -7,7 +7,7 @@ import org.fdryt.ornamental.dto.news.CreateNewsDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
 import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
 import org.fdryt.ornamental.problem.exception.DomainNotFoundException;
-import org.fdryt.ornamental.repository.NewsRepository;
+import org.fdryt.ornamental.repository.NewsJpaRepository;
 import org.fdryt.ornamental.service.NewsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class NewsServiceImpl implements NewsService {
 
-    private final NewsRepository newsRepository;
+    private final NewsJpaRepository newsRepository;
     private final ModelMapper newsMapper;
 
     @Override
