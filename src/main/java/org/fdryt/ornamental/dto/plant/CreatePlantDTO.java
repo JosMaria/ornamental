@@ -16,10 +16,12 @@ public record CreatePlantDTO(
     Character scientistLastnameInitial,
 
     @JsonProperty("family")
-    String nameFamily,
+    String familyName,
 
     Set<Classification> classifications,
     Status status,
+    String description,
     List<String> notes,
-    List<String> details
+    List<String> details,
+    List<TechnicalSheetDTO> technicalSheet
 ) {}

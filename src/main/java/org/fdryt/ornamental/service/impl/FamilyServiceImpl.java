@@ -1,17 +1,18 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
-import org.fdryt.ornamental.problem.exception.EntityAlreadyException;
-import org.fdryt.ornamental.repository.FamilyRepository;
+import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,61 +21,85 @@ import java.util.stream.Collectors;
 @Service
 public class FamilyServiceImpl implements FamilyService {
 
-    private final FamilyRepository familyRepository;
+    private final FamilyJpaRepository familyJpaRepository;
 
     @Override
-    public FamilyResponseDTO create(final CreateFamilyDTO payload) {
-        verifyIfFamilyNameExists(payload.name());
-        Family familyToPersist = toFamily(payload);
-        Family familyPersisted = familyRepository.add(familyToPersist);
-        log.info("Family with name: {} persisted", familyPersisted.getName());
-
-        return toFamilyResponseDTO(familyPersisted);
-    }
-
-    @Override
-    public List<String> getAllNames() {
-        List<String> allNames = familyRepository.getAllNames();
-        log.info("Get all names of the families");
-
-        return allNames;
-    }
-
-    // TODO: implement of other matter
-    @Override
-    public List<FamilyResponseDTO> createAllByName(final List<CreateFamilyDTO> payload) {
-        payload.forEach(dto -> verifyIfFamilyNameExists(dto.name()));
-
-        Collection<Family> familiesToPersist = payload.stream()
-                .map(this::toFamily)
+    public List<FamilyResponseDTO> createAll(final List<CreateFamilyDTO> payload) {
+        List<String> familyNames = payload.stream()
+                .map(createFamilyDTO -> createFamilyDTO.name().toLowerCase().trim())
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        Collection<Family> familiesPersisted = familyRepository.addAll(familiesToPersist);
-        log.info("Families were persisted");
+        familyNames.forEach(this::throwExceptionIfFamilyNameExists);
+        List<Family> familiesToPersist = toCollectionFamilies(familyNames);
+        List<Family> familiesPersisted = familyJpaRepository.saveAll(familiesToPersist);
+        log.info("All families were persisted.");
 
-        return familiesPersisted.stream()
-                .map(this::toFamilyResponseDTO)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return toCollectionFamiliesResponseDTO(familiesPersisted);
     }
 
-    private void verifyIfFamilyNameExists(String name) {
-        if (familyRepository.existsByName(name)) {
-            throw new EntityAlreadyException(Family.class, name);
+    @Override
+    public List<FamilyResponseDTO> getAllFamilies() {
+        List<FamilyResponseDTO> familiesObtained = familyJpaRepository.getAllFamilies();
+        log.info("Fetch all the families");
+
+        return familiesObtained;
+    }
+
+    @Override
+    public void deleteById(final Integer id) {
+        familyJpaRepository.deleteById(id);
+        log.info("Family with ID: {} deleted", id);
+    }
+
+    @Transactional
+    @Override
+    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
+        String familyNewName = payload.name().toLowerCase().trim();
+        throwExceptionIfFamilyNameExists(familyNewName);
+        Family familyObtained = findByIdOrElseThrowException(id);
+
+        if (familyObtained.getName().equals(familyNewName)) {
+            log.info("Family: %s continues with the same name.".formatted(familyObtained.getName()));
+            return fromFamilytoFamilyResponseDTO(familyObtained);
+
+        } else {
+            familyObtained.setName(familyNewName);
+            Family familyUpdated = familyJpaRepository.save(familyObtained);
+            log.info("Family with ID: {} change its name to {}.", familyObtained.getId(), familyObtained.getName());
+            return fromFamilytoFamilyResponseDTO(familyUpdated);
         }
     }
 
-    // TODO: delete methods below when I create the mapper
-    private Family toFamily(CreateFamilyDTO dto) {
-        Family family = new Family();
-        family.setName(dto.name());
+    private Family findByIdOrElseThrowException(Integer id) {
+        return familyJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Family with ID: %s does not exists.".formatted(id)));
+    }
 
+    private void throwExceptionIfFamilyNameExists(String name) {
+        if (familyJpaRepository.existsByName(name)) {
+            throw new EntityExistsException("Familia nombrada %s ya existe.".formatted(name));
+        }
+    }
+
+    private List<Family> toCollectionFamilies(List<String> familyNames) {
+        return familyNames.stream()
+                .map(this::fromCreateFamilyDtoToFamily)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private Family fromCreateFamilyDtoToFamily(String familyName) {
+        Family family = new Family();
+        family.setName(familyName);
         return family;
     }
 
-    private FamilyResponseDTO toFamilyResponseDTO(Family entity) {
-        return new FamilyResponseDTO(
-                entity.getId(),
-                entity.getName()
-        );
+    private List<FamilyResponseDTO> toCollectionFamiliesResponseDTO(List<Family> families) {
+        return families.stream()
+                .map(this::fromFamilytoFamilyResponseDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private FamilyResponseDTO fromFamilytoFamilyResponseDTO(Family entity) {
+        return new FamilyResponseDTO(entity.getId(), entity.getName());
     }
 }

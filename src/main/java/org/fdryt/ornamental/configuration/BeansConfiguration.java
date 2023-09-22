@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RequiredArgsConstructor
 @Configuration
 public class BeansConfiguration {
-
-    private final PasswordEncoder passwordEncoder;
 
     @Bean("plantMapper")
     public ModelMapper plantMapper() {

@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.controller;
+/*package org.fdryt.ornamental.auth.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.auth.dto.AuthRequestDTO;
@@ -31,3 +31,4 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(authRequestDTO));
     }
 }
+*/

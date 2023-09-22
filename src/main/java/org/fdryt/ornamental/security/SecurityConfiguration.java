@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.security;
+/*package org.fdryt.ornamental.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers(GET, "/api/v1/classifications/**").permitAll();
                     auth.requestMatchers("/api/v1/families/**").permitAll();
                     auth.requestMatchers("/api/v1/plants/**").permitAll();
+                    auth.requestMatchers("/api/v1/nursery/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -46,3 +47,4 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
+*/
