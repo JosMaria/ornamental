@@ -1,6 +1,5 @@
 package org.fdryt.ornamental.service;
 
-import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
