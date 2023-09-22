@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.service;
+/*package org.fdryt.ornamental.auth.service;
 
 import org.fdryt.ornamental.auth.dto.AuthRequestDTO;
 import org.fdryt.ornamental.auth.dto.AuthResponseDTO;
@@ -10,3 +10,4 @@ public interface AuthService {
 
     AuthResponseDTO authenticate(AuthRequestDTO authRequestDTO);
 }
+*/

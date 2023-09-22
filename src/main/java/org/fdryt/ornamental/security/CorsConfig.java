@@ -1,4 +1,5 @@
-package org.fdryt.ornamental.security;
+/*package org.fdryt.ornamental.security;
+
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,3 +25,4 @@ public class CorsConfig {
         return source;
     }
 }
+*/

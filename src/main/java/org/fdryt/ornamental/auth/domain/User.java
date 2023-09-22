@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.domain;
+/*package org.fdryt.ornamental.auth.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -70,3 +70,4 @@ public class User implements UserDetails {
         return isEnabled;
     }
 }
+*/

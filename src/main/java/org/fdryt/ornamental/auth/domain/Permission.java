@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.auth.domain;
+/*package org.fdryt.ornamental.auth.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,3 +19,4 @@ public enum Permission {
     private final String permission;
 }
 
+*/

@@ -1,3 +1,4 @@
+/*
 package org.fdryt.ornamental.security;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class ApplicationConfig {
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
 
+
         return authProvider;
     }
 
@@ -44,3 +46,4 @@ public class ApplicationConfig {
         return config.getAuthenticationManager();
     }
 }
+*/

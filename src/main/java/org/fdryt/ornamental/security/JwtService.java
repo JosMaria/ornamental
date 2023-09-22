@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.security;
+/*package org.fdryt.ornamental.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -72,3 +72,4 @@ public class JwtService {
         return Keys.hmacShaKeyFor(ketBytes);
     }
 }
+*/

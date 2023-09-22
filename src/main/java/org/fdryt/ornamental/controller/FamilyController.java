@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
+import org.fdryt.ornamental.utils.ValidList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,26 +13,32 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-// TODO: see authorizations
-@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/families")
 public class FamilyController {
 
     private final FamilyService familyService;
 
-    @PostMapping
-    public ResponseEntity<FamilyResponseDTO> save(@RequestBody @Valid CreateFamilyDTO payload) {
-        return new ResponseEntity<>(familyService.create(payload), CREATED);
-    }
-
-    @GetMapping("/names")
-    public ResponseEntity<List<String>> getAllNames() {
-        return ResponseEntity.ok(familyService.getAllNames());
-    }
-
     @PostMapping("/batch")
-    public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody List<CreateFamilyDTO> payload) {
-        return new ResponseEntity<>(familyService.createAllByName(payload), CREATED);
+    public ResponseEntity<List<FamilyResponseDTO>> saveAll(@RequestBody @Valid ValidList<CreateFamilyDTO> payload) {
+        return new ResponseEntity<>(familyService.createAll(payload), CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FamilyResponseDTO>> fetchAllFamilies() {
+        return ResponseEntity.ok(familyService.getAllFamilies());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        familyService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<FamilyResponseDTO> update(@PathVariable("id") Integer id, @RequestBody @Valid CreateFamilyDTO payload) {
+        return ResponseEntity.ok(familyService.updateName(id, payload));
     }
 }

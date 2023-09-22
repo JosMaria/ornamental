@@ -10,10 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -27,7 +25,7 @@ public class NewsController {
     private final NewsService newsService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('news:create')")
+//    @PreAuthorize("hasAuthority('news:create')")
     public ResponseEntity<NewsResponseDTO> create(@RequestBody @Valid final CreateNewsDTO createNewsDTO) {
         return new ResponseEntity<>(newsService.create(createNewsDTO), CREATED);
     }
@@ -43,20 +41,20 @@ public class NewsController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('news:delete')")
+//    @PreAuthorize("hasAuthority('news:delete')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") final Integer id) {
         newsService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('news:update')")
+//    @PreAuthorize("hasAuthority('news:update')")
     public ResponseEntity<NewsResponseDTO> update(@PathVariable("id") final Integer id, @RequestBody @Valid final UpdateNewsDTO updateNewsDTO) {
         return ResponseEntity.ok(newsService.update(id, updateNewsDTO));
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAuthority('news_fields:update')")
+//    @PreAuthorize("hasAuthority('news_fields:update')")
     public ResponseEntity<NewsResponseDTO> updateByFields(@PathVariable("id") Integer id, @RequestBody final Map<String, Object> fields) {
         return ResponseEntity.ok(newsService.updateByFields(id, fields));
     }

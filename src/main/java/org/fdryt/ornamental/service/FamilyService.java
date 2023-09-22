@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface FamilyService {
 
-    FamilyResponseDTO create(CreateFamilyDTO payload);
+    List<FamilyResponseDTO> createAll(List<CreateFamilyDTO> payload);
 
-    List<String> getAllNames();
+    List<FamilyResponseDTO> getAllFamilies();
 
-    List<FamilyResponseDTO> createAllByName(List<CreateFamilyDTO> payload);
+    void deleteById(Integer id);
+
+    FamilyResponseDTO updateName(Integer id, CreateFamilyDTO payload);
 }
