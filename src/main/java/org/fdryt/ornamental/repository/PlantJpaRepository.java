@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,16 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
         FROM Plant p
     """)
     Page<ProductResponseDTO> findAllProducts(Pageable pageable);
+
+    @Query("""
+        SELECT NEW org.fdryt.ornamental.dto.nursery.ItemResponseDTO(
+            p.id,
+            p.fundamentalData.commonName,
+            p.fundamentalData.scientificName.name,
+            p.fundamentalData.scientificName.scientistLastnameInitial,
+            p.status,
+            p.fundamentalData.family.name)
+        FROM Plant p
+        """)
+    Page<ItemResponseDTO> findAllItem(Pageable pageable);
 }

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Detail;
 import org.fdryt.ornamental.domain.plant.Note;
 import org.fdryt.ornamental.domain.plant.Plant;
-import org.fdryt.ornamental.domain.plant.Status;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
@@ -31,7 +30,7 @@ public class NurseryServiceImpl implements NurseryService {
     @Override
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
         Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProducts(pageable);
-        log.info("Products fetched");
+        log.info("Products fo the number {} fetched.", productsPageable.getNumber());
         return productsPageable;
     }
 
@@ -65,19 +64,8 @@ public class NurseryServiceImpl implements NurseryService {
 
     @Override
     public Page<ItemResponseDTO> findAllItems(Pageable pageable) {
-        /*
-        * SELECT
-        *   id,
-        *   fundamentalData.commonName,
-        *   fundamentalData.scientificName,
-        *   fundamentalData.scientistLastnameInitial,
-        *   status,
-        *   familyName
-        *
-        * FROM Plant p
-        * INNER JOIN Family f
-        * WHERE p.status = :status
-        * */
-        return null;
+        Page<ItemResponseDTO> itemsPageable = plantJpaRepository.findAllItem(pageable);
+        log.info("Items of the number page: {} fetched", itemsPageable.getNumber());
+        return itemsPageable;
     }
 }
