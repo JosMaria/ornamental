@@ -4,9 +4,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/nursery_db
-    username: josemaria
-    password: maria17
+    url: jdbc:postgresql://containers-us-west-162.railway.app:7014/railway
+    username: postgres
+    password: 5tNqgfTw7qCM2NB34eWA
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
