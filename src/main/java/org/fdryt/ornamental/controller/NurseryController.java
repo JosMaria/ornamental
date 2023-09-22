@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
+@CrossOrigin(origins = "https://deploy-preview-19--magnificent-daifuku-409cab.netlify.app/", allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/nursery")
