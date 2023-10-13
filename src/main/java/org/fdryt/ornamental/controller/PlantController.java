@@ -33,7 +33,7 @@ public class PlantController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("/simple-info")
     public ResponseEntity<List<SimpleInfoPlantResponseDTO>> fetchAllCommonNames() {
         return ResponseEntity.ok(plantService.getAllCommonName());
     }
