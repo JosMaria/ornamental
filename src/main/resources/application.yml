@@ -9,6 +9,7 @@ spring:
     password: maria17
     driver-class-name: org.postgresql.Driver
   jpa:
+    generate-ddl: true
     show-sql: true
     open-in-view: false
     hibernate:
@@ -17,3 +18,4 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        globally_quoted_identifiers: true
