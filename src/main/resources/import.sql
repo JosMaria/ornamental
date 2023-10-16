@@ -1,2 +1,0 @@
-INSERT INTO users (id, name, last_name, username, password, role) VALUES (1, 'Consuelo Miranda', 'Diaz Villarroel', 'Consuelo', '$2a$10$Z0rZ2GX89QgAN.Bl2CK8/OzQnima6ckfoK4Nro8BWv80j45Wte1PW', 'ADMINISTRATOR');
-INSERT INTO users (id, name, last_name, username, password, role) VALUES (2, 'Jose Maria', 'Aguilar Chambi', 'JosMaria', '$2a$10$KWBQvSzan47gTwsQZz.CZ.i37BSV2eEAMH/8LalAtRyDtXEUAm1k2', 'ASSISTANT');
