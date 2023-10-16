@@ -26,10 +26,11 @@ public class Account {
     private String username;
 
     private String password;
-    private boolean enabled = false;
-    private boolean credentialsExpired = false;
-    private boolean expired = false;
-    private boolean locked = false;
+
+    private boolean enabled = true;
+    private boolean credentialsNonExpired = true;
+    private boolean nonExpired = true;
+    private boolean nonLocked = true;
 
     @Enumerated(EnumType.STRING)
     private Role role;
