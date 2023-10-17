@@ -1,12 +1,14 @@
 package org.fdryt.ornamental.domain.account;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
@@ -25,6 +27,7 @@ public class Account {
     @Column(unique = true)
     private String username;
 
+    @JsonProperty(access = WRITE_ONLY)
     private String password;
 
     private boolean enabled = true;
