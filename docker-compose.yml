@@ -1,0 +1,43 @@
+services:
+  postgresdb:
+    container_name: postgrescontainerforapp
+    image: postgres:15-alpine
+    restart: unless-stopped
+    volumes:
+      - $HOME/database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      POSTGRES_DB: nursery_db
+      POSTGRES_USER: josmaria
+      POSTGRES_PASSWORD: maria17
+      SERVICE_TAGS: prod
+      SERVICE_NAME: postgresdb
+    networks:
+      - apinetwork
+
+  apiapplication:
+    container_name: apiapplicationcontainer
+    build: .
+    image: apiapplication:v1
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/nursery_db
+      SPRING_DATASOURCE_USERNAME: 'josmaria'
+      SPRING_DATASOURCE_PASSWORD: 'maria17'
+      SERVICE_TAGS: prod
+      SERVICE_NAME: springapi
+    depends_on:
+      - postgresdb
+    networks:
+      - apinetwork
+
+networks:
+  apinetwork:
+    driver: bridge
