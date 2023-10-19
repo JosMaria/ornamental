@@ -1,3 +1,4 @@
+/*
 package org.fdryt.ornamental.security;
 
 import lombok.RequiredArgsConstructor;
@@ -33,3 +34,4 @@ public class AccountAuthenticationProvider extends AbstractUserDetailsAuthentica
         return userDetailsService.loadUserByUsername(username);
     }
 }
+*/
