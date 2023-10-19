@@ -35,7 +35,3 @@ build/
 src/main/resources/db/**
 
 src/main/java/org/fdryt/ornamental/configuration/DataLoad.java
-
-### only to test deploy after delete this lines
-docker-compose.yml
-Dockerfile
