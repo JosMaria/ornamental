@@ -1,10 +1,11 @@
-package org.fdryt.ornamental.security;
+package org.fdryt.ornamental.service.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.fdryt.ornamental.service.JwtService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +15,31 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static org.fdryt.ornamental.security.SecurityConstants.ONE_HOUR;
+import static org.fdryt.ornamental.security.SecurityConstants.SECRET_KEY;
+
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
-    public static final String SECRET_KEY = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
-    private static final Long EXPIRATION_TIME = 86_400_000L;
-
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails);
+    }
+
+    @Override
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -33,18 +47,9 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + ONE_HOUR))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
