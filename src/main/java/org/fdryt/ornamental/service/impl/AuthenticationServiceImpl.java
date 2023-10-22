@@ -9,7 +9,7 @@ import org.fdryt.ornamental.dto.auth.AuthenticationResponse;
 import org.fdryt.ornamental.dto.auth.RegisterRequest;
 import org.fdryt.ornamental.repository.UserJpaRepository;
 import org.fdryt.ornamental.service.AuthenticationService;
-import org.fdryt.ornamental.service.JwtService;
+import org.fdryt.ornamental.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
     private final UserJpaRepository userJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -38,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User userPersisted = userJpaRepository.save(user);
         log.info("User {} created successfully.", userPersisted.getUsername());
-        String jwtTokenGenerated = jwtService.generateToken(userPersisted);
+        String jwtTokenGenerated = jwtUtils.generateToken(userPersisted);
 
         return new AuthenticationResponse(jwtTokenGenerated);
     }
@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User userObtained = userJpaRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException("User %s not found.".formatted(request.username())));
 
-        String jwtTokenGenerated = jwtService.generateToken(userObtained);
+        String jwtTokenGenerated = jwtUtils.generateToken(userObtained);
 
         return new AuthenticationResponse(jwtTokenGenerated);
     }

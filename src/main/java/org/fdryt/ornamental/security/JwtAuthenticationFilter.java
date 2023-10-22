@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.service.JwtService;
+import org.fdryt.ornamental.utils.JwtUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +24,7 @@ import static org.fdryt.ornamental.security.SecurityConstants.PREFIX_BEARER_AUTH
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -41,11 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String jwtTokenObtained = authHeader.substring(PREFIX_BEARER_AUTH.length());
-        String username = jwtService.extractUsername(jwtTokenObtained);
+        String username = jwtUtils.extractUsername(jwtTokenObtained);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetailsObtained = userDetailsService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(jwtTokenObtained, userDetailsObtained)) {
+
+            if (jwtUtils.isTokenValid(jwtTokenObtained, userDetailsObtained)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetailsObtained,

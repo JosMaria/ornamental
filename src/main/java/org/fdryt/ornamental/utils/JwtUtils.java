@@ -1,11 +1,10 @@
-package org.fdryt.ornamental.service.impl;
+package org.fdryt.ornamental.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.fdryt.ornamental.service.JwtService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +18,20 @@ import static org.fdryt.ornamental.security.SecurityConstants.ONE_HOUR;
 import static org.fdryt.ornamental.security.SecurityConstants.SECRET_KEY;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+public class JwtUtils {
 
-    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    @Override
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails);
     }
 
-    @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
