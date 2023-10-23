@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.fdryt.ornamental.security.SecurityConstants.ONE_HOUR;
-import static org.fdryt.ornamental.security.SecurityConstants.SECRET_KEY;
+import static org.fdryt.ornamental.utils.SecurityConstants.ONE_HOUR;
+import static org.fdryt.ornamental.utils.SecurityConstants.SECRET_KEY;
 
 @Service
 public class JwtUtils {

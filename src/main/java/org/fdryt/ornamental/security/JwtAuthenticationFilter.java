@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static org.fdryt.ornamental.security.SecurityConstants.PREFIX_BEARER_AUTH;
+import static org.fdryt.ornamental.utils.SecurityConstants.PREFIX_BEARER_AUTH;
 
 @RequiredArgsConstructor
 @Component

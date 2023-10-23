@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.security;
+package org.fdryt.ornamental.utils;
 
 public class SecurityConstants {
 
