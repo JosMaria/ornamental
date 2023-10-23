@@ -1,4 +1,4 @@
-/*package org.fdryt.ornamental.security;
+package org.fdryt.ornamental.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,27 +14,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service
-public class JwtService {
+import static org.fdryt.ornamental.utils.SecurityConstants.ONE_HOUR;
+import static org.fdryt.ornamental.utils.SecurityConstants.SECRET_KEY;
 
-    public static final String SECRET_KEY = "2A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368";
-    private static final Long EXPIRATION_TIME = 86_400_000L;
+@Service
+public class JwtUtils {
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return buildToken(extraClaims, userDetails);
-    }
-
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
     }
 
     public String extractUsername(String token) {
@@ -44,6 +35,16 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ONE_HOUR))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {
@@ -72,4 +73,3 @@ public class JwtService {
         return Keys.hmacShaKeyFor(ketBytes);
     }
 }
-*/

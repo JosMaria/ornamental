@@ -1,21 +1,16 @@
 package org.fdryt.ornamental.domain.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.stream.Collectors;
-
-import static jakarta.persistence.GenerationType.SEQUENCE;
+import java.util.Collections;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,11 +19,11 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class User implements UserDetails {
 
     @Id
-    /*@GeneratedValue(strategy = SEQUENCE, generator = "user_sequence")
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)*/
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
     private Integer id;
 
-    private String name;
+    private String firstname;
     private String lastName;
     private String username;
     private String password;
@@ -38,12 +33,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        HashSet<SimpleGrantedAuthority> authorities = role.getPermissions().stream()
-                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                .collect(Collectors.toCollection(HashSet::new));
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
-
-        return authorities;
+        return Collections.singletonList(new SimpleGrantedAuthority(Role.ASSISTANT.name()));
     }
 
     @Override
