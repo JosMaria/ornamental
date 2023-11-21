@@ -1,5 +1,6 @@
 package org.fdryt.ornamental.service.impl;
 
+import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.user.Role;
@@ -29,7 +30,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(final RegisterRequest request) {
+        if (userJpaRepository.existsByUsername(request.username())) {
+            log.error("Username {} already exists.", request.username());
+            throw new EntityExistsException("Nombre de usuario %s ya existe.".formatted(request.username()));
+        }
+
         User user = User.builder()
                 .firstname(request.firstname())
                 .lastName(request.lastname())
@@ -40,9 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User userPersisted = userJpaRepository.save(user);
         log.info("User {} created successfully.", userPersisted.getUsername());
-        String jwtTokenGenerated = jwtUtils.generateToken(userPersisted);
-
-        return new AuthenticationResponse(jwtTokenGenerated);
+        return new AuthenticationResponse(jwtUtils.generateToken(userPersisted));
     }
 
     @Override
