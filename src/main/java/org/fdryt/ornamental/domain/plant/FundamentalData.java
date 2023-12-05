@@ -17,6 +17,7 @@ public class FundamentalData {
     @Embedded
     private ScientificName scientificName;
 
+    @ElementCollection(targetClass = Classification.class)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
 

@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record RegisterRequest(
 
-        @NotBlank(message = "FIRSTNAME field should not be null, empty or blank")
-        String firstname,
+        @NotBlank(message = "NAME field should not be null, empty or blank")
+        String name,
 
         @NotBlank(message = "LASTNAME field should not be null, empty or blank")
         String lastname,

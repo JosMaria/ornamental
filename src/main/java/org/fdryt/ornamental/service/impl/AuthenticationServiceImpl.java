@@ -36,8 +36,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new EntityExistsException("Nombre de usuario %s ya existe.".formatted(request.username()));
         }
 
+        // TODO: do given Role and its permissions
         User user = User.builder()
-                .firstname(request.firstname())
+                .name(request.name())
                 .lastName(request.lastname())
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
@@ -52,16 +53,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(final AuthenticationRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.username(), request.password())
+                new UsernamePasswordAuthenticationToken(
+                        request.username(),
+                        request.password()
+                )
         );
 
         User userObtained = userJpaRepository.findByUsername(request.username())
                 .orElseThrow(() -> new UsernameNotFoundException("User %s not found.".formatted(request.username())));
         log.info("User {} authenticate successfully", userObtained.getUsername());
-
         Map<String, Object> claims =  Map.of("role", userObtained.getRole());
         String jwtTokenGenerated = jwtUtils.generateToken(claims, userObtained);
-
         return new AuthenticationResponse(jwtTokenGenerated);
     }
 }

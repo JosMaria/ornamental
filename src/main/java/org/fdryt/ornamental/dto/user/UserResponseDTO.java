@@ -4,7 +4,7 @@ import org.fdryt.ornamental.domain.user.Role;
 
 public record UserResponseDTO(
         Integer id,
-        String firstname,
+        String name,
         String lastname,
         String username,
         Role role

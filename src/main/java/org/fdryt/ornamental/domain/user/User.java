@@ -24,7 +24,7 @@ public class User implements UserDetails {
     private Integer id;
 
     @Column(nullable = false)
-    private String firstname;
+    private String name;
 
     @Column(nullable = false)
     private String lastName;

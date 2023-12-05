@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserService {
 
     List<UserResponseDTO> fetchAllUsers();
+
+    UserResponseDTO fetchUserById(Integer id);
 }

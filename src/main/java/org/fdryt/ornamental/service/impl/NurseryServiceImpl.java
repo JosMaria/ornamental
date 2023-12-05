@@ -3,6 +3,7 @@ package org.fdryt.ornamental.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Detail;
 import org.fdryt.ornamental.domain.plant.Note;
 import org.fdryt.ornamental.domain.plant.Plant;
@@ -30,7 +31,14 @@ public class NurseryServiceImpl implements NurseryService {
     @Override
     public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
         Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProducts(pageable);
-        log.info("Products of the number {} fetched.", productsPageable.getNumber());
+        log.info("Products from page number {} fetched.", productsPageable.getNumber());
+        return productsPageable;
+    }
+
+    @Override
+    public Page<ProductResponseDTO> findAllProductsByClassification(Pageable pageable, Classification classification) {
+        Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProductsByClassification(pageable, classification);
+        log.info("Products from page number {} and classification {} fetched.", productsPageable.getNumber(), classification);
         return productsPageable;
     }
 
