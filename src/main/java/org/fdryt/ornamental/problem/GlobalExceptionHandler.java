@@ -29,13 +29,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorResponse> handleEntityExists(EntityExistsException exception, HttpServletRequest request) {
-        log.warn(exception.getMessage());
         return responseBadRequest(request.getRequestURI(), exception.getMessage());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
-        log.warn(exception.getMessage());
         return responseBadRequest(request.getRequestURI(), exception.getMessage());
     }
 
