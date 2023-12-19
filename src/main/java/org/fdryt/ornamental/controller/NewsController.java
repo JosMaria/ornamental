@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://localhost:5173/", "https://magnificent-daifuku-409cab.netlify.app/"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/news")

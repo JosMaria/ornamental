@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@CrossOrigin(origins = "http://localhost:5173/", allowedHeaders = "*")
+@CrossOrigin(origins = {"http://localhost:5173/", "https://magnificent-daifuku-409cab.netlify.app/"}, allowedHeaders = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/families")
