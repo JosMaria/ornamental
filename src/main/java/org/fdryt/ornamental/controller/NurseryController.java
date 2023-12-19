@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
@@ -19,17 +20,25 @@ public class NurseryController {
 
     private final NurseryService service;
 
-    @GetMapping("/products")
+    @GetMapping("/product")
     public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(@PageableDefault(size = 12) Pageable pageable) {
         return ResponseEntity.ok(service.findAllProducts(pageable));
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/product/classification/{classification}")
+    public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(
+            @PageableDefault(size = 12) Pageable pageable,
+            @PathVariable("classification") Classification classification
+    ) {
+        return ResponseEntity.ok(service.findAllProductsByClassification(pageable, classification));
+    }
+
+    @GetMapping("/product/{id}")
     public ResponseEntity<SingleProductResponseDTO> fetchProductById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(service.findProductById(id));
     }
 
-    @GetMapping("/items")
+    @GetMapping("/item")
     public ResponseEntity<Page<ItemResponseDTO>> fetchAllItems(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(service.findAllItems(pageable));
     }
