@@ -35,17 +35,10 @@ public class Plant {
     private String description;
 
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private final Collection<Note> notes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<Detail> details = new ArrayList<>();
 
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<TechnicalSheet> technicalSheets = new ArrayList<>();
-
-    public void addNotes(Collection<Note> newNotes) {
-        notes.addAll(newNotes);
-    }
 
     public void addDetails(Collection<Detail> newDetails) {
         details.addAll(newDetails);

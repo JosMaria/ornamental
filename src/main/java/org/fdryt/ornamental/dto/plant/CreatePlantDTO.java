@@ -21,7 +21,6 @@ public record CreatePlantDTO(
     Set<Classification> classifications,
     Status status,
     String description,
-    List<String> notes,
     List<String> details,
     List<TechnicalSheetDTO> technicalSheet
 ) {}

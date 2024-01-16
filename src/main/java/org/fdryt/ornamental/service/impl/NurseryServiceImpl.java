@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Detail;
-import org.fdryt.ornamental.domain.plant.Note;
 import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
@@ -58,9 +57,6 @@ public class NurseryServiceImpl implements NurseryService {
                 plantObtained.getFundamentalData().getClassifications(),
                 plantObtained.getDescription(),
                 Set.of("url1", "url2", "url3"),
-                plantObtained.getNotes().stream()
-                        .map(Note::getNote)
-                        .collect(Collectors.toCollection(ArrayList::new)),
                 plantObtained.getDetails().stream()
                         .map(Detail::getDetail)
                         .collect(Collectors.toCollection(ArrayList::new)),

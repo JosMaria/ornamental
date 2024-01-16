@@ -49,10 +49,6 @@ public class PlantServiceImpl implements PlantService {
 
         Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyObtained);
 
-        List<Note> notesToPersist = payload.notes().stream()
-                .map(note -> Note.builder().note(note).plant(plantToPersist).build())
-                .collect(Collectors.toCollection(ArrayList::new));
-
         List<Detail> detailsToPersist = payload.details().stream()
                 .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -65,7 +61,6 @@ public class PlantServiceImpl implements PlantService {
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        plantToPersist.addNotes(notesToPersist);
         plantToPersist.addDetails(detailsToPersist);
         plantToPersist.addTechnicalSheet(technicalSheet);
 
@@ -160,7 +155,6 @@ public class PlantServiceImpl implements PlantService {
                 fundamentalData.getClassifications(),
                 entity.getStatus(),
                 entity.getDescription(),
-                entity.getNotes().stream().map(Note::getNote).collect(Collectors.toCollection(ArrayList::new)),
                 entity.getDetails().stream().map(Detail::getDetail).collect(Collectors.toCollection(ArrayList::new)),
                 entity.getTechnicalSheets().stream()
                         .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))

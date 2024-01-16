@@ -19,7 +19,6 @@ public record SingleProductResponseDTO(
     String description,
     @JsonProperty("photos_URL")
     Set<String> photosUrl,
-    List<String> notes,
     List<String> details,
     List<TechnicalSheetDTO> technicalSheet
 ) {}

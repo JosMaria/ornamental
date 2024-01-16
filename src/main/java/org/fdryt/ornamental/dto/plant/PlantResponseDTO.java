@@ -15,6 +15,5 @@ public record PlantResponseDTO(
     Status status,
     String description,
     Collection<String> details,
-    Collection<String> notes,
     Collection<TechnicalSheetDTO> technicalSheet
 ) {}
