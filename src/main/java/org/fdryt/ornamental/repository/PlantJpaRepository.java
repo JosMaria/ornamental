@@ -8,9 +8,11 @@ import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -73,4 +75,13 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             FROM Plant p
             """)
     List<SimpleInfoPlantResponseDTO> findAllSimpleInfoPlant();
+
+    @Transactional
+    @Modifying
+    @Query("""
+            UPDATE Plant p
+            SET p.fundamentalData.family = NULL
+            WHERE p.fundamentalData.family.id = :familyId
+            """)
+    Object updatePlantFamilyIdToRemoveFamily(@Param("familyId") int familyId);
 }

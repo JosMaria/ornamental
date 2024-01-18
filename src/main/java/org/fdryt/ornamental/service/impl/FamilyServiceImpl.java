@@ -9,6 +9,7 @@ import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
+import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyJpaRepository familyJpaRepository;
+    private final PlantJpaRepository plantJpaRepository;
 
     @Override
     public List<FamilyResponseDTO> createAll(final List<CreateFamilyDTO> payload) {
@@ -47,6 +49,14 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public void deleteById(final Integer id) {
+        if (!familyJpaRepository.existsById(id)) {
+            throw new EntityNotFoundException("Familia con ID: %s ya fue eliminada.".formatted(id));
+        }
+
+        Object result = plantJpaRepository.updatePlantFamilyIdToRemoveFamily(id);
+        System.out.println(result.getClass().getSimpleName());
+        System.out.println(result);
+
         familyJpaRepository.deleteById(id);
         log.info("Family with ID: {} deleted", id);
     }

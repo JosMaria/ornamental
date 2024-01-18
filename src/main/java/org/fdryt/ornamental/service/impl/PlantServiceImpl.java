@@ -151,7 +151,7 @@ public class PlantServiceImpl implements PlantService {
                 entity.getId(),
                 fundamentalData.getCommonName(),
                 fundamentalData.getScientificName().toString(),
-                fundamentalData.getFamily().getName(),
+                fundamentalData.getFamily() != null ? fundamentalData.getFamily().getName() : null,
                 fundamentalData.getClassifications(),
                 entity.getStatus(),
                 entity.getDescription(),

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
@@ -19,4 +22,7 @@ public class Family {
 
     @Column(unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "fundamentalData.family")
+    private final Collection<Plant> plants = new HashSet<>();
 }

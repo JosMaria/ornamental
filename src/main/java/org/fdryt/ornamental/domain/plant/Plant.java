@@ -34,7 +34,7 @@ public class Plant {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "plant"/*, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER*/)
     private final Collection<Detail> details = new ArrayList<>();
 
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

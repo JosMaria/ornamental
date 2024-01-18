@@ -21,7 +21,7 @@ public class FundamentalData {
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
     private Family family;
 }
