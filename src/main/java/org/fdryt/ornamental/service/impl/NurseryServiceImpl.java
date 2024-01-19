@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Classification;
 import org.fdryt.ornamental.domain.plant.Detail;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
@@ -46,13 +47,14 @@ public class NurseryServiceImpl implements NurseryService {
         Plant plantObtained = plantJpaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Planta con ID: %s no fue encontrada".formatted(id)));
         log.info("Plant with ID: {} fetched", plantObtained.getId());
+        Family familyObtained = plantObtained.getFundamentalData().getFamily();
 
         return new SingleProductResponseDTO(
                 plantObtained.getId(),
                 plantObtained.getFundamentalData().getCommonName(),
                 plantObtained.getFundamentalData().getScientificName().getName(),
                 plantObtained.getFundamentalData().getScientificName().getScientistLastnameInitial(),
-                plantObtained.getFundamentalData().getFamily().getName(),
+                familyObtained != null ? familyObtained.getName() : null,
                 plantObtained.getStatus(),
                 plantObtained.getFundamentalData().getClassifications(),
                 plantObtained.getDescription(),
