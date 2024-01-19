@@ -22,7 +22,4 @@ public class Family {
 
     @Column(unique = true)
     private String name;
-
-    @OneToMany(mappedBy = "fundamentalData.family")
-    private final Collection<Plant> plants = new HashSet<>();
 }

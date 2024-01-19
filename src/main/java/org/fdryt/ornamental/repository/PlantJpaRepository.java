@@ -37,9 +37,11 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             p.fundamentalData.scientificName.name,
             p.fundamentalData.scientificName.scientistLastnameInitial,
             p.status,
-            p.fundamentalData.family.name,
+            f.name,
             p.fundamentalData.commonName)
         FROM Plant p
+        LEFT JOIN Family f
+            ON f.id = p.fundamentalData.family.id
     """)
     Page<ProductResponseDTO> findAllProducts(Pageable pageable);
 
@@ -50,9 +52,11 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             p.fundamentalData.scientificName.name,
             p.fundamentalData.scientificName.scientistLastnameInitial,
             p.status,
-            p.fundamentalData.family.name,
+            f.name,
             p.fundamentalData.commonName)
         FROM Plant p
+        LEFT JOIN Family f
+            ON f.id = p.fundamentalData.family.id
         WHERE :classification MEMBER OF p.fundamentalData.classifications
     """)
     Page<ProductResponseDTO> findAllProductsByClassification(Pageable pageable, @Param("classification") Classification classification);
@@ -63,8 +67,10 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             p.fundamentalData.commonName,
             p.fundamentalData.scientificName.name,
             p.fundamentalData.scientificName.scientistLastnameInitial,
-            p.fundamentalData.family.name)
+            f.name)
         FROM Plant p
+        LEFT JOIN Family f
+            ON f.id = p.fundamentalData.family.id
         """)
     Page<ItemResponseDTO> findAllItems(Pageable pageable);
 
@@ -83,5 +89,5 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
             SET p.fundamentalData.family = NULL
             WHERE p.fundamentalData.family.id = :familyId
             """)
-    Object updatePlantFamilyIdToRemoveFamily(@Param("familyId") int familyId);
+    int updatePlantFamilyIdToRemoveFamily(@Param("familyId") int familyId);
 }
