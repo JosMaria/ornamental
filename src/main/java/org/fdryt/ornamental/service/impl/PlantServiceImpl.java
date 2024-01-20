@@ -142,6 +142,7 @@ public class PlantServiceImpl implements PlantService {
                 .fundamentalData(fundamentalData)
                 .description(dto.description())
                 .status(dto.status())
+                .price(dto.price())
                 .build();
     }
 

@@ -34,6 +34,8 @@ public class Plant {
     @Lob
     private String description;
 
+    private Double price;
+
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<Detail> details = new ArrayList<>();
 

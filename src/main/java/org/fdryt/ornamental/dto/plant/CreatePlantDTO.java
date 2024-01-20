@@ -22,5 +22,6 @@ public record CreatePlantDTO(
     Status status,
     String description,
     List<String> details,
-    List<TechnicalSheetDTO> technicalSheet
+    List<TechnicalSheetDTO> technicalSheet,
+    Double price
 ) {}
