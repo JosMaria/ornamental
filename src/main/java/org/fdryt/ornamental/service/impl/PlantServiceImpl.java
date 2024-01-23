@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,49 +85,46 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public String uploadImages(final MultipartFile pictureOne, final MultipartFile pictureTwo, final MultipartFile pictureThree) {
-        System.out.println(pictureOne == null ? "picture one is null" : "picture one is not null");
-        System.out.println(pictureTwo == null ? "picture two is null" : "picture two is not null");
-        System.out.println(pictureThree == null ? "picture three is null" : "picture three is not null");
-        /*String filePath = FOLDER_PATH + pictureOne.getOriginalFilename();
-        Picture picturePersisted = pictureJpaRepository.save(
-                Picture.builder()
-                        .name(pictureOne.getOriginalFilename())
-                        .type(pictureOne.getContentType())
-                        .filePath(filePath)
-                        .build()
-        );
+    public String uploadImageToFileSystem(final MultipartFile file) {
+        String filePath = FOLDER_PATH + file.getOriginalFilename();
+
         try {
-            pictureOne.transferTo(new File(filePath));
+            File pictureToSave = new File(filePath);
+            file.transferTo(pictureToSave);
         } catch (Exception e) {
             log.warn(e.getMessage());
+            return "Error upload file %s".formatted(file.getOriginalFilename());
         }
 
-        return "File %s uploaded successfully in the path %s".formatted(
-                picturePersisted.getName(),
-                picturePersisted.getFilePath()
-        );*/
-        return "";
+        Picture pictureToPersist = Picture.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .filePath(filePath)
+                .build();
+        Picture picturePersisted = pictureJpaRepository.save(pictureToPersist);
+        String message = "File named '%s' uploaded successfully in the directory %s".formatted(
+                picturePersisted.getName(), FOLDER_PATH);
+        log.info(message);
+        return message;
+
     }
 
     @Override
-    public byte[] downloadPicture(String pictureName) {
+    public byte[] downloadPictureFromFileSystem(String pictureName) {
         Optional<Picture> optionalPictureObtained = pictureJpaRepository.findByName(pictureName);
-        String filePath = optionalPictureObtained.orElseGet(() ->
-                Picture.builder()
-                        .filePath("")
-                        .name("")
-                        .type("")
-                        .build()
-        ).getFilePath();
+        Picture defaultPicture = Picture.builder()
+                .filePath("")
+                .name("")
+                .type("")
+                .build();
+        String filePath = optionalPictureObtained.orElse(defaultPicture).getFilePath();
 
         try {
             return Files.readAllBytes(new File(filePath).toPath());
         } catch (Exception e) {
             log.warn(e.getMessage());
+            return null;
         }
-
-        return null;
     }
 
     // TODO: Create mapper

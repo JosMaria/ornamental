@@ -15,7 +15,7 @@ public interface PlantService {
 
     void delete(Integer id);
 
-    String uploadImages(MultipartFile pictureOne, MultipartFile pictureTwo, MultipartFile pictureThree);
+    String uploadImageToFileSystem(MultipartFile file);
 
-    byte[] downloadPicture(String pictureName);
+    byte[] downloadPictureFromFileSystem(String pictureName);
 }

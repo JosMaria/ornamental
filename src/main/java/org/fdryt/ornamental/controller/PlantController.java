@@ -38,17 +38,13 @@ public class PlantController {
         return ResponseEntity.ok(plantService.getAllCommonName());
     }
 
-    @PostMapping("/pictures")
-    public ResponseEntity<String> uploadPicture(
-            @RequestParam(value = "picture-one", required = false) MultipartFile pictureOne,
-            @RequestParam(value = "picture-two", required = false) MultipartFile pictureTwo,
-            @RequestParam(value = "picture-three", required = false) MultipartFile pictureThree
-    ) {
-        return new ResponseEntity<>(plantService.uploadImages(pictureOne, pictureTwo, pictureThree), CREATED);
+    @PostMapping("/picture")
+    public ResponseEntity<String> uploadPicture(@RequestParam(value = "picture") MultipartFile file) {
+        return new ResponseEntity<>(plantService.uploadImageToFileSystem(file), CREATED);
     }
 
-    @GetMapping("/pictures/{pictureName}")
-    public ResponseEntity<byte[]> uploadPicture(@PathVariable String pictureName) {
-        return ResponseEntity.ok(plantService.downloadPicture(pictureName));
+    @GetMapping("/picture/{pictureName}")
+    public ResponseEntity<?> uploadPicture(@PathVariable String pictureName) {
+        return ResponseEntity.ok(plantService.downloadPictureFromFileSystem(pictureName));
     }
 }
