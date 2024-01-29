@@ -21,7 +21,13 @@ public class Picture {
     @SequenceGenerator(name = "picture_sequence", sequenceName = "picture_sequence", allocationSize = 1)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
+
     private String type;
     private String filePath;
+
+    @ManyToOne
+    @JoinColumn(name = "plant_id")
+    private Plant plant;
 }

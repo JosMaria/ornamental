@@ -85,7 +85,7 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public String uploadImageToFileSystem(final MultipartFile file) {
+    public String uploadImageToFileSystem(final MultipartFile file, final Integer plantId) {
         String filePath = FOLDER_PATH + file.getOriginalFilename();
 
         try {

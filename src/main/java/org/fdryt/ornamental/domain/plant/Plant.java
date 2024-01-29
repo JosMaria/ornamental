@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -42,11 +44,18 @@ public class Plant {
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<TechnicalSheet> technicalSheets = new ArrayList<>();
 
+    @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
+    private final Set<Picture> pictures = new HashSet<>();
+
     public void addDetails(Collection<Detail> newDetails) {
         details.addAll(newDetails);
     }
 
     public void addTechnicalSheet(Collection<TechnicalSheet> newTechnicalSheet) {
         technicalSheets.addAll(newTechnicalSheet);
+    }
+
+    public void addPicture(Picture picture) {
+        pictures.add(picture);
     }
 }

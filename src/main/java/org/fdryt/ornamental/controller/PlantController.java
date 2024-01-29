@@ -38,9 +38,9 @@ public class PlantController {
         return ResponseEntity.ok(plantService.getAllCommonName());
     }
 
-    @PostMapping("/picture")
-    public ResponseEntity<String> uploadPicture(@RequestParam(value = "picture") MultipartFile file) {
-        return new ResponseEntity<>(plantService.uploadImageToFileSystem(file), CREATED);
+    @PostMapping("/picture/{plantId}")
+    public ResponseEntity<String> uploadPicture(@RequestParam(value = "picture") MultipartFile file, @PathVariable("plantId") Integer plantId) {
+        return new ResponseEntity<>(plantService.uploadImageToFileSystem(file, plantId), CREATED);
     }
 
     @GetMapping("/picture/{pictureName}")
