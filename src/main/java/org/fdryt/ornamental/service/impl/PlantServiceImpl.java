@@ -5,10 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
-import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
-import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
-import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
+import org.fdryt.ornamental.dto.plant.*;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.PictureJpaRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
@@ -124,6 +121,63 @@ public class PlantServiceImpl implements PlantService {
         } catch (Exception e) {
             log.warn(e.getMessage());
             return null;
+        }
+    }
+
+    @Override
+    public String updateInformationBasic(Integer id, UpdateInformationBasicDTO payload) {
+        Plant plantObtained = plantJpaRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Plant with ID: %s does not exists.".formatted(id)));
+
+        throwExceptionIfCommonNameIsInvalid(payload.commonName(), plantObtained.getFundamentalData().getCommonName());
+        throwExceptionIfFamilyIsInvalid(payload.family());
+
+        // update
+        FundamentalData fundamentalData = plantObtained.getFundamentalData();
+        if(!fundamentalData.getCommonName().equals(payload.commonName())) {
+            fundamentalData.setCommonName(payload.commonName());
+        }
+
+        ScientificName scientificName = fundamentalData.getScientificName();
+        if (!scientificName.getName().equals(payload.scientificName())) {
+            scientificName.setName(payload.scientificName());
+        }
+
+        if (!scientificName.getScientistLastnameInitial().equals(payload.scientistLastnameInitial())) {
+            scientificName.setScientistLastnameInitial(payload.scientistLastnameInitial());
+        }
+
+        if (payload.family() == null) {
+            fundamentalData.setFamily(null);
+        } else {
+            Family familyObtained = familyJpaRepository
+                    .findByName(payload.family())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Family with name: %s does not exists".formatted(payload.family())));
+            fundamentalData.setFamily(familyObtained);
+        }
+
+        plantObtained.getFundamentalData().getClassifications();
+
+        return null;
+    }
+
+    private void throwExceptionIfCommonNameIsInvalid(String newCommonName, String oldCommonName) {
+        if (newCommonName != null) {
+            if (!newCommonName.equals(oldCommonName) && plantJpaRepository.existsByCommonName(oldCommonName)) {
+                throw new IllegalArgumentException("Common name \"%s\" already exists in other plant.");
+            }
+        } else {
+            throw new IllegalArgumentException("common name must have a value");
+        }
+    }
+
+    private void throwExceptionIfFamilyIsInvalid(String newFamily) {
+        if (newFamily != null) {
+            if (!familyJpaRepository.existsByName(newFamily)) {
+                throw new EntityNotFoundException("Family with name: %s does not exists".formatted(newFamily));
+            }
         }
     }
 

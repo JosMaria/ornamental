@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.UpdateInformationBasicDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +47,10 @@ public class PlantController {
     @GetMapping("/picture/{pictureName}")
     public ResponseEntity<?> uploadPicture(@PathVariable String pictureName) {
         return ResponseEntity.ok(plantService.downloadPictureFromFileSystem(pictureName));
+    }
+
+    @PatchMapping("/{id}/information-basic")
+    public ResponseEntity<?> updateInformationBasic(@PathVariable("id") Integer id, @RequestBody UpdateInformationBasicDTO payload) {
+        return ResponseEntity.ok(plantService.updateInformationBasic(id, payload));
     }
 }
