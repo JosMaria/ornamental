@@ -53,4 +53,9 @@ public class PlantController {
     public ResponseEntity<?> updateInformationBasic(@PathVariable("id") Integer id, @RequestBody UpdateInformationBasicDTO payload) {
         return ResponseEntity.ok(plantService.updateInformationBasic(id, payload));
     }
+
+    @PutMapping
+    public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(plantService.uploadPhoto(file));
+    }
 }

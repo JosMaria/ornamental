@@ -36,6 +36,7 @@ public class HttpSecurityConfig {
                     auth.requestMatchers("/api/v1/nursery/**").permitAll();
                     auth.requestMatchers("/api/v1/news/**").permitAll();
 					auth.requestMatchers("/api/v1/families/**").permitAll();
+                    auth.requestMatchers("/api/v2/families/**").permitAll();
 					auth.requestMatchers("/api/v1/plants/**").permitAll();
                     auth.anyRequest().authenticated();
                 })

@@ -12,14 +12,20 @@ import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.fdryt.ornamental.constant.Constant.PHOTO_DIRECTORY;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -161,6 +167,32 @@ public class PlantServiceImpl implements PlantService {
         plantObtained.getFundamentalData().getClassifications();
 
         return null;
+    }
+
+    @Override
+    public String uploadPhoto(MultipartFile image) {
+        Path fileStorageLocation = Paths.get(PHOTO_DIRECTORY).toAbsolutePath().normalize();
+
+        try {
+            if (!Files.exists(fileStorageLocation)) {
+                Files.createDirectories(fileStorageLocation);
+            }
+
+            Files.copy(
+                    image.getInputStream(),
+                    fileStorageLocation.resolve("filename"),
+                    REPLACE_EXISTING
+            );
+
+            return ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/contacts/image/" + "filename")
+                    .toUriString();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void throwExceptionIfCommonNameIsInvalid(String newCommonName, String oldCommonName) {

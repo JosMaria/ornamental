@@ -21,4 +21,6 @@ public interface PlantService {
     byte[] downloadPictureFromFileSystem(String pictureName);
 
     String updateInformationBasic(Integer id, UpdateInformationBasicDTO payload);
+
+    String uploadPhoto(MultipartFile file);
 }
