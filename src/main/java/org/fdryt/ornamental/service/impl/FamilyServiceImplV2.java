@@ -70,6 +70,24 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
         return toFamilyResponseDTO(familyObtained);
     }
 
+    @Transactional
+    @Override
+    public FamilyResponseDTO modifyFamilyByID(final String id, final FamilyResponseDTO payload) {
+        if (familyJpaRepository.existsByName(payload.name())) {
+            String message = "Family name: %s already exists in another plant or is the same as the previous name".formatted(payload.name());
+            log.info(message);
+            throw new EntityExistsException(message);
+        }
+
+        String messageError = "Family with ID: %s does not exist.".formatted(id);
+        FamilyV2 familyObtained = familyJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(messageError));
+        familyObtained.setName(payload.name());
+        log.info("Family name changed to '{}'", familyObtained.getName());
+
+        return toFamilyResponseDTO(familyObtained);
+    }
+
     // Methods utils
 
     // Mappers

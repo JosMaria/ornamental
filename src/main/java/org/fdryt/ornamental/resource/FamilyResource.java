@@ -43,4 +43,13 @@ public class FamilyResource {
     public ResponseEntity<FamilyResponseDTO> removeFamilyByID(@PathVariable("id") String id) {
         return ResponseEntity.ok(familyService.deleteFamilyByID(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FamilyResponseDTO> updateFamilyByID(
+            @PathVariable("id") String id,
+            @RequestBody @Valid FamilyResponseDTO payload
+    ) {
+
+        return ResponseEntity.ok(familyService.modifyFamilyByID(id, payload));
+    }
 }
