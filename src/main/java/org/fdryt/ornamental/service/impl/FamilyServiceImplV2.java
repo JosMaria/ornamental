@@ -1,13 +1,12 @@
 package org.fdryt.ornamental.service.impl;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.alternative.FamilyV2;
 import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
+import org.fdryt.ornamental.exception.FamilyNotFoundException;
 import org.fdryt.ornamental.exception.RepeatedFamilyNameException;
 import org.fdryt.ornamental.repository.FamilyJpaRepositoryV2;
 import org.fdryt.ornamental.service.FamilyServiceV2;
@@ -63,9 +62,7 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
 
     @Override
     public FamilyResponseDTO deleteFamilyByID(final String id) {
-        String messageError = "Family with ID: %s did not exist.".formatted(id);
-        FamilyV2 familyObtained = familyJpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(messageError));
+        FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         log.info("Removing family with name: {}.", familyObtained.getName());
         familyJpaRepository.deleteById(id);
 
@@ -76,14 +73,12 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
     @Override
     public FamilyResponseDTO modifyFamilyByID(final String id, final FamilyResponseDTO payload) {
         if (familyJpaRepository.existsByName(payload.name())) {
-            String message = "Family name: %s already exists in another plant or is the same as the previous name".formatted(payload.name());
-            log.info(message);
-            throw new EntityExistsException(message);
+            var exception = new RepeatedFamilyNameException(payload.name());
+            log.info(exception.getMessage());
+            throw exception;
         }
 
-        String messageError = "Family with ID: %s does not exist.".formatted(id);
-        FamilyV2 familyObtained = familyJpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(messageError));
+        FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
         log.info("Family name changed to '{}'", familyObtained.getName());
 
@@ -91,6 +86,10 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
     }
 
     // Methods utils
+    private FamilyV2 throwExceptionIfFamilyNotFound(final String id) {
+        return familyJpaRepository.findById(id)
+                .orElseThrow(() -> new FamilyNotFoundException(id));
+    }
 
     // Mappers
     private FamilyV2 toFamilyEntity(FamilyRequestDTO payload) {
