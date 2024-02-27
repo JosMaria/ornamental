@@ -15,7 +15,7 @@ public interface FamilyJpaRepositoryV2 extends JpaRepository<FamilyV2, String> {
                 THEN TRUE
                 ELSE FALSE
             END
-        FROM Family f
+        FROM FamilyV2 f
         WHERE f.name = :name
     """)
     boolean existsByName(@Param("name") String name);

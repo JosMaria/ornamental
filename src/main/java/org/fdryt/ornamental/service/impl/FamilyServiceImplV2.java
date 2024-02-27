@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.alternative.FamilyV2;
 import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
+import org.fdryt.ornamental.exception.RepeatedFamilyNameException;
 import org.fdryt.ornamental.repository.FamilyJpaRepositoryV2;
 import org.fdryt.ornamental.service.FamilyServiceV2;
 import org.springframework.stereotype.Service;
@@ -25,14 +26,15 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
 
     @Override
     public FamilyResponseDTO createFamily(final FamilyRequestDTO payload) {
-        // TODO: handle exceptions
         if (familyJpaRepository.existsByName(payload.name())) {
-            String message = "family name: %s already exists.".formatted(payload.name());
-            throw new EntityExistsException(message);
+            var exception = new RepeatedFamilyNameException(payload.name());
+            log.info(exception.getMessage());
+            throw exception;
         }
 
         log.info("Saving family with name: {}.", payload.name());
         FamilyV2 familyPersisted = familyJpaRepository.save(toFamilyEntity(payload));
+
         return toFamilyResponseDTO(familyPersisted);
     }
 

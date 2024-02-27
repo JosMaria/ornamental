@@ -1,3 +1,4 @@
+/*
 package org.fdryt.ornamental.problem;
 
 import jakarta.persistence.EntityExistsException;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RestControllerAdvice
+//@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private final HttpStatus httpStatusBadRequest = HttpStatus.BAD_REQUEST;
@@ -93,3 +94,4 @@ public class GlobalExceptionHandler {
                         .build());
     }
 }
+*/
