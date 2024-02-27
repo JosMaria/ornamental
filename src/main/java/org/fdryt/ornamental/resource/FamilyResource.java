@@ -7,10 +7,7 @@ import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyServiceV2;
 import org.fdryt.ornamental.utils.ValidList;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -35,5 +32,15 @@ public class FamilyResource {
         return ResponseEntity
                 .created(URI.create("/api/v2/families/batch"))
                 .body(familyService.createFamilies(payload));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FamilyResponseDTO>> fetchFamilies() {
+        return ResponseEntity.ok(familyService.obtainFamilies());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<FamilyResponseDTO> removeFamilyByID(@PathVariable("id") String id) {
+        return ResponseEntity.ok(familyService.deleteFamilyByID(id));
     }
 }

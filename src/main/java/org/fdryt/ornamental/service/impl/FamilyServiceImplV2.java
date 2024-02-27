@@ -1,6 +1,7 @@
 package org.fdryt.ornamental.service.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -45,6 +47,27 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
         });
 
         return familiesPersisted;
+    }
+
+    @Override
+    public List<FamilyResponseDTO> obtainFamilies() {
+        List<FamilyV2> familiesObtained = familyJpaRepository.findAll();
+        log.info("Obtained everyone of the families.");
+
+        return familiesObtained.stream()
+                .map(this::toFamilyResponseDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public FamilyResponseDTO deleteFamilyByID(final String id) {
+        String messageError = "Family with ID: %s did not exist.".formatted(id);
+        FamilyV2 familyObtained = familyJpaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(messageError));
+        log.info("Removing family with name: {}.", familyObtained.getName());
+        familyJpaRepository.deleteById(id);
+
+        return toFamilyResponseDTO(familyObtained);
     }
 
     // Methods utils

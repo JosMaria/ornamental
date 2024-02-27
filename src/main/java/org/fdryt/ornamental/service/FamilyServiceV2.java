@@ -10,4 +10,8 @@ public interface FamilyServiceV2 {
     FamilyResponseDTO createFamily(FamilyRequestDTO payload);
 
     List<FamilyResponseDTO> createFamilies(List<FamilyRequestDTO> payload);
+
+    List<FamilyResponseDTO> obtainFamilies();
+
+    FamilyResponseDTO deleteFamilyByID(String id);
 }
