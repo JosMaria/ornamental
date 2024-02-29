@@ -3,10 +3,8 @@ package org.fdryt.ornamental.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.Classification;
-import org.fdryt.ornamental.domain.plant.Detail;
-import org.fdryt.ornamental.domain.plant.Note;
-import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.domain.plant.*;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
@@ -47,27 +45,7 @@ public class NurseryServiceImpl implements NurseryService {
         Plant plantObtained = plantJpaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Planta con ID: %s no fue encontrada".formatted(id)));
         log.info("Plant with ID: {} fetched", plantObtained.getId());
-
-        return new SingleProductResponseDTO(
-                plantObtained.getId(),
-                plantObtained.getFundamentalData().getCommonName(),
-                plantObtained.getFundamentalData().getScientificName().getName(),
-                plantObtained.getFundamentalData().getScientificName().getScientistLastnameInitial(),
-                plantObtained.getFundamentalData().getFamily().getName(),
-                plantObtained.getStatus(),
-                plantObtained.getFundamentalData().getClassifications(),
-                plantObtained.getDescription(),
-                Set.of("url1", "url2", "url3"),
-                plantObtained.getNotes().stream()
-                        .map(Note::getNote)
-                        .collect(Collectors.toCollection(ArrayList::new)),
-                plantObtained.getDetails().stream()
-                        .map(Detail::getDetail)
-                        .collect(Collectors.toCollection(ArrayList::new)),
-                plantObtained.getTechnicalSheets().stream()
-                        .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
-                        .collect(Collectors.toCollection(ArrayList::new))
-        );
+        return toSingleProductResponseDTO(plantObtained);
     }
 
     @Override
@@ -75,5 +53,30 @@ public class NurseryServiceImpl implements NurseryService {
         Page<ItemResponseDTO> itemsPageable = plantJpaRepository.findAllItems(pageable);
         log.info("Items of the number page: {} fetched", itemsPageable.getNumber());
         return itemsPageable;
+    }
+
+    private SingleProductResponseDTO toSingleProductResponseDTO(Plant plant) {
+        FundamentalData fundamentalData = plant.getFundamentalData();
+        ScientificName scientificName = fundamentalData.getScientificName();
+        Family familyObtained = fundamentalData.getFamily();
+
+        return new SingleProductResponseDTO(
+                plant.getId(),
+                fundamentalData.getCommonName(),
+                scientificName.getName(),
+                scientificName.getScientistLastnameInitial(),
+                familyObtained != null ? familyObtained.getName() : null,
+                plant.getStatus(),
+                fundamentalData.getClassifications(),
+                plant.getDescription(),
+                Set.of("url1", "url2", "url3"),
+                plant.getDetails().stream()
+                        .map(Detail::getDetail)
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                plant.getTechnicalSheets().stream()
+                        .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                plant.getPrice()
+        );
     }
 }

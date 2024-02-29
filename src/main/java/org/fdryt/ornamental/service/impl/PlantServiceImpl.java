@@ -5,23 +5,27 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
-import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
-import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
-import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
-import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
+import org.fdryt.ornamental.dto.plant.*;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.PictureJpaRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.fdryt.ornamental.constant.Constant.PHOTO_DIRECTORY;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,10 +53,6 @@ public class PlantServiceImpl implements PlantService {
 
         Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyObtained);
 
-        List<Note> notesToPersist = payload.notes().stream()
-                .map(note -> Note.builder().note(note).plant(plantToPersist).build())
-                .collect(Collectors.toCollection(ArrayList::new));
-
         List<Detail> detailsToPersist = payload.details().stream()
                 .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -65,7 +65,6 @@ public class PlantServiceImpl implements PlantService {
                         .build())
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        plantToPersist.addNotes(notesToPersist);
         plantToPersist.addDetails(detailsToPersist);
         plantToPersist.addTechnicalSheet(technicalSheet);
 
@@ -89,49 +88,129 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public String uploadImages(final MultipartFile pictureOne, final MultipartFile pictureTwo, final MultipartFile pictureThree) {
-        System.out.println(pictureOne == null ? "picture one is null" : "picture one is not null");
-        System.out.println(pictureTwo == null ? "picture two is null" : "picture two is not null");
-        System.out.println(pictureThree == null ? "picture three is null" : "picture three is not null");
-        /*String filePath = FOLDER_PATH + pictureOne.getOriginalFilename();
-        Picture picturePersisted = pictureJpaRepository.save(
-                Picture.builder()
-                        .name(pictureOne.getOriginalFilename())
-                        .type(pictureOne.getContentType())
-                        .filePath(filePath)
-                        .build()
-        );
+    public String uploadImageToFileSystem(final MultipartFile file, final Integer plantId) {
+        String filePath = FOLDER_PATH + file.getOriginalFilename();
+
         try {
-            pictureOne.transferTo(new File(filePath));
+            File pictureToSave = new File(filePath);
+            file.transferTo(pictureToSave);
         } catch (Exception e) {
             log.warn(e.getMessage());
+            return "Error upload file %s".formatted(file.getOriginalFilename());
         }
 
-        return "File %s uploaded successfully in the path %s".formatted(
-                picturePersisted.getName(),
-                picturePersisted.getFilePath()
-        );*/
-        return "";
+        Picture pictureToPersist = Picture.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .filePath(filePath)
+                .build();
+        Picture picturePersisted = pictureJpaRepository.save(pictureToPersist);
+        String message = "File named '%s' uploaded successfully in the directory %s".formatted(
+                picturePersisted.getName(), FOLDER_PATH);
+        log.info(message);
+        return message;
+
     }
 
     @Override
-    public byte[] downloadPicture(String pictureName) {
+    public byte[] downloadPictureFromFileSystem(String pictureName) {
         Optional<Picture> optionalPictureObtained = pictureJpaRepository.findByName(pictureName);
-        String filePath = optionalPictureObtained.orElseGet(() ->
-                Picture.builder()
-                        .filePath("")
-                        .name("")
-                        .type("")
-                        .build()
-        ).getFilePath();
+        Picture defaultPicture = Picture.builder()
+                .filePath("")
+                .name("")
+                .type("")
+                .build();
+        String filePath = optionalPictureObtained.orElse(defaultPicture).getFilePath();
 
         try {
             return Files.readAllBytes(new File(filePath).toPath());
         } catch (Exception e) {
             log.warn(e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public String updateInformationBasic(Integer id, UpdateInformationBasicDTO payload) {
+        Plant plantObtained = plantJpaRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Plant with ID: %s does not exists.".formatted(id)));
+
+        throwExceptionIfCommonNameIsInvalid(payload.commonName(), plantObtained.getFundamentalData().getCommonName());
+        throwExceptionIfFamilyIsInvalid(payload.family());
+
+        // update
+        FundamentalData fundamentalData = plantObtained.getFundamentalData();
+        if(!fundamentalData.getCommonName().equals(payload.commonName())) {
+            fundamentalData.setCommonName(payload.commonName());
         }
 
+        ScientificName scientificName = fundamentalData.getScientificName();
+        if (!scientificName.getName().equals(payload.scientificName())) {
+            scientificName.setName(payload.scientificName());
+        }
+
+        if (!scientificName.getScientistLastnameInitial().equals(payload.scientistLastnameInitial())) {
+            scientificName.setScientistLastnameInitial(payload.scientistLastnameInitial());
+        }
+
+        if (payload.family() == null) {
+            fundamentalData.setFamily(null);
+        } else {
+            Family familyObtained = familyJpaRepository
+                    .findByName(payload.family())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "Family with name: %s does not exists".formatted(payload.family())));
+            fundamentalData.setFamily(familyObtained);
+        }
+
+        plantObtained.getFundamentalData().getClassifications();
+
         return null;
+    }
+
+    @Override
+    public String uploadPhoto(MultipartFile image) {
+        Path fileStorageLocation = Paths.get(PHOTO_DIRECTORY).toAbsolutePath().normalize();
+
+        try {
+            if (!Files.exists(fileStorageLocation)) {
+                Files.createDirectories(fileStorageLocation);
+            }
+
+            Files.copy(
+                    image.getInputStream(),
+                    fileStorageLocation.resolve("filename"),
+                    REPLACE_EXISTING
+            );
+
+            return ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/contacts/image/" + "filename")
+                    .toUriString();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void throwExceptionIfCommonNameIsInvalid(String newCommonName, String oldCommonName) {
+        if (newCommonName != null) {
+            if (!newCommonName.equals(oldCommonName) && plantJpaRepository.existsByCommonName(oldCommonName)) {
+                throw new IllegalArgumentException("Common name \"%s\" already exists in other plant.");
+            }
+        } else {
+            throw new IllegalArgumentException("common name must have a value");
+        }
+    }
+
+    private void throwExceptionIfFamilyIsInvalid(String newFamily) {
+        if (newFamily != null) {
+            if (!familyJpaRepository.existsByName(newFamily)) {
+                throw new EntityNotFoundException("Family with name: %s does not exists".formatted(newFamily));
+            }
+        }
     }
 
     // TODO: Create mapper
@@ -147,6 +226,7 @@ public class PlantServiceImpl implements PlantService {
                 .fundamentalData(fundamentalData)
                 .description(dto.description())
                 .status(dto.status())
+                .price(dto.price())
                 .build();
     }
 
@@ -156,11 +236,10 @@ public class PlantServiceImpl implements PlantService {
                 entity.getId(),
                 fundamentalData.getCommonName(),
                 fundamentalData.getScientificName().toString(),
-                fundamentalData.getFamily().getName(),
+                fundamentalData.getFamily() != null ? fundamentalData.getFamily().getName() : null,
                 fundamentalData.getClassifications(),
                 entity.getStatus(),
                 entity.getDescription(),
-                entity.getNotes().stream().map(Note::getNote).collect(Collectors.toCollection(ArrayList::new)),
                 entity.getDetails().stream().map(Detail::getDetail).collect(Collectors.toCollection(ArrayList::new)),
                 entity.getTechnicalSheets().stream()
                         .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
