@@ -2,6 +2,7 @@ package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 
 import java.util.ArrayList;
 import java.util.Collection;

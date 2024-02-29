@@ -1,7 +1,7 @@
 package org.fdryt.ornamental.dto.plant;
 
-import org.fdryt.ornamental.domain.plant.Classification;
-import org.fdryt.ornamental.domain.plant.Status;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 
 import java.util.Set;
 

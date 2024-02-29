@@ -1,7 +1,7 @@
 package org.fdryt.ornamental.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.domain.plant.Classification;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;

@@ -2,8 +2,8 @@ package org.fdryt.ornamental.dto.plant;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
-import org.fdryt.ornamental.domain.plant.Classification;
-import org.fdryt.ornamental.domain.plant.Status;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 
 import java.util.List;
 import java.util.Set;
