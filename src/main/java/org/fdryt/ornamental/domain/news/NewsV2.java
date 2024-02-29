@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,5 +27,8 @@ public class NewsV2 {
     @Lob
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    private LocalDateTime publication;
 }
 
