@@ -36,4 +36,10 @@ public class NewsResource {
     public ResponseEntity<NewsResponseDTO> fetchNewsByID(@PathVariable("id") String id) {
         return ResponseEntity.ok(newsService.obtainNewsByID(id));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<NewsResponseDTO> updateNewsByID(
+            @PathVariable("id") String id, @RequestBody NewsRequestDTO payload) {
+        return ResponseEntity.ok(newsService.modifyNewsByID(id, payload));
+    }
 }

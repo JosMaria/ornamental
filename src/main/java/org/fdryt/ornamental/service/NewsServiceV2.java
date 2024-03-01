@@ -12,4 +12,6 @@ public interface NewsServiceV2 {
     Page<NewsResponseDTO> obtainNews(int page, int size);
 
     NewsResponseDTO obtainNewsByID(String id);
+
+    NewsResponseDTO modifyNewsByID(String id, NewsRequestDTO payload);
 }
