@@ -31,4 +31,9 @@ public class NewsResource {
     ) {
         return ResponseEntity.ok(newsService.obtainNews(page, size));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NewsResponseDTO> fetchNewsByID(@PathVariable("id") String id) {
+        return ResponseEntity.ok(newsService.obtainNewsByID(id));
+    }
 }

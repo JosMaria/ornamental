@@ -38,15 +38,27 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
         return newsObtained;
     }
 
+    @Override
+    public NewsResponseDTO obtainNewsByID(final String id) {
+        NewsV2 newsObtained = newsJpaRepository.findById(id).orElseThrow(() -> {
+            String message = "News with ID: %s does not founded.".formatted(id);
+            log.info(message);
+            return new IllegalArgumentException(message);
+        });
+        log.info("Fetched news with ID: {}", newsObtained.getId());
+
+        return toNewsResponseDTO(newsObtained);
+    }
+
     private NewsV2 toEntityNews(NewsRequestDTO dto) {
         return NewsV2.builder()
                 .title(dto.title())
                 .content(dto.content())
-                .publication(LocalDateTime.now())
+                .createAt(LocalDateTime.now())
                 .build();
     }
 
     private NewsResponseDTO toNewsResponseDTO(NewsV2 news) {
-        return new NewsResponseDTO(news.getId(), news.getTitle(), news.getContent(), news.getPublication());
+        return new NewsResponseDTO(news.getId(), news.getTitle(), news.getContent(), news.getCreateAt());
     }
 }

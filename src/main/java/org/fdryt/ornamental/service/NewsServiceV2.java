@@ -10,4 +10,6 @@ public interface NewsServiceV2 {
     NewsResponseDTO createNews(NewsRequestDTO payload);
 
     Page<NewsResponseDTO> obtainNews(int page, int size);
+
+    NewsResponseDTO obtainNewsByID(String id);
 }

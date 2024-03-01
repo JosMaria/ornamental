@@ -29,6 +29,6 @@ public class NewsV2 {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime publication;
+    private LocalDateTime createAt;
 }
 
