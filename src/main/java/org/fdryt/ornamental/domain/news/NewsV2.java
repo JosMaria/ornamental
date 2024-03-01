@@ -32,5 +32,7 @@ public class NewsV2 {
     private LocalDateTime createAt;
 
     private LocalDateTime updatedAt;
+
+    private boolean isVisible;
 }
 

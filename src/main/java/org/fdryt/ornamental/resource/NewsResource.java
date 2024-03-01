@@ -42,4 +42,9 @@ public class NewsResource {
             @PathVariable("id") String id, @RequestBody NewsRequestDTO payload) {
         return ResponseEntity.ok(newsService.modifyNewsByID(id, payload));
     }
+
+    @PatchMapping("/{id}/visible")
+    public ResponseEntity<String> patchNewsByID(@PathVariable("id") String id) {
+        return ResponseEntity.ok(newsService.changeValueIsVisible(id));
+    }
 }

@@ -14,4 +14,6 @@ public interface NewsServiceV2 {
     NewsResponseDTO obtainNewsByID(String id);
 
     NewsResponseDTO modifyNewsByID(String id, NewsRequestDTO payload);
+
+    String changeValueIsVisible(String id);
 }
