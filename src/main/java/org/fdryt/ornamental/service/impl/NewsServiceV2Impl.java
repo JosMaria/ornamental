@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.news.NewsV2;
 import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
 import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
+import org.fdryt.ornamental.exception.NewsNotAvailableException;
+import org.fdryt.ornamental.exception.NewsNotFoundException;
 import org.fdryt.ornamental.repository.NewsJpaRepositoryV2;
 import org.fdryt.ornamental.service.NewsServiceV2;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,11 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
     @Override
     public NewsResponseDTO obtainNewsByID(final String id) {
         NewsV2 newsObtained = throwExceptionIfNewsNotFound(id);
+        if (!newsObtained.isVisible()) {
+            log.info("The news with ID: %s {} was not shown.", id);
+            throw new NewsNotAvailableException("This news is not available for now");
+        }
+
         log.info("Fetched news with ID: {}", newsObtained.getId());
         return toNewsResponseDTO(newsObtained);
     }
@@ -66,15 +73,17 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
             log.info(response);
             return response;
         }
+
         return "None of the news was updated.";
     }
 
     private NewsV2 throwExceptionIfNewsNotFound(String id) {
-        return newsJpaRepository.findById(id).orElseThrow(() -> {
-            String message = "News with ID: %s does not founded.".formatted(id);
-            log.info(message);
-            return new IllegalArgumentException(message);
-        });
+        return newsJpaRepository.findById(id)
+                .orElseThrow(() -> {
+                    var exception = new NewsNotFoundException(id);
+                    log.info(exception.getMessage());
+                    return exception;
+                });
     }
 
     private NewsV2 toEntityNews(NewsRequestDTO dto) {

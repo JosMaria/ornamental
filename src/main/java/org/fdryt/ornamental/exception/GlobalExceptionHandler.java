@@ -31,6 +31,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    @ExceptionHandler(NewsNotAvailableException.class)
+    public ResponseEntity<ErrorExecution> handleNewsNotAvailableException(
+            NewsNotAvailableException exception,
+            HttpServletRequest request) {
+        ErrorExecution response = buildErrorExecution(BAD_REQUEST, request.getRequestURI(), exception.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(NewsNotFoundException.class)
+    public ResponseEntity<ErrorExecution> handleNewsNotFoundException(
+            NewsNotFoundException exception,
+            HttpServletRequest request) {
+        ErrorExecution response = buildErrorExecution(BAD_REQUEST, request.getRequestURI(), exception.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+
     private ErrorExecution buildErrorExecution(HttpStatus status, String uri, String message) {
         return ErrorExecution.builder()
                 .value(status.value())
