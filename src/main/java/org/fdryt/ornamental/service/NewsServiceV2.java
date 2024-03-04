@@ -2,6 +2,7 @@ package org.fdryt.ornamental.service;
 
 import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
 import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.alternative.news.SingleNewsResponseDTO;
 import org.springframework.data.domain.Page;
 
 public interface NewsServiceV2 {
@@ -11,7 +12,7 @@ public interface NewsServiceV2 {
 
     Page<NewsResponseDTO> obtainNews(int page, int size);
 
-    NewsResponseDTO obtainNewsByID(String id);
+    SingleNewsResponseDTO obtainNewsByID(String id);
 
     NewsResponseDTO modifyNewsByID(String id, NewsRequestDTO payload);
 

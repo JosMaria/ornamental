@@ -3,6 +3,7 @@ package org.fdryt.ornamental.resource;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
 import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.alternative.news.SingleNewsResponseDTO;
 import org.fdryt.ornamental.service.NewsServiceV2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class NewsResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NewsResponseDTO> fetchNewsByID(@PathVariable("id") String id) {
+    public ResponseEntity<SingleNewsResponseDTO> fetchNewsByID(@PathVariable("id") String id) {
         return ResponseEntity.ok(newsService.obtainNewsByID(id));
     }
 

@@ -81,7 +81,6 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
         FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
         log.info("Family name changed to '{}'", familyObtained.getName());
-
         return toFamilyResponseDTO(familyObtained);
     }
 

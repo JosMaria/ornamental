@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.news.NewsV2;
 import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
 import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.alternative.news.SingleNewsResponseDTO;
 import org.fdryt.ornamental.exception.NewsNotAvailableException;
 import org.fdryt.ornamental.exception.NewsNotFoundException;
 import org.fdryt.ornamental.repository.NewsJpaRepositoryV2;
@@ -34,7 +35,7 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
 
     @Override
     public Page<NewsResponseDTO> obtainNews(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createAt"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<NewsResponseDTO> newsObtained = newsJpaRepository.findAllNewsVisible(pageRequest)
                 .map(this::toNewsResponseDTO);
         log.info("Obtained news of the number page: {} with size: {}", page, size);
@@ -42,7 +43,7 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
     }
 
     @Override
-    public NewsResponseDTO obtainNewsByID(final String id) {
+    public SingleNewsResponseDTO obtainNewsByID(final String id) {
         NewsV2 newsObtained = throwExceptionIfNewsNotFound(id);
         if (!newsObtained.isVisible()) {
             log.info("The news with ID: %s {} was not shown.", id);
@@ -50,15 +51,25 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
         }
 
         log.info("Fetched news with ID: {}", newsObtained.getId());
-        return toNewsResponseDTO(newsObtained);
+        return toSingleNewsResponseDTO(newsObtained);
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
     public NewsResponseDTO modifyNewsByID(final String id, final NewsRequestDTO payload) {
         NewsV2 newsObtained = throwExceptionIfNewsNotFound(id);
-        newsObtained.setTitle(payload.title());
-        newsObtained.setContent(payload.content());
+        if (payload.title() != null) {
+            newsObtained.setTitle(payload.title());
+        }
+
+        if (payload.description() != null) {
+            newsObtained.setDescription(payload.description());
+        }
+
+        if (payload.content() != null) {
+            newsObtained.setContent(payload.content());
+        }
+
         newsObtained.setUpdatedAt(LocalDateTime.now());
         log.info("updated news with ID: {}", id);
         return toNewsResponseDTO(newsObtained);
@@ -89,13 +100,37 @@ public class NewsServiceV2Impl implements NewsServiceV2 {
     private NewsV2 toEntityNews(NewsRequestDTO dto) {
         return NewsV2.builder()
                 .title(dto.title())
+                .description(dto.description())
                 .content(dto.content())
-                .createAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .isVisible(true)
                 .build();
     }
 
     private NewsResponseDTO toNewsResponseDTO(NewsV2 news) {
-        return new NewsResponseDTO(news.getId(), news.getTitle(), news.getContent(), news.getCreateAt(), news.getUpdatedAt());
+        return new NewsResponseDTO(
+                news.getId(),
+                news.getTitle(),
+                news.getDescription(),
+                "https://i.stack.imgur.com/Of2w5.jpg",
+                news.getCreatedAt(),
+                news.getUpdatedAt(),
+                "https://lh3.googleusercontent.com/-75PEaiU9U3s/VOIS2XRjj1I/AAAAAAAAA8g/hrSIcbRe89s/s2048/cool-and-stylish-profile-pictures-for-facebook-for-girls-2015-cool-and-stylish-profile-pictures-for-facebook-for-girls-2014-1931-AZ.jpg",
+                "Jose Maria Aguilar Chambi");
+    }
+
+    private SingleNewsResponseDTO toSingleNewsResponseDTO(NewsV2 news) {
+        return new SingleNewsResponseDTO(
+                news.getId(),
+                news.getTitle(),
+                news.getDescription(),
+                news.getContent(),
+                "https://i.stack.imgur.com/Of2w5.jpg",
+                news.getCreatedAt(),
+                news.getUpdatedAt(),
+                "https://lh3.googleusercontent.com/-75PEaiU9U3s/VOIS2XRjj1I/AAAAAAAAA8g/hrSIcbRe89s/s2048/cool-and-stylish-profile-pictures-for-facebook-for-girls-2015-cool-and-stylish-profile-pictures-for-facebook-for-girls-2014-1931-AZ.jpg",
+                "Jose Maria Aguilar Chambi"
+
+        );
     }
 }
