@@ -2,8 +2,9 @@ package org.fdryt.ornamental.domain.news;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
-import static jakarta.persistence.GenerationType.SEQUENCE;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,13 +16,24 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class News {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "news_sequence")
-    @SequenceGenerator(name = "news_sequence", sequenceName = "news_sequence", allocationSize = 1)
-    private Integer id;
+    @UuidGenerator
+    @Column(updatable = false)
+    private String id;
 
+    @Lob
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, length = 2000)
     private String description;
+
+    @Lob
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private boolean isVisible;
 }
