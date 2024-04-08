@@ -24,10 +24,10 @@ public class News {
     @Column(nullable = false)
     private String title;
 
+    @Lob
     private String description;
 
     @Lob
-    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false, updatable = false)

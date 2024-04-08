@@ -1,16 +1,19 @@
 package org.fdryt.ornamental.dto.news;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class NewsResponseDTO {
+import java.time.LocalDateTime;
 
-    private Integer id;
-    private String urlImage;
-    private String title;
-    private String description;
-}
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
+
+@JsonInclude(NON_DEFAULT)
+public record NewsResponseDTO(
+        String id,
+        String title,
+        String description,
+        String urlImage,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
+        String urlPhotoProfile,
+        String authorName
+) {}

@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.alternative.news;
+package org.fdryt.ornamental.dto.news;
 
 import org.hibernate.validator.constraints.Length;
 

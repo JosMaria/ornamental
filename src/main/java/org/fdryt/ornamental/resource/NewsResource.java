@@ -1,15 +1,17 @@
 package org.fdryt.ornamental.resource;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
-import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
-import org.fdryt.ornamental.dto.alternative.news.SingleNewsResponseDTO;
+import org.fdryt.ornamental.dto.news.NewsInfoStateResponseDTO;
+import org.fdryt.ornamental.dto.news.NewsRequestDTO;
+import org.fdryt.ornamental.dto.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.news.SingleNewsResponseDTO;
 import org.fdryt.ornamental.service.NewsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,11 +28,16 @@ public class NewsResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<NewsResponseDTO>> fetchNews(
+    public ResponseEntity<Page<NewsResponseDTO>> fetchNewsVisible(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "page", defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(newsService.obtainNews(page, size));
+        return ResponseEntity.ok(newsService.obtainNewsVisible(page, size));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<NewsInfoStateResponseDTO>> fetchAllNews() {
+        return ResponseEntity.ok(newsService.obtainAllNews());
     }
 
     @GetMapping("/{id}")

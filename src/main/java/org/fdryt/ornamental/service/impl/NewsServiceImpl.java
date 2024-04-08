@@ -4,9 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.news.News;
-import org.fdryt.ornamental.dto.alternative.news.NewsRequestDTO;
-import org.fdryt.ornamental.dto.alternative.news.NewsResponseDTO;
-import org.fdryt.ornamental.dto.alternative.news.SingleNewsResponseDTO;
+import org.fdryt.ornamental.dto.news.NewsInfoStateResponseDTO;
+import org.fdryt.ornamental.dto.news.NewsRequestDTO;
+import org.fdryt.ornamental.dto.news.NewsResponseDTO;
+import org.fdryt.ornamental.dto.news.SingleNewsResponseDTO;
 import org.fdryt.ornamental.exception.NewsNotAvailableException;
 import org.fdryt.ornamental.exception.NewsNotFoundException;
 import org.fdryt.ornamental.repository.NewsJpaRepository;
@@ -17,6 +18,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,12 +39,21 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public Page<NewsResponseDTO> obtainNews(int page, int size) {
+    public Page<NewsResponseDTO> obtainNewsVisible(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<NewsResponseDTO> newsObtained = newsJpaRepository.findAllNewsVisible(pageRequest)
                 .map(this::toNewsResponseDTO);
         log.info("Obtained news of the number page: {} with size: {}", page, size);
         return newsObtained;
+    }
+
+    @Override
+    public List<NewsInfoStateResponseDTO> obtainAllNews() {
+        List<News> newsObtained = newsJpaRepository.findAll();
+        log.info("Fetched all news.");
+        return newsObtained.stream()
+                .map(mapperNewsInfoStateResponseDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -133,4 +147,13 @@ public class NewsServiceImpl implements NewsService {
 
         );
     }
+
+    private final Function<News, NewsInfoStateResponseDTO> mapperNewsInfoStateResponseDTO = news ->
+        new NewsInfoStateResponseDTO(
+                news.getId(),
+            news.getTitle(),
+            news.getDescription(),
+            news.isVisible(),
+            news.getCreatedAt()
+        );
 }
