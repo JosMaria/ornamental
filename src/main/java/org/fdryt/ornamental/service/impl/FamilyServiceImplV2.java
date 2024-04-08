@@ -69,7 +69,7 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
         return toFamilyResponseDTO(familyObtained);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public FamilyResponseDTO modifyFamilyByID(final String id, final FamilyResponseDTO payload) {
         if (familyJpaRepository.existsByName(payload.name())) {
@@ -81,7 +81,6 @@ public class FamilyServiceImplV2 implements FamilyServiceV2 {
         FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
         log.info("Family name changed to '{}'", familyObtained.getName());
-
         return toFamilyResponseDTO(familyObtained);
     }
 
