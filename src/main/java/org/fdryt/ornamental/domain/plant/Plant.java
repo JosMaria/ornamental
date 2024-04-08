@@ -1,17 +1,18 @@
 package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,8 +35,7 @@ public class Plant {
     @Lob
     private String description;
 
-    @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private final Collection<Note> notes = new ArrayList<>();
+    private Double price;
 
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<Detail> details = new ArrayList<>();
@@ -43,9 +43,8 @@ public class Plant {
     @OneToMany(mappedBy = "plant", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private final Collection<TechnicalSheet> technicalSheets = new ArrayList<>();
 
-    public void addNotes(Collection<Note> newNotes) {
-        notes.addAll(newNotes);
-    }
+    @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
+    private final Set<Picture> pictures = new HashSet<>();
 
     public void addDetails(Collection<Detail> newDetails) {
         details.addAll(newDetails);
@@ -53,5 +52,9 @@ public class Plant {
 
     public void addTechnicalSheet(Collection<TechnicalSheet> newTechnicalSheet) {
         technicalSheets.addAll(newTechnicalSheet);
+    }
+
+    public void addPicture(Picture picture) {
+        pictures.add(picture);
     }
 }

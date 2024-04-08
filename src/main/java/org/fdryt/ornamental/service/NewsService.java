@@ -1,24 +1,25 @@
 package org.fdryt.ornamental.service;
 
-import org.fdryt.ornamental.dto.news.CreateNewsDTO;
+import org.fdryt.ornamental.dto.news.NewsInfoStateResponseDTO;
+import org.fdryt.ornamental.dto.news.NewsRequestDTO;
 import org.fdryt.ornamental.dto.news.NewsResponseDTO;
-import org.fdryt.ornamental.dto.news.UpdateNewsDTO;
+import org.fdryt.ornamental.dto.news.SingleNewsResponseDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.util.Map;
+import java.util.List;
 
 public interface NewsService {
 
-    NewsResponseDTO create(CreateNewsDTO createNewsDTO);
 
-    Page<NewsResponseDTO> findAll(Pageable pageable);
+    NewsResponseDTO createNews(NewsRequestDTO payload);
 
-    NewsResponseDTO findById(Integer id);
+    Page<NewsResponseDTO> obtainNewsVisible(int page, int size);
 
-    void deleteById(Integer id);
+    List<NewsInfoStateResponseDTO> obtainAllNews();
 
-    NewsResponseDTO update(Integer id, UpdateNewsDTO updateNewsDTO);
+    SingleNewsResponseDTO obtainNewsByID(String id);
 
-    NewsResponseDTO updateByFields(Integer id, Map<String, Object> fields);
+    NewsResponseDTO modifyNewsByID(String id, NewsRequestDTO payload);
+
+    String changeValueIsVisible(String id);
 }

@@ -1,8 +1,8 @@
 package org.fdryt.ornamental.dto.nursery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.fdryt.ornamental.domain.plant.Classification;
-import org.fdryt.ornamental.domain.plant.Status;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public record SingleProductResponseDTO(
     String description,
     @JsonProperty("photos_URL")
     Set<String> photosUrl,
-    List<String> notes,
     List<String> details,
-    List<TechnicalSheetDTO> technicalSheet
+    List<TechnicalSheetDTO> technicalSheet,
+    Double price
 ) {}

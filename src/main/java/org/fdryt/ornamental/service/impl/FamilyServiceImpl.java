@@ -2,13 +2,13 @@ package org.fdryt.ornamental.service.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
+import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class FamilyServiceImpl implements FamilyService {
 
     private final FamilyJpaRepository familyJpaRepository;
+    private final PlantJpaRepository plantJpaRepository;
 
     @Override
     public List<FamilyResponseDTO> createAll(final List<CreateFamilyDTO> payload) {
@@ -47,32 +48,32 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public void deleteById(final Integer id) {
-        familyJpaRepository.deleteById(id);
-        log.info("Family with ID: {} deleted", id);
-    }
-
-    @Transactional
-    @Override
-    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
-        String familyNewName = payload.name().toLowerCase().trim();
-        throwExceptionIfFamilyNameExists(familyNewName);
-        Family familyObtained = findByIdOrElseThrowException(id);
-
-        if (familyObtained.getName().equals(familyNewName)) {
-            log.info("Family: %s continues with the same name.".formatted(familyObtained.getName()));
-            return fromFamilytoFamilyResponseDTO(familyObtained);
-
+        if (familyJpaRepository.existsById(id)) {
+            int rowsAffected = plantJpaRepository.updatePlantFamilyIdToRemoveFamily(id);
+            log.info("Count of plants %s are with value null in field family now.".formatted(rowsAffected));
+            familyJpaRepository.deleteById(id);
+            log.info("Family with ID: {} deleted", id);
         } else {
-            familyObtained.setName(familyNewName);
-            Family familyUpdated = familyJpaRepository.save(familyObtained);
-            log.info("Family with ID: {} change its name to {}.", familyObtained.getId(), familyObtained.getName());
-            return fromFamilytoFamilyResponseDTO(familyUpdated);
+            throw new EntityNotFoundException("Familia con ID: %s ya fue eliminada.".formatted(id));
         }
     }
 
-    private Family findByIdOrElseThrowException(Integer id) {
-        return familyJpaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Family with ID: %s does not exists.".formatted(id)));
+    @Override
+    public FamilyResponseDTO updateName(final Integer id, final CreateFamilyDTO payload) {
+        if (!familyJpaRepository.existsById(id)) {
+            throw new EntityNotFoundException("Familia con ID: %s ya fue eliminada.".formatted(id));
+        }
+        String nameToUpdate = payload.name().toLowerCase().trim();
+        throwExceptionIfFamilyNameExists(nameToUpdate);
+
+        int rowsAffected = familyJpaRepository.updateFamilyName(id, nameToUpdate);
+        if (rowsAffected < 1) {
+            throw new EntityNotFoundException("No se actualizo ninguna familia con ID: %s".formatted(id));
+
+        } else {
+            log.info("Family with ID: {} change its name to {}.", id, nameToUpdate);
+            return new FamilyResponseDTO(id, nameToUpdate);
+        }
     }
 
     private void throwExceptionIfFamilyNameExists(String name) {

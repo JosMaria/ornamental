@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.CreatePlantDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.UpdateInformationBasicDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,17 +39,23 @@ public class PlantController {
         return ResponseEntity.ok(plantService.getAllCommonName());
     }
 
-    @PostMapping("/pictures")
-    public ResponseEntity<String> uploadPicture(
-            @RequestParam(value = "picture-one", required = false) MultipartFile pictureOne,
-            @RequestParam(value = "picture-two", required = false) MultipartFile pictureTwo,
-            @RequestParam(value = "picture-three", required = false) MultipartFile pictureThree
-    ) {
-        return new ResponseEntity<>(plantService.uploadImages(pictureOne, pictureTwo, pictureThree), CREATED);
+    @PostMapping("/picture/{plantId}")
+    public ResponseEntity<String> uploadPicture(@RequestParam(value = "picture") MultipartFile file, @PathVariable("plantId") Integer plantId) {
+        return new ResponseEntity<>(plantService.uploadImageToFileSystem(file, plantId), CREATED);
     }
 
-    @GetMapping("/pictures/{pictureName}")
-    public ResponseEntity<byte[]> uploadPicture(@PathVariable String pictureName) {
-        return ResponseEntity.ok(plantService.downloadPicture(pictureName));
+    @GetMapping("/picture/{pictureName}")
+    public ResponseEntity<?> uploadPicture(@PathVariable String pictureName) {
+        return ResponseEntity.ok(plantService.downloadPictureFromFileSystem(pictureName));
+    }
+
+    @PatchMapping("/{id}/information-basic")
+    public ResponseEntity<?> updateInformationBasic(@PathVariable("id") Integer id, @RequestBody UpdateInformationBasicDTO payload) {
+        return ResponseEntity.ok(plantService.updateInformationBasic(id, payload));
+    }
+
+    @PutMapping
+    public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(plantService.uploadPhoto(file));
     }
 }

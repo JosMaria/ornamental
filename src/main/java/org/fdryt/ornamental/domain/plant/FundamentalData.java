@@ -3,6 +3,7 @@ package org.fdryt.ornamental.domain.plant;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 
 import java.util.Set;
 
@@ -22,6 +23,5 @@ public class FundamentalData {
     private Set<Classification> classifications;
 
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
     private Family family;
 }
