@@ -27,7 +27,7 @@ public class FamilyResource {
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<List<FamilyResponseDTO>> saveFamilies(@RequestBody @Valid ValidList<FamilyRequestDTO> payload) {
+    public ResponseEntity<List<FamilyResponseDTO>> saveFamilies(@Valid @RequestBody ValidList<FamilyRequestDTO> payload) {
         return ResponseEntity
                 .created(URI.create("/api/v2/families/batch"))
                 .body(familyService.createFamilies(payload));

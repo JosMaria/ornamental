@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -19,15 +21,14 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException exception,
-            HttpServletRequest request) {
+    public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpServletRequest request) {
         Map<String, String> fieldErrors = new HashMap<>();
         if (exception.hasFieldErrors()) {
             exception.getFieldErrors()
                     .forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
         }
-        log.warn("validation error {}", fieldErrors);
+        Set<String> message = new HashSet<>(fieldErrors.values());
+        log.warn("Exception thrown, it does not satisfy the validations. and contains the messages '{}'", message);
         return ResponseEntity.badRequest()
                 .body(
                         new ValidationErrorResponse(
