@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/nursery_db
-    username: josemaria
-    password: maria17
+    username: postgres
+    password: mysecretpassword
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true

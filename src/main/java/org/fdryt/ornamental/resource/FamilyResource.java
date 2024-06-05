@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
-import org.fdryt.ornamental.service.FamilyServiceV2;
+import org.fdryt.ornamental.service.FamilyService;
 import org.fdryt.ornamental.utils.ValidList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("api/v2/families")
 public class FamilyResource {
 
-    private final FamilyServiceV2 familyService;
+    private final FamilyService familyService;
 
     //TODO: add restrictions to @Valid
     @PostMapping
