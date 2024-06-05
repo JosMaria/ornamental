@@ -19,9 +19,8 @@ public class FamilyResource {
 
     private final FamilyService familyService;
 
-    //TODO: add restrictions to @Valid
     @PostMapping
-    public ResponseEntity<FamilyResponseDTO> saveFamily(@RequestBody @Valid FamilyRequestDTO payload) {
+    public ResponseEntity<FamilyResponseDTO> saveFamily(@Valid @RequestBody FamilyRequestDTO payload) {
         return ResponseEntity
                 .created(URI.create("/api/v2/families"))
                 .body(familyService.createFamily(payload));
