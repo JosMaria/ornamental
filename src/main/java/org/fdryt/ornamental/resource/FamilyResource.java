@@ -43,12 +43,8 @@ public class FamilyResource {
         return ResponseEntity.ok(familyService.deleteFamilyByID(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FamilyResponseDTO> updateFamilyByID(
-            @PathVariable("id") String id,
-            @RequestBody @Valid FamilyResponseDTO payload
-    ) {
-
-        return ResponseEntity.ok(familyService.modifyFamilyByID(id, payload));
+    @PatchMapping("/{id}")
+    public ResponseEntity<FamilyResponseDTO> updateFamilyNameByID(@PathVariable("id") String id, @Valid @RequestBody FamilyRequestDTO payload) {
+        return ResponseEntity.ok(familyService.modifyFamilyNameByID(id, payload));
     }
 }

@@ -15,5 +15,5 @@ public interface FamilyService {
 
     FamilyResponseDTO deleteFamilyByID(String id);
 
-    FamilyResponseDTO modifyFamilyByID(String id, FamilyResponseDTO payload);
+    FamilyResponseDTO modifyFamilyNameByID(String id, FamilyRequestDTO payload);
 }

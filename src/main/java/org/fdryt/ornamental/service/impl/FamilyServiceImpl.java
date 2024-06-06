@@ -25,12 +25,7 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FamilyResponseDTO createFamily(final FamilyRequestDTO payload) {
-        if (familyJpaRepository.existsByName(payload.name())) {
-            var exception = new RepeatedFamilyNameException(payload.name());
-            log.info(exception.getMessage());
-            throw exception;
-        }
-
+        throwExceptionIfFamilyNameAlreadyExists(payload.name());
         log.info("Saving family with name: {}.", payload.name());
         FamilyV2 familyPersisted = familyJpaRepository.save(toFamilyEntity(payload));
 
@@ -71,13 +66,8 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public FamilyResponseDTO modifyFamilyByID(final String id, final FamilyResponseDTO payload) {
-        if (familyJpaRepository.existsByName(payload.name())) {
-            var exception = new RepeatedFamilyNameException(payload.name());
-            log.info(exception.getMessage());
-            throw exception;
-        }
-
+    public FamilyResponseDTO modifyFamilyNameByID(final String id, final FamilyRequestDTO payload) {
+        throwExceptionIfFamilyNameAlreadyExists(payload.name());
         FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
         log.info("Family name changed to '{}'", familyObtained.getName());
@@ -88,6 +78,14 @@ public class FamilyServiceImpl implements FamilyService {
     private FamilyV2 throwExceptionIfFamilyNotFound(final String id) {
         return familyJpaRepository.findById(id)
                 .orElseThrow(() -> new FamilyNotFoundException(id));
+    }
+
+    private void throwExceptionIfFamilyNameAlreadyExists(final String name) {
+        if (familyJpaRepository.existsByName(name)) {
+            var exception = new RepeatedFamilyNameException(name);
+            log.warn(exception.getMessage());
+            throw exception;
+        }
     }
 
     // Mappers
