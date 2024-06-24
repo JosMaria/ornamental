@@ -1,17 +1,19 @@
 package org.fdryt.ornamental.service;
 
-import org.fdryt.ornamental.dto.family.CreateFamilyDTO;
-import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
+import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
+import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 
 import java.util.List;
 
 public interface FamilyService {
 
-    List<FamilyResponseDTO> createAll(List<CreateFamilyDTO> payload);
+    FamilyResponseDTO createFamily(FamilyRequestDTO payload);
 
-    List<FamilyResponseDTO> getAllFamilies();
+    List<FamilyResponseDTO> createFamilies(List<FamilyRequestDTO> payload);
 
-    void deleteById(Integer id);
+    List<FamilyResponseDTO> obtainFamilies();
 
-    FamilyResponseDTO updateName(Integer id, CreateFamilyDTO payload);
+    FamilyResponseDTO deleteFamilyByID(String id);
+
+    FamilyResponseDTO modifyFamilyNameByID(String id, FamilyRequestDTO payload);
 }

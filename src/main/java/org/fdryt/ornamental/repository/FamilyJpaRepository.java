@@ -26,20 +26,5 @@ public interface FamilyJpaRepository extends JpaRepository<Family, Integer> {
     """)
     boolean existsByName(@Param("name") String name);
 
-    @Query("""
-        SELECT NEW org.fdryt.ornamental.dto.family.FamilyResponseDTO(f.id, f.name)
-        FROM Family f
-    """)
-    List<FamilyResponseDTO> getAllFamilies();
-
     Optional<Family> findByName(String name);
-
-    @Modifying
-    @Transactional
-    @Query("""
-            UPDATE Family f
-            SET f.name = :name
-            WHERE f.id = :id
-            """)
-    int updateFamilyName(@Param("id") Integer id, @Param("name") String name);
 }
