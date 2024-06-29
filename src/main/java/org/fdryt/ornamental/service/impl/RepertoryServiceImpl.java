@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.fdryt.ornamental.utils.Converters.buildScientificName;
+import static org.fdryt.ornamental.utils.Converters.firstLetterToCapitalize;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,16 +28,16 @@ public class RepertoryServiceImpl implements RepertoryService {
         log.info("Obtained all plants to show in the repertory");
 
         return plantsObtained.stream()
-                .map(plant -> {
-                    String scientificName = null;
-                    if (plant.getScientificName() != null && !plant.getScientificName().isEmpty()) {
-                        scientificName = plant.getScientificName().substring(0, 1).toUpperCase() + plant.getScientificName().substring(1);
-                        if (plant.getDiscoverer() != null) {
-                            scientificName += " " + Character.toUpperCase(plant.getDiscoverer());
-                        }
-                    }
-                    return new ItemResponseDTO(plant.getCommonName(), scientificName, plant.getFamily().getName());
-                    })
+                .map(this::toItemResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private ItemResponseDTO toItemResponseDTO(PlantV3 plant) {
+        String scientificName = buildScientificName(plant.getScientificName(), plant.getDiscoverer());
+        return new ItemResponseDTO(
+                firstLetterToCapitalize(plant.getCommonName()),
+                scientificName,
+                firstLetterToCapitalize(plant.getFamily().getName())
+        );
     }
 }
