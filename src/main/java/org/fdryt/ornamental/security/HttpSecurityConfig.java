@@ -39,6 +39,7 @@ public class HttpSecurityConfig {
 					auth.requestMatchers("/api/v1/families/**").permitAll();
                     auth.requestMatchers("/api/v2/families/**").permitAll();
 					auth.requestMatchers("/api/v2/plants/**").permitAll();
+                    auth.requestMatchers("/api/v2/repertory/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
