@@ -2,6 +2,7 @@ package org.fdryt.ornamental.domain.plant.alternative;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 import org.hibernate.annotations.UuidGenerator;
 
 @Getter
@@ -25,6 +26,10 @@ public class PlantV3 {
     private String scientificName;
 
     private Character discoverer;
+
+    @Column(length = 15, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
