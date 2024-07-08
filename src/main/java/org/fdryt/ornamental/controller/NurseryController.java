@@ -20,11 +20,6 @@ public class NurseryController {
 
     private final NurseryService service;
 
-    @GetMapping("/product")
-    public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(@PageableDefault(size = 12) Pageable pageable) {
-        return ResponseEntity.ok(service.findAllProducts(pageable));
-    }
-
     @GetMapping("/product/classification/{classification}")
     public ResponseEntity<Page<ProductResponseDTO>> fetchAllProducts(
             @PageableDefault(size = 12) Pageable pageable,

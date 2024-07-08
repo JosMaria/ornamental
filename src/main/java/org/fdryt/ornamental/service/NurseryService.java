@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface NurseryService {
-    Page<ProductResponseDTO> findAllProducts(Pageable pageable);
 
     Page<ProductResponseDTO> findAllProductsByClassification(Pageable pageable, Classification classification);
 

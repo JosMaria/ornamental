@@ -27,13 +27,6 @@ public class NurseryServiceImpl implements NurseryService {
     private final PlantJpaRepository plantJpaRepository;
 
     @Override
-    public Page<ProductResponseDTO> findAllProducts(Pageable pageable) {
-        Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProducts(pageable);
-        log.info("Products from page number {} fetched.", productsPageable.getNumber());
-        return productsPageable;
-    }
-
-    @Override
     public Page<ProductResponseDTO> findAllProductsByClassification(Pageable pageable, Classification classification) {
         Page<ProductResponseDTO> productsPageable = plantJpaRepository.findAllProductsByClassification(pageable, classification);
         log.info("Products from page number {} and classification {} fetched.", productsPageable.getNumber(), classification);

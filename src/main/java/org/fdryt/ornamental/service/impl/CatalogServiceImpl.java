@@ -2,7 +2,6 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.alternative.PlantV3;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
 import org.fdryt.ornamental.repository.PlantJpaRepositoryV2;
@@ -36,7 +35,7 @@ public class CatalogServiceImpl implements CatalogService {
                 .map(this::toPlantCardResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        log.info("Fetch all plant cards");
+        log.info("Fetch all plant of the number page: {}", pageable.getPageNumber());
         return new PageImpl<>(plantCardsObtained, pageable, plantJpaRepository.count());
     }
 
