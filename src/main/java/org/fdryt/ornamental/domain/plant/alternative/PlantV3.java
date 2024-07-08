@@ -20,6 +20,8 @@ import org.hibernate.annotations.UuidGenerator;
             FROM plants_v3 plants
             LEFT JOIN families_v2 families
             ON plants.family_id = families.id
+            ORDER BY plants.common_name
+            LIMIT :limit OFFSET :offset
         """,
         resultSetMapping = "PlantCardMapping"
 )

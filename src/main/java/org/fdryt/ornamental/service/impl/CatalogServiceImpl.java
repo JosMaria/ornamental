@@ -27,13 +27,17 @@ public class CatalogServiceImpl implements CatalogService {
     private final PlantJpaRepositoryV2 plantJpaRepository;
 
     @Override
-    public List<PlantCardResponseDTO> obtainPlantCards(Pageable pageable) {
-        List<PlantCardDTO> plantCardsObtained = plantJpaRepository.findAllPlantCards();
-        log.info("Fetch all plant cards");
+    public Page<PlantCardResponseDTO> obtainPlantCards(Pageable pageable) {
+        int limit = pageable.getPageSize();
+        int offset = pageable.getPageNumber() * limit;
 
-        return plantCardsObtained.stream()
+        List<PlantCardResponseDTO> plantCardsObtained = plantJpaRepository.findAllPlantCards(limit, offset)
+                .stream()
                 .map(this::toPlantCardResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        log.info("Fetch all plant cards");
+        return new PageImpl<>(plantCardsObtained, pageable, plantJpaRepository.count());
     }
 
     private PlantCardResponseDTO toPlantCardResponseDTO(PlantCardDTO plantCardDTO) {

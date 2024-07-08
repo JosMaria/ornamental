@@ -3,6 +3,7 @@ package org.fdryt.ornamental.resource;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
 import org.fdryt.ornamental.service.CatalogService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class CatalogResource {
     private final CatalogService catalogService;
 
     @GetMapping
-    public ResponseEntity<List<PlantCardResponseDTO>> fetch(@PageableDefault(size = 12) Pageable pageable) {
+    public ResponseEntity<Page<PlantCardResponseDTO>> fetch(@PageableDefault(size = 5) Pageable pageable) {
         return ResponseEntity.ok(catalogService.obtainPlantCards(pageable));
     }
 }
