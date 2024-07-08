@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
-import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
 import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
@@ -39,13 +38,6 @@ public class NurseryServiceImpl implements NurseryService {
                 .orElseThrow(() -> new EntityNotFoundException("Planta con ID: %s no fue encontrada".formatted(id)));
         log.info("Plant with ID: {} fetched", plantObtained.getId());
         return toSingleProductResponseDTO(plantObtained);
-    }
-
-    @Override
-    public Page<ItemResponseDTO> findAllItems(Pageable pageable) {
-        Page<ItemResponseDTO> itemsPageable = plantJpaRepository.findAllItems(pageable);
-        log.info("Items of the number page: {} fetched", itemsPageable.getNumber());
-        return itemsPageable;
     }
 
     private SingleProductResponseDTO toSingleProductResponseDTO(Plant plant) {

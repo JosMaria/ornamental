@@ -2,7 +2,6 @@ package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
-import org.fdryt.ornamental.dto.nursery.ItemResponseDTO;
 import org.fdryt.ornamental.dto.nursery.ProductResponseDTO;
 import org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO;
 import org.springframework.data.domain.Page;
@@ -43,19 +42,6 @@ public interface PlantJpaRepository extends JpaRepository<Plant, Integer> {
         WHERE :classification MEMBER OF p.fundamentalData.classifications
     """)
     Page<ProductResponseDTO> findAllProductsByClassification(Pageable pageable, @Param("classification") Classification classification);
-
-    @Query("""
-        SELECT NEW org.fdryt.ornamental.dto.nursery.ItemResponseDTO(
-            p.id,
-            p.fundamentalData.commonName,
-            p.fundamentalData.scientificName.name,
-            p.fundamentalData.scientificName.scientistLastnameInitial,
-            f.name)
-        FROM Plant p
-        LEFT JOIN Family f
-            ON f.id = p.fundamentalData.family.id
-        """)
-    Page<ItemResponseDTO> findAllItems(Pageable pageable);
 
     @Query("""
             SELECT NEW org.fdryt.ornamental.dto.plant.SimpleInfoPlantResponseDTO(
