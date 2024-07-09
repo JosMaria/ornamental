@@ -2,9 +2,12 @@ package org.fdryt.ornamental.domain.plant.alternative;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,18 +16,35 @@ import org.hibernate.annotations.UuidGenerator;
 @AllArgsConstructor
 @Table(name = "plants_v3")
 @Entity
-@NamedNativeQuery(
-        name = "findAllPlantCards",
-        query = """
-            SELECT plants.id, common_name, scientific_name, discoverer, status, families.name as family_name
-            FROM plants_v3 plants
-            LEFT JOIN families_v2 families
-            ON plants.family_id = families.id
-            ORDER BY plants.common_name
-            LIMIT :limit OFFSET :offset
-        """,
-        resultSetMapping = "PlantCardMapping"
-)
+@NamedNativeQueries({
+        @NamedNativeQuery(
+                name = "findAllPlantCards",
+                query = """
+                    SELECT plants.id, common_name, scientific_name, discoverer, status, families.name AS family_name
+                    FROM plants_v3 plants
+                    LEFT JOIN families_v2 families
+                        ON plants.family_id = families.id
+                    ORDER BY plants.common_name
+                    LIMIT :limit OFFSET :offset
+                """,
+                resultSetMapping = "PlantCardMapping"
+        ),
+        @NamedNativeQuery(
+                name = "findPlantCardsByClassification",
+                query = """
+                    SELECT plants.id, common_name, scientific_name, discoverer, status, families.name AS family_name
+                    FROM plants_v3 plants
+                    LEFT JOIN families_v2 families
+                        ON plants.family_id = families.id
+                    LEFT JOIN plantv3_classifications c
+                        ON plants.id = c.plantv3_id
+                    WHERE c.classifications = :classification
+                    ORDER BY plants.common_name
+                    LIMIT :limit OFFSET :offset
+                """,
+                resultSetMapping = "PlantCardMapping"
+        )
+})
 @SqlResultSetMapping(
         name = "PlantCardMapping",
         classes = @ConstructorResult(
@@ -61,4 +81,8 @@ public class PlantV3 {
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
     private FamilyV2 family;
+
+    @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    private Set<Classification> classifications;
 }
