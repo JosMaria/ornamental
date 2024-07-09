@@ -1,7 +1,6 @@
 package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.plant.alternative.PlantV3;
-import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

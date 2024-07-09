@@ -5,6 +5,7 @@ import lombok.*;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
+import org.fdryt.ornamental.dto.repertory.ItemDTO;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Set;
@@ -43,22 +44,46 @@ import java.util.Set;
                     LIMIT :limit OFFSET :offset
                 """,
                 resultSetMapping = "PlantCardMapping"
+        ),
+        @NamedNativeQuery(
+                name = "findAllItems",
+                query = """
+                    SELECT common_name, scientific_name, discoverer, families.name AS family_name
+                    FROM plants_v3 plants
+                    LEFT JOIN families_v2 families
+                    ON plants.family_id = families.id
+                """,
+                resultSetMapping = "ItemMapping"
         )
 })
-@SqlResultSetMapping(
-        name = "PlantCardMapping",
-        classes = @ConstructorResult(
-                targetClass = PlantCardDTO.class,
-                columns = {
-                        @ColumnResult(name = "id", type = String.class),
-                        @ColumnResult(name = "common_name", type = String.class),
-                        @ColumnResult(name = "scientific_name", type = String.class),
-                        @ColumnResult(name = "discoverer", type = Character.class),
-                        @ColumnResult(name = "status", type = Status.class),
-                        @ColumnResult(name = "family_name", type = String.class),
-                }
+@SqlResultSetMappings({
+        @SqlResultSetMapping(
+                name = "PlantCardMapping",
+                classes = @ConstructorResult(
+                        targetClass = PlantCardDTO.class,
+                        columns = {
+                                @ColumnResult(name = "id", type = String.class),
+                                @ColumnResult(name = "common_name", type = String.class),
+                                @ColumnResult(name = "scientific_name", type = String.class),
+                                @ColumnResult(name = "discoverer", type = Character.class),
+                                @ColumnResult(name = "status", type = Status.class),
+                                @ColumnResult(name = "family_name", type = String.class),
+                        }
+                )
+        ),
+        @SqlResultSetMapping(
+                name = "ItemMapping",
+                classes = @ConstructorResult(
+                        targetClass = ItemDTO.class,
+                        columns = {
+                                @ColumnResult(name = "common_name", type = String.class),
+                                @ColumnResult(name = "scientific_name", type = String.class),
+                                @ColumnResult(name = "discoverer", type = Character.class),
+                                @ColumnResult(name = "family_name", type = String.class),
+                        }
+                )
         )
-)
+})
 public class PlantV3 {
 
     @Id
