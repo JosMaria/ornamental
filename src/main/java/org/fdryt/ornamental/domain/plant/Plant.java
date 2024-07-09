@@ -53,8 +53,4 @@ public class Plant {
     public void addTechnicalSheet(Collection<TechnicalSheet> newTechnicalSheet) {
         technicalSheets.addAll(newTechnicalSheet);
     }
-
-    public void addPicture(Picture picture) {
-        pictures.add(picture);
-    }
 }
