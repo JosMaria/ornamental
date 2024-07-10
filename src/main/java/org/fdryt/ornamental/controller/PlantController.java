@@ -1,3 +1,4 @@
+/*
 package org.fdryt.ornamental.controller;
 
 import jakarta.validation.Valid;
@@ -59,3 +60,4 @@ public class PlantController {
         return ResponseEntity.ok(plantService.uploadPhoto(file));
     }
 }
+*/

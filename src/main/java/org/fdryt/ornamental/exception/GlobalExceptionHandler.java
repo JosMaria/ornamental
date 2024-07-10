@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,6 +40,11 @@ public class GlobalExceptionHandler {
                                 LocalDateTime.now(),
                                 fieldErrors)
                 );
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public void handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
+        System.out.println("llegue aqui");
     }
 
     @ExceptionHandler(RepeatedFamilyNameException.class)
