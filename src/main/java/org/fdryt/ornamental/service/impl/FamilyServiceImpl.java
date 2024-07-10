@@ -50,8 +50,8 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyResponseDTO deleteFamilyByID(final String id) {
         FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
-        log.info("Removing family with name: {}.", familyObtained.getName());
         familyJpaRepository.deleteById(id);
+        log.info("Family removed with name: {}.", familyObtained.getName());
 
         return toFamilyResponseDTO(familyObtained);
     }
@@ -62,7 +62,7 @@ public class FamilyServiceImpl implements FamilyService {
         throwExceptionIfFamilyNameAlreadyExists(payload.name());
         FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
-        log.info("Family name changed to '{}'", familyObtained.getName());
+        log.info("Family updated with new name: {}", familyObtained.getName());
         return toFamilyResponseDTO(familyObtained);
     }
 

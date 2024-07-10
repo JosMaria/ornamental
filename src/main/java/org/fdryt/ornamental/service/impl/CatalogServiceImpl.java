@@ -31,13 +31,23 @@ public class CatalogServiceImpl implements CatalogService {
         int limit = pageable.getPageSize();
         int offset = pageable.getPageNumber() * limit;
 
-        List<PlantCardResponseDTO> plantCardsObtained = findPlantCards(limit, offset, classification)
-                .stream()
+        long count;
+        List<PlantCardDTO> plantCardsObtained;
+        if (classification == null) {
+            count = plantJpaRepository.count();
+            plantCardsObtained = plantJpaRepository.findAllPlantCards(limit, offset);
+
+        } else {
+            count = plantJpaRepository.countByClassification(classification.name());
+            plantCardsObtained = plantJpaRepository.findPlantCardsByClassification(limit, offset, classification.name());
+        }
+
+        List<PlantCardResponseDTO> plantCardsConverted = plantCardsObtained.stream()
                 .map(this::toPlantCardResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
-
         log.info("Fetch all plant of the number page: {}", pageable.getPageNumber());
-        return new PageImpl<>(plantCardsObtained, pageable, plantJpaRepository.count());
+
+        return new PageImpl<>(plantCardsConverted, pageable, count);
     }
 
     private List<PlantCardDTO> findPlantCards(int limit, int offset, Classification classification) {

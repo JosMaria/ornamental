@@ -21,8 +21,8 @@ public class CatalogResource {
     private final CatalogService catalogService;
 
     @GetMapping
-    public ResponseEntity<Page<PlantCardResponseDTO>> fetch(
-            @PageableDefault(size = 5) Pageable pageable,
+    public ResponseEntity<Page<PlantCardResponseDTO>> fetchPlantCards(
+            @PageableDefault(size = 12) Pageable pageable,
             @RequestParam(required = false) Classification classification
     ) {
         return ResponseEntity.ok(catalogService.obtainPlantCards(pageable, classification));

@@ -21,4 +21,13 @@ public interface PlantJpaRepositoryV2 extends JpaRepository<PlantV3, String> {
             @Param("offset") int offset,
             @Param("classification") String classification
     );
+
+    @Query(value = """
+        SELECT COUNT(*)
+        FROM plants_v3 plant
+        INNER JOIN plantv3_classifications c
+               ON plant.id = c.plantv3_id
+        WHERE c.classifications = :classification
+    """, nativeQuery = true)
+    long countByClassification(@Param("classification") String classification);
 }
