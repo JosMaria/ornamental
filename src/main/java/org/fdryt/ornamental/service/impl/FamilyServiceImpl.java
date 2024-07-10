@@ -41,13 +41,10 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public List<FamilyResponseDTO> obtainFamilies() {
-        List<FamilyV2> familiesObtained = familyJpaRepository.findAll();
+    public List<FamilyResponseDTO> obtainAll() {
+        List<FamilyResponseDTO> familiesObtained = familyJpaRepository.findAllFamilies();
         log.info("Obtained everyone of the families.");
-
-        return familiesObtained.stream()
-                .map(this::toFamilyResponseDTO)
-                .collect(Collectors.toCollection(ArrayList::new));
+        return familiesObtained;
     }
 
     @Override

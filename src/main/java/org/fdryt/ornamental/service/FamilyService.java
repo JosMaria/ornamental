@@ -12,7 +12,7 @@ public interface FamilyService {
 
     List<FamilyResponseDTO> createMany(Set<FamilyRequestDTO> payload);
 
-    List<FamilyResponseDTO> obtainFamilies();
+    List<FamilyResponseDTO> obtainAll();
 
     FamilyResponseDTO deleteFamilyByID(String id);
 

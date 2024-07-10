@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
-import org.fdryt.ornamental.utils.ValidList;
 import org.fdryt.ornamental.utils.ValidSet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +34,8 @@ public class FamilyResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<FamilyResponseDTO>> fetchFamilies() {
-        return ResponseEntity.ok(familyService.obtainFamilies());
+    public ResponseEntity<List<FamilyResponseDTO>> fetchAll() {
+        return ResponseEntity.ok(familyService.obtainAll());
     }
 
     @DeleteMapping("/{id}")

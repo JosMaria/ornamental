@@ -21,11 +21,11 @@ import java.util.Set;
         @NamedNativeQuery(
                 name = "findAllPlantCards",
                 query = """
-                    SELECT plants.id, common_name, scientific_name, discoverer, status, families.name AS family_name
-                    FROM plants_v3 plants
-                    LEFT JOIN families_v2 families
-                        ON plants.family_id = families.id
-                    ORDER BY plants.common_name
+                    SELECT plant.id, common_name, scientific_name, discoverer, status, family.name AS family_name
+                    FROM plants_v3 plant
+                    LEFT JOIN families_v2 family
+                        ON plant.family_id = family.id
+                    ORDER BY plant.common_name
                     LIMIT :limit OFFSET :offset
                 """,
                 resultSetMapping = "PlantCardMapping"
@@ -33,14 +33,14 @@ import java.util.Set;
         @NamedNativeQuery(
                 name = "findPlantCardsByClassification",
                 query = """
-                    SELECT plants.id, common_name, scientific_name, discoverer, status, families.name AS family_name
-                    FROM plants_v3 plants
-                    LEFT JOIN families_v2 families
-                        ON plants.family_id = families.id
+                    SELECT plant.id, common_name, scientific_name, discoverer, status, family.name AS family_name
+                    FROM plants_v3 plant
+                    LEFT JOIN families_v2 family
+                        ON plant.family_id = family.id
                     LEFT JOIN plantv3_classifications c
-                        ON plants.id = c.plantv3_id
+                        ON plant.id = c.plantv3_id
                     WHERE c.classifications = :classification
-                    ORDER BY plants.common_name
+                    ORDER BY plant.common_name
                     LIMIT :limit OFFSET :offset
                 """,
                 resultSetMapping = "PlantCardMapping"
@@ -48,10 +48,10 @@ import java.util.Set;
         @NamedNativeQuery(
                 name = "findAllItems",
                 query = """
-                    SELECT common_name, scientific_name, discoverer, families.name AS family_name
-                    FROM plants_v3 plants
-                    LEFT JOIN families_v2 families
-                    ON plants.family_id = families.id
+                    SELECT common_name, scientific_name, discoverer, family.name AS family_name
+                    FROM plants_v3 plant
+                    LEFT JOIN families_v2 family
+                    ON plant.family_id = family.id
                 """,
                 resultSetMapping = "ItemMapping"
         )
