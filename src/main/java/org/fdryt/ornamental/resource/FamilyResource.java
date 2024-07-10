@@ -6,6 +6,7 @@ import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
 import org.fdryt.ornamental.utils.ValidList;
+import org.fdryt.ornamental.utils.ValidSet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +21,17 @@ public class FamilyResource {
     private final FamilyService familyService;
 
     @PostMapping
-    public ResponseEntity<FamilyResponseDTO> saveFamily(@Valid @RequestBody FamilyRequestDTO payload) {
+    public ResponseEntity<FamilyResponseDTO> save(@Valid @RequestBody FamilyRequestDTO payload) {
         return ResponseEntity
                 .created(URI.create("/api/v2/families"))
-                .body(familyService.createFamily(payload));
+                .body(familyService.create(payload));
     }
 
     @PostMapping("/batch")
-    public ResponseEntity<List<FamilyResponseDTO>> saveFamilies(@Valid @RequestBody ValidList<FamilyRequestDTO> payload) {
+    public ResponseEntity<List<FamilyResponseDTO>> saveMany(@Valid @RequestBody ValidSet<FamilyRequestDTO> payload) {
         return ResponseEntity
                 .created(URI.create("/api/v2/families/batch"))
-                .body(familyService.createFamilies(payload));
+                .body(familyService.createMany(payload));
     }
 
     @GetMapping

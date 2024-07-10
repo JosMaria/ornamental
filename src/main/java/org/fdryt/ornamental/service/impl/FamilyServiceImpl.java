@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,25 +25,19 @@ public class FamilyServiceImpl implements FamilyService {
     private final FamilyJpaRepositoryV2 familyJpaRepository;
 
     @Override
-    public FamilyResponseDTO createFamily(final FamilyRequestDTO payload) {
+    public FamilyResponseDTO create(final FamilyRequestDTO payload) {
         throwExceptionIfFamilyNameAlreadyExists(payload.name());
-        log.info("Saving family with name: {}.", payload.name());
         FamilyV2 familyPersisted = familyJpaRepository.save(toFamilyEntity(payload));
-
+        log.info("Family saved with name: {}", familyPersisted.getName());
         return toFamilyResponseDTO(familyPersisted);
     }
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public List<FamilyResponseDTO> createFamilies(final List<FamilyRequestDTO> families) {
-        List<FamilyResponseDTO> familiesPersisted = new ArrayList<>();
-
-        families.forEach((family) -> {
-            FamilyResponseDTO response = createFamily(family);
-            familiesPersisted.add(response);
-        });
-
-        return familiesPersisted;
+    public List<FamilyResponseDTO> createMany(final Set<FamilyRequestDTO> families) {
+        return families.stream()
+                .map(this::create)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

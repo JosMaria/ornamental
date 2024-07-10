@@ -4,12 +4,13 @@ import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 
 import java.util.List;
+import java.util.Set;
 
 public interface FamilyService {
 
-    FamilyResponseDTO createFamily(FamilyRequestDTO payload);
+    FamilyResponseDTO create(FamilyRequestDTO payload);
 
-    List<FamilyResponseDTO> createFamilies(List<FamilyRequestDTO> payload);
+    List<FamilyResponseDTO> createMany(Set<FamilyRequestDTO> payload);
 
     List<FamilyResponseDTO> obtainFamilies();
 
