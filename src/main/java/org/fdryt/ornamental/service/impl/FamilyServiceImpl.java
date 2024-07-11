@@ -3,12 +3,12 @@ package org.fdryt.ornamental.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.alternative.FamilyV2;
+import org.fdryt.ornamental.domain.plant.alternative.Family;
 import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
 import org.fdryt.ornamental.exception.FamilyNotFoundException;
 import org.fdryt.ornamental.exception.RepeatedFamilyNameException;
-import org.fdryt.ornamental.repository.FamilyJpaRepositoryV2;
+import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.service.FamilyService;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FamilyServiceImpl implements FamilyService {
 
-    private final FamilyJpaRepositoryV2 familyJpaRepository;
+    private final FamilyJpaRepository familyJpaRepository;
 
     @Override
     public FamilyResponseDTO create(final FamilyRequestDTO payload) {
         throwExceptionIfFamilyNameAlreadyExists(payload.name());
-        FamilyV2 familyPersisted = familyJpaRepository.save(toFamilyEntity(payload));
+        Family familyPersisted = familyJpaRepository.save(toFamilyEntity(payload));
         log.info("Family saved with name: {}", familyPersisted.getName());
         return toFamilyResponseDTO(familyPersisted);
     }
@@ -49,7 +49,7 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FamilyResponseDTO deleteFamilyByID(final String id) {
-        FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
+        Family familyObtained = throwExceptionIfFamilyNotFound(id);
         familyJpaRepository.deleteById(id);
         log.info("Family removed with name: {}.", familyObtained.getName());
 
@@ -60,14 +60,14 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FamilyResponseDTO modifyFamilyNameByID(final String id, final FamilyRequestDTO payload) {
         throwExceptionIfFamilyNameAlreadyExists(payload.name());
-        FamilyV2 familyObtained = throwExceptionIfFamilyNotFound(id);
+        Family familyObtained = throwExceptionIfFamilyNotFound(id);
         familyObtained.setName(payload.name());
         log.info("Family updated with new name: {}", familyObtained.getName());
         return toFamilyResponseDTO(familyObtained);
     }
 
     // Methods utils
-    private FamilyV2 throwExceptionIfFamilyNotFound(final String id) {
+    private Family throwExceptionIfFamilyNotFound(final String id) {
         return familyJpaRepository.findById(id)
                 .orElseThrow(() -> new FamilyNotFoundException(id));
     }
@@ -81,13 +81,13 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     // Mappers
-    private FamilyV2 toFamilyEntity(FamilyRequestDTO payload) {
-        return FamilyV2.builder()
+    private Family toFamilyEntity(FamilyRequestDTO payload) {
+        return Family.builder()
                 .name(payload.name())
                 .build();
     }
 
-    private FamilyResponseDTO toFamilyResponseDTO(FamilyV2 family) {
+    private FamilyResponseDTO toFamilyResponseDTO(Family family) {
         return new FamilyResponseDTO(family.getId(), family.getName());
     }
 }

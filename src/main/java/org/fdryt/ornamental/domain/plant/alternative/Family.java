@@ -10,13 +10,13 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "families_v2")
+@Table(name = "families")
 @Entity
 @NamedNativeQuery(
         name = "findAllFamilies",
         query = """
             SELECT id, name
-            FROM families_v2
+            FROM families
             ORDER BY name
         """,
         resultSetMapping = "FamilyMapping"
@@ -31,8 +31,7 @@ import org.hibernate.annotations.UuidGenerator;
                 }
         )
 )
-public class FamilyV2 {
-
+public class Family {
     @Id
     @UuidGenerator
     @Column(updatable = false)

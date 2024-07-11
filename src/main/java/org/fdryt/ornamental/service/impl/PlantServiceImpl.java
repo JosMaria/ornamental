@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
 import org.fdryt.ornamental.dto.plant.*;
-import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.PictureJpaRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
@@ -33,7 +32,7 @@ import static org.fdryt.ornamental.constant.Constant.PHOTO_DIRECTORY;
 public class PlantServiceImpl implements PlantService {
 
     private final PlantJpaRepository plantJpaRepository;
-    private final FamilyJpaRepository familyJpaRepository;
+    //private final FamilyJpaRepository familyJpaRepository;
     private final PictureJpaRepository pictureJpaRepository;
 
     private static final String FOLDER_PATH = "/home/josmaria/pictures_nursery/";
@@ -43,15 +42,15 @@ public class PlantServiceImpl implements PlantService {
         if (plantJpaRepository.existsByCommonName(payload.commonName())) {
             throw new EntityExistsException("Planta nombrada: %s ya existe, no puede ser repetida.".formatted(payload.commonName()));
         }
-
+/*
         Family familyObtained = null;
         if (payload.familyName() != null) {
             familyObtained = familyJpaRepository
                 .findByName(payload.familyName())
                 .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.familyName())));
-        }
+        }*/
 
-        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload, familyObtained);
+        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload);
 
         List<Detail> detailsToPersist = payload.details().stream()
                 .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
@@ -144,16 +143,7 @@ public class PlantServiceImpl implements PlantService {
         if(!fundamentalData.getCommonName().equals(payload.commonName())) {
             fundamentalData.setCommonName(payload.commonName());
         }
-
-        ScientificName scientificName = fundamentalData.getScientificName();
-        if (!scientificName.getName().equals(payload.scientificName())) {
-            scientificName.setName(payload.scientificName());
-        }
-
-        if (!scientificName.getScientistLastnameInitial().equals(payload.scientistLastnameInitial())) {
-            scientificName.setScientistLastnameInitial(payload.scientistLastnameInitial());
-        }
-
+/*
         if (payload.family() == null) {
             fundamentalData.setFamily(null);
         } else {
@@ -163,6 +153,7 @@ public class PlantServiceImpl implements PlantService {
                             "Family with name: %s does not exists".formatted(payload.family())));
             fundamentalData.setFamily(familyObtained);
         }
+        */
 
         plantObtained.getFundamentalData().getClassifications();
 
@@ -206,21 +197,18 @@ public class PlantServiceImpl implements PlantService {
     }
 
     private void throwExceptionIfFamilyIsInvalid(String newFamily) {
-        if (newFamily != null) {
+        /*if (newFamily != null) {
             if (!familyJpaRepository.existsByName(newFamily)) {
                 throw new EntityNotFoundException("Family with name: %s does not exists".formatted(newFamily));
             }
-        }
+        }*/
     }
 
     // TODO: Create mapper
-    private Plant fromCreatePlantDtoToEntityPlant(CreatePlantDTO dto, Family family) {
-        ScientificName scientificName = new ScientificName(dto.scientificName(), dto.scientistLastnameInitial());
+    private Plant fromCreatePlantDtoToEntityPlant(CreatePlantDTO dto) {
         FundamentalData fundamentalData = new FundamentalData();
         fundamentalData.setCommonName(dto.commonName());
-        fundamentalData.setScientificName(scientificName);
         fundamentalData.setClassifications(dto.classifications());
-        fundamentalData.setFamily(family);
 
         return Plant.builder()
                 .fundamentalData(fundamentalData)
@@ -235,8 +223,8 @@ public class PlantServiceImpl implements PlantService {
         return new PlantResponseDTO(
                 entity.getId(),
                 fundamentalData.getCommonName(),
-                fundamentalData.getScientificName().toString(),
-                fundamentalData.getFamily() != null ? fundamentalData.getFamily().getName() : null,
+                "",
+                null,
                 fundamentalData.getClassifications(),
                 entity.getStatus(),
                 entity.getDescription(),

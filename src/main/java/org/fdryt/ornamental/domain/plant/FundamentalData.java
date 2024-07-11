@@ -15,13 +15,7 @@ public class FundamentalData {
     @Column(nullable = false, unique = true)
     private String commonName;
 
-    @Embedded
-    private ScientificName scientificName;
-
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
-
-    @ManyToOne
-    private Family family;
 }

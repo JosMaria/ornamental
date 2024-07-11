@@ -3,7 +3,9 @@ package org.fdryt.ornamental.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.*;
+import org.fdryt.ornamental.domain.plant.Detail;
+import org.fdryt.ornamental.domain.plant.FundamentalData;
+import org.fdryt.ornamental.domain.plant.Plant;
 import org.fdryt.ornamental.dto.nursery.SingleProductResponseDTO;
 import org.fdryt.ornamental.dto.plant.TechnicalSheetDTO;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
@@ -31,15 +33,13 @@ public class NurseryServiceImpl implements NurseryService {
 
     private SingleProductResponseDTO toSingleProductResponseDTO(Plant plant) {
         FundamentalData fundamentalData = plant.getFundamentalData();
-        ScientificName scientificName = fundamentalData.getScientificName();
-        Family familyObtained = fundamentalData.getFamily();
 
         return new SingleProductResponseDTO(
                 plant.getId(),
                 fundamentalData.getCommonName(),
-                scientificName.getName(),
-                scientificName.getScientistLastnameInitial(),
-                familyObtained != null ? familyObtained.getName() : null,
+                "",
+                'x',
+                null,
                 plant.getStatus(),
                 fundamentalData.getClassifications(),
                 plant.getDescription(),

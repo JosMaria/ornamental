@@ -23,7 +23,7 @@ import java.util.Set;
                 query = """
                     SELECT plant.id, common_name, scientific_name, discoverer, status, family.name AS family_name
                     FROM plants_v3 plant
-                    LEFT JOIN families_v2 family
+                    LEFT JOIN families family
                         ON plant.family_id = family.id
                     ORDER BY plant.common_name
                     LIMIT :limit OFFSET :offset
@@ -35,7 +35,7 @@ import java.util.Set;
                 query = """
                     SELECT plant.id, common_name, scientific_name, discoverer, status, family.name AS family_name
                     FROM plants_v3 plant
-                    LEFT JOIN families_v2 family
+                    LEFT JOIN families family
                         ON plant.family_id = family.id
                     LEFT JOIN plantv3_classifications c
                         ON plant.id = c.plantv3_id
@@ -50,7 +50,7 @@ import java.util.Set;
                 query = """
                     SELECT common_name, scientific_name, discoverer, family.name AS family_name
                     FROM plants_v3 plant
-                    LEFT JOIN families_v2 family
+                    LEFT JOIN families family
                     ON plant.family_id = family.id
                 """,
                 resultSetMapping = "ItemMapping"
@@ -105,7 +105,7 @@ public class PlantV3 {
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_families"))
-    private FamilyV2 family;
+    private Family family;
 
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
