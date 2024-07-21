@@ -1,6 +1,3 @@
 package org.fdryt.ornamental.dto.family;
 
-public record FamilyResponseDTO(
-    Integer id,
-    String name
-) {}
+public record FamilyResponseDTO(String id, String name) {}

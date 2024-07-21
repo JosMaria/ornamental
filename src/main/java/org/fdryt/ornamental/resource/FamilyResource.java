@@ -2,8 +2,8 @@ package org.fdryt.ornamental.resource;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.dto.alternative.FamilyRequestDTO;
-import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
+import org.fdryt.ornamental.dto.family.FamilyRequestDTO;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
 import org.fdryt.ornamental.utils.ValidSet;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +39,15 @@ public class FamilyResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<FamilyResponseDTO> removeFamilyByID(@PathVariable("id") String id) {
-        return ResponseEntity.ok(familyService.deleteFamilyByID(id));
+    public ResponseEntity<FamilyResponseDTO> removeByID(@PathVariable("id") String id) {
+        return ResponseEntity.ok(familyService.deleteByID(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FamilyResponseDTO> updateFamilyNameByID(@PathVariable("id") String id, @Valid @RequestBody FamilyRequestDTO payload) {
-        return ResponseEntity.ok(familyService.modifyFamilyNameByID(id, payload));
+    public ResponseEntity<FamilyResponseDTO> updateNameByID(
+            @PathVariable("id") String id,
+            @Valid @RequestBody FamilyRequestDTO payload
+    ) {
+        return ResponseEntity.ok(familyService.modifyNameByID(id, payload));
     }
 }

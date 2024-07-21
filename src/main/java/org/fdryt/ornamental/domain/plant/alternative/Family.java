@@ -2,7 +2,7 @@ package org.fdryt.ornamental.domain.plant.alternative;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.hibernate.annotations.UuidGenerator;
 
 @Getter

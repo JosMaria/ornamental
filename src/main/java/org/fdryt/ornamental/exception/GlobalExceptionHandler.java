@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,24 +44,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public void handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
         System.out.println("llegue aqui");
-    }
-
-    @ExceptionHandler(RepeatedFamilyNameException.class)
-    public ResponseEntity<ErrorExecution> handleRepeatFamilyNameException(
-            RepeatedFamilyNameException exception,
-            HttpServletRequest request
-    ) {
-        ErrorExecution response = buildErrorExecution(BAD_REQUEST, request.getRequestURI(), exception.getMessage());
-        return ResponseEntity.badRequest().body(response);
-    }
-
-    @ExceptionHandler(FamilyNotFoundException.class)
-    public ResponseEntity<ErrorExecution> handleFamilyNotFoundException(
-            FamilyNotFoundException exception,
-            HttpServletRequest request
-    ) {
-        ErrorExecution response = buildErrorExecution(BAD_REQUEST, request.getRequestURI(), exception.getMessage());
-        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(NewsNotAvailableException.class)

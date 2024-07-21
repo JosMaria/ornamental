@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.alternative;
+package org.fdryt.ornamental.dto.family;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

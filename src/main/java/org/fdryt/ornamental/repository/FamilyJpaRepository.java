@@ -1,7 +1,7 @@
 package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.plant.alternative.Family;
-import org.fdryt.ornamental.dto.alternative.FamilyResponseDTO;
+import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
