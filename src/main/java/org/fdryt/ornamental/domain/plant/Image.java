@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.domain.plant.alternative;
+package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,9 +10,9 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "images_v2")
+@Table(name = "images")
 @Entity
-public class ImageV2 {
+public class Image {
 
     @Id
     @GeneratedValue(strategy = SEQUENCE, generator = "image_sequence")
@@ -25,5 +25,5 @@ public class ImageV2 {
 
     @ManyToOne
     @JoinColumn(name = "plant_id")
-    private PlantV3 plant;
+    private Plant plant;
 }

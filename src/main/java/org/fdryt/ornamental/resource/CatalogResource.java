@@ -1,7 +1,7 @@
 package org.fdryt.ornamental.resource;
 
 import lombok.RequiredArgsConstructor;
-import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
+import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
 import org.fdryt.ornamental.service.CatalogService;
 import org.springframework.data.domain.Page;

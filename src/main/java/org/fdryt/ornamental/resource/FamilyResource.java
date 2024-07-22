@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.family.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.service.FamilyService;
-import org.fdryt.ornamental.utils.ValidSet;
+import org.fdryt.ornamental.utils.validation.ValidSet;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

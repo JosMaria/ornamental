@@ -1,6 +1,6 @@
 package org.fdryt.ornamental.dto.catalog;
 
-import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
+import org.fdryt.ornamental.domain.plant.enums.Status;
 
 public record PlantCardDTO(
         String id,

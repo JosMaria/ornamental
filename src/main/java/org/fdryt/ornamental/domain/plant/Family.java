@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.domain.plant.alternative;
+package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
 import lombok.*;

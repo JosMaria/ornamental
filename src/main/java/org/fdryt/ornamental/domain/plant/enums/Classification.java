@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.domain.plant.alternative.enums;
+package org.fdryt.ornamental.domain.plant.enums;
 
 public enum Classification {
     ORNAMENTAL,

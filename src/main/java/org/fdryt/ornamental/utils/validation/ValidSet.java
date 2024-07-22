@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.utils;
+package org.fdryt.ornamental.utils.validation;
 
 import jakarta.validation.Valid;
 import lombok.Data;

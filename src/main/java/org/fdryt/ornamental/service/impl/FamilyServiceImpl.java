@@ -5,7 +5,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.alternative.Family;
+import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.dto.family.FamilyRequestDTO;
 import org.fdryt.ornamental.dto.family.FamilyResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;

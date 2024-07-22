@@ -2,10 +2,10 @@ package org.fdryt.ornamental.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
+import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
-import org.fdryt.ornamental.repository.PlantJpaRepositoryV2;
+import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.CatalogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +24,7 @@ import static org.fdryt.ornamental.utils.Converters.firstLetterToCapitalize;
 @RequiredArgsConstructor
 public class CatalogServiceImpl implements CatalogService {
 
-    private final PlantJpaRepositoryV2 plantJpaRepository;
+    private final PlantJpaRepository plantJpaRepository;
 
     @Override
     public Page<PlantCardResponseDTO> obtainPlantCards(Pageable pageable, Classification classification) {
@@ -48,14 +48,6 @@ public class CatalogServiceImpl implements CatalogService {
         log.info("Fetch all plant of the number page: {}", pageable.getPageNumber());
 
         return new PageImpl<>(plantCardsConverted, pageable, count);
-    }
-
-    private List<PlantCardDTO> findPlantCards(int limit, int offset, Classification classification) {
-        if (classification == null) {
-            return plantJpaRepository.findAllPlantCards(limit, offset);
-        } else {
-            return plantJpaRepository.findPlantCardsByClassification(limit, offset, classification.name());
-        }
     }
 
     private PlantCardResponseDTO toPlantCardResponseDTO(PlantCardDTO plantCardDTO) {
