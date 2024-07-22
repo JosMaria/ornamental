@@ -20,13 +20,11 @@ public record PlantRequestDTO(
 
         Character discoverer,
 
-        @ValidEnum(enumClass = Status.class)
         Status status,
 
         @JsonProperty("family")
         String familyName,
 
-        @ValidEnum(enumClass = Classification.class)
         Set<Classification> classifications/*,
 
         List<TechnicalSheetDTO> technicalSheet,

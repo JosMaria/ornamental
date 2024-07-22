@@ -6,7 +6,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
+import org.fdryt.ornamental.domain.plant.alternative.Family;
 import org.fdryt.ornamental.domain.plant.alternative.ImageV2;
+import org.fdryt.ornamental.domain.plant.alternative.PlantV3;
 import org.fdryt.ornamental.dto.plant.*;
 import org.fdryt.ornamental.repository.*;
 import org.fdryt.ornamental.service.PlantService;
@@ -49,37 +51,30 @@ public class PlantServiceImpl implements PlantService {
             throw new EntityExistsException(message);
 
         } else {
+            Family familyObtained = null;
+            if (payload.familyName() != null) {
+                familyObtained = familyJpaRepository.findByName(payload.familyName())
+                        .orElseThrow(() -> {
+                            String message = String.format("Family %s not found.", payload.familyName());
+                            log.warn(message);
+                            return new EntityExistsException(message);
+                        });
+            }
 
+            PlantV3 plantToPersist = PlantV3.builder()
+                    .commonName(payload.commonName())
+                    .scientificName(payload.scientificName())
+                    .discoverer(payload.discoverer())
+                    .status(payload.status())
+                    .family(familyObtained)
+                    .classifications(payload.classifications())
+                    .build();
+
+            PlantV3 plantPersisted = plantJpaRepositoryV2.save(plantToPersist);
+            log.info("Plant named: {} persisted successfully and has ID: {}",
+                    plantPersisted.getCommonName(), plantPersisted.getId());
+            return mapToPlantResponseDTO(plantPersisted);
         }
-/*
-        Family familyObtained = null;
-        if (payload.familyName() != null) {
-            familyObtained = familyJpaRepository
-                .findByName(payload.familyName())
-                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.familyName())));
-        }*/
-
-        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload);
-
-        List<Detail> detailsToPersist = payload.details().stream()
-                .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        List<TechnicalSheet> technicalSheet = payload.technicalSheet().stream()
-                .map(technicalSheetDTO -> TechnicalSheet.builder()
-                        .word(technicalSheetDTO.word())
-                        .info(technicalSheetDTO.info())
-                        .plant(plantToPersist)
-                        .build())
-                .collect(Collectors.toCollection(ArrayList::new));
-
-        plantToPersist.addDetails(detailsToPersist);
-        plantToPersist.addTechnicalSheet(technicalSheet);
-
-        Plant plantPersisted = plantJpaRepository.save(plantToPersist);
-        log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
-
-        return fromPlantEntitytoPlantResponseDTO(plantPersisted);
     }
 
     public PlantResponseDTO create2(final CreatePlantDTO payload) {
@@ -114,7 +109,8 @@ public class PlantServiceImpl implements PlantService {
         Plant plantPersisted = plantJpaRepository.save(plantToPersist);
         log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
 
-        return fromPlantEntitytoPlantResponseDTO(plantPersisted);
+//        return fromPlantEntitytoPlantResponseDTO(plantPersisted);
+        return null;
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -137,6 +133,22 @@ public class PlantServiceImpl implements PlantService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // mapper
+    private PlantResponseDTO mapToPlantResponseDTO(PlantV3 plant) {
+        Family family = plant.getFamily();
+        String familyName = family != null ? family.getName() : null;
+
+        return new PlantResponseDTO(
+                plant.getId(),
+                plant.getCommonName(),
+                plant.getScientificName(),
+                plant.getDiscoverer(),
+                plant.getStatus(),
+                familyName,
+                plant.getClassifications()
+        );
     }
 
     @Override
@@ -261,7 +273,7 @@ public class PlantServiceImpl implements PlantService {
                 .build();
     }
 
-    private PlantResponseDTO fromPlantEntitytoPlantResponseDTO(Plant entity) {
+    /*private PlantResponseDTO fromPlantEntitytoPlantResponseDTO(Plant entity) {
         FundamentalData fundamentalData = entity.getFundamentalData();
         return new PlantResponseDTO(
                 entity.getId(),
@@ -276,5 +288,5 @@ public class PlantServiceImpl implements PlantService {
                         .map(item -> new TechnicalSheetDTO(item.getWord(), item.getInfo()))
                         .collect(Collectors.toCollection(ArrayList::new))
         );
-    }
+    }*/
 }

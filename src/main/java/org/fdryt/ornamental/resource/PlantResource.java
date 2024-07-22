@@ -3,7 +3,7 @@ package org.fdryt.ornamental.resource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
-import org.fdryt.ornamental.dto.alternative.PlantResponseDTO;
+import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
