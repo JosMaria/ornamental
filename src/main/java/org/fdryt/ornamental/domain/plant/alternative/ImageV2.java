@@ -22,4 +22,8 @@ public class ImageV2 {
     private String name;
     private String type;
     private String path;
+
+    @ManyToOne
+    @JoinColumn(name = "plant_id")
+    private PlantV3 plant;
 }

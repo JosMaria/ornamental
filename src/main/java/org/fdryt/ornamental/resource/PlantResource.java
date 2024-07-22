@@ -25,9 +25,12 @@ public class PlantResource {
                 .body(plantService.create(payload));
     }
 
-    @PostMapping("image")
-    public ResponseEntity<Void> uploadImage(@RequestParam("file") MultipartFile file) {
-        plantService.uploadImageToFileSystem(file);
+    @PostMapping("{plantId}/image")
+    public ResponseEntity<Void> uploadImage(
+            @PathVariable("plantId") String plantId,
+            @RequestParam("image") MultipartFile file
+    ) {
+        plantService.uploadImageToFileSystem(plantId, file);
         return ResponseEntity.ok().build();
     }
 }

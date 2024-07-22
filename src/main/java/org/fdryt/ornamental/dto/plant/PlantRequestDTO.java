@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Classification;
 import org.fdryt.ornamental.domain.plant.alternative.enums.Status;
-import org.fdryt.ornamental.utils.validations.ValidEnum;
 
 import java.util.Set;
 

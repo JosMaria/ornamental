@@ -8,6 +8,7 @@ import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.repertory.ItemDTO;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -110,4 +111,11 @@ public class PlantV3 {
     @ElementCollection(targetClass = Classification.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Classification> classifications;
+
+    @OneToMany(mappedBy = "plant", fetch = FetchType.EAGER)
+    private final Set<ImageV2> images = new HashSet<>();
+
+    public void addImage(ImageV2 image) {
+        images.add(image);
+    }
 }

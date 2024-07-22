@@ -9,7 +9,7 @@ public interface PlantService {
 
     PlantResponseDTO create(PlantRequestDTO payload);
 
-    void uploadImageToFileSystem(MultipartFile file);
+    void uploadImageToFileSystem(String plantId, MultipartFile file);
 
     List<SimpleInfoPlantResponseDTO> getAllCommonName();
 

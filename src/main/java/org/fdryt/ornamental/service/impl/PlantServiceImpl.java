@@ -77,17 +77,57 @@ public class PlantServiceImpl implements PlantService {
         }
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public void uploadImageToFileSystem(final String plantId, final MultipartFile file) {
+        PlantV3 plantObtained = plantJpaRepositoryV2.findById(plantId)
+                .orElseThrow(() -> {
+                    String message = String.format("Plant with ID %s not found.", plantId);
+                    log.warn(message);
+                    return new EntityNotFoundException(message);
+                });
+
+
+        ImageV2 imageToPersist = ImageV2.builder()
+                .name(file.getOriginalFilename())
+                .type(file.getContentType())
+                .path(FOLDER_PATH + file.getOriginalFilename())
+                .plant(plantObtained)
+                .build();
+
+        ImageV2 imagePersisted = imageRepository.save(imageToPersist);
+        plantObtained.addImage(imagePersisted);
+
+        try {
+            String fileName = String.format("%s_%s", imagePersisted.getId(), file.getOriginalFilename());
+            file.transferTo(new File(FOLDER_PATH + fileName));
+            log.info("File named: {}, uploaded successfully in the folder {}", imagePersisted.getName(), FOLDER_PATH);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // mapper
+    private PlantResponseDTO mapToPlantResponseDTO(PlantV3 plant) {
+        Family family = plant.getFamily();
+        String familyName = family != null ? family.getName() : null;
+
+        return new PlantResponseDTO(
+                plant.getId(),
+                plant.getCommonName(),
+                plant.getScientificName(),
+                plant.getDiscoverer(),
+                plant.getStatus(),
+                familyName,
+                plant.getClassifications()
+        );
+    }
+
     public PlantResponseDTO create2(final CreatePlantDTO payload) {
         if (plantJpaRepository.existsByCommonName(payload.commonName())) {
             throw new EntityExistsException("Planta nombrada: %s ya existe, no puede ser repetida.".formatted(payload.commonName()));
         }
-/*
-        Family familyObtained = null;
-        if (payload.familyName() != null) {
-            familyObtained = familyJpaRepository
-                .findByName(payload.familyName())
-                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.familyName())));
-        }*/
 
         Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload);
 
@@ -113,44 +153,6 @@ public class PlantServiceImpl implements PlantService {
         return null;
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    @Override
-    public
-    void uploadImageToFileSystem(final MultipartFile file) {
-        String filePath = FOLDER_PATH + file.getOriginalFilename();
-        ImageV2 imagePersisted = imageRepository.save(
-                ImageV2.builder()
-                        .name(file.getOriginalFilename())
-                        .type(file.getContentType())
-                        .path(filePath)
-                        .build()
-        );
-
-        try {
-            file.transferTo(new File(filePath));
-            log.info("File named: {}, uploaded successfully in the folder {}", imagePersisted.getName(), FOLDER_PATH);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // mapper
-    private PlantResponseDTO mapToPlantResponseDTO(PlantV3 plant) {
-        Family family = plant.getFamily();
-        String familyName = family != null ? family.getName() : null;
-
-        return new PlantResponseDTO(
-                plant.getId(),
-                plant.getCommonName(),
-                plant.getScientificName(),
-                plant.getDiscoverer(),
-                plant.getStatus(),
-                familyName,
-                plant.getClassifications()
-        );
-    }
-
     @Override
     public List<SimpleInfoPlantResponseDTO> getAllCommonName() {
         List<SimpleInfoPlantResponseDTO> allSimpleInfoPlant = plantJpaRepository.findAllSimpleInfoPlant();
@@ -163,8 +165,6 @@ public class PlantServiceImpl implements PlantService {
         // TODO: will done
         log.info("Plant with ID: {} deleted", id);
     }
-
-
 
     @Override
     public byte[] downloadPictureFromFileSystem(String pictureName) {
