@@ -41,11 +41,6 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public void handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
-        System.out.println("llegue aqui");
-    }
-
     @ExceptionHandler(NewsNotAvailableException.class)
     public ResponseEntity<ErrorExecution> handleNewsNotAvailableException(
             NewsNotAvailableException exception,

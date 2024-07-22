@@ -12,6 +12,17 @@ import java.util.List;
 @Repository
 public interface PlantJpaRepositoryV2 extends JpaRepository<PlantV3, String> {
 
+    @Query(value = """
+        SELECT
+            CASE WHEN COUNT(*) > 0
+                 THEN TRUE
+                 ELSE FALSE
+            END AS exists
+        FROM plants_v3 plant
+        WHERE plant.common_name = :common_name
+    """, nativeQuery = true)
+    boolean existsByCommonName(@Param("commonName") String commonName);
+
     @Query(name = "findAllPlantCards", nativeQuery = true)
     List<PlantCardDTO> findAllPlantCards(@Param("limit") int limit, @Param("offset") int offset);
 

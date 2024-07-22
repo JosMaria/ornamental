@@ -2,12 +2,13 @@ package org.fdryt.ornamental.service.impl;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.*;
+import org.fdryt.ornamental.domain.plant.alternative.ImageV2;
 import org.fdryt.ornamental.dto.plant.*;
-import org.fdryt.ornamental.repository.PictureJpaRepository;
-import org.fdryt.ornamental.repository.PlantJpaRepository;
+import org.fdryt.ornamental.repository.*;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,13 +33,56 @@ import static org.fdryt.ornamental.constant.Constant.PHOTO_DIRECTORY;
 public class PlantServiceImpl implements PlantService {
 
     private final PlantJpaRepository plantJpaRepository;
-    //private final FamilyJpaRepository familyJpaRepository;
     private final PictureJpaRepository pictureJpaRepository;
 
-    private static final String FOLDER_PATH = "/home/josmaria/pictures_nursery/";
+    private final ImageRepository imageRepository;
+    private final PlantJpaRepositoryV2 plantJpaRepositoryV2;
+    private final FamilyJpaRepository familyJpaRepository;
+
+    private static final String FOLDER_PATH = "/home/josmaria/nursery/images/";
 
     @Override
-    public PlantResponseDTO create(final CreatePlantDTO payload) {
+    public PlantResponseDTO create(final PlantRequestDTO payload) {
+        if (plantJpaRepositoryV2.existsByCommonName(payload.commonName())) {
+            String message = String.format("Plant named %s already exists", payload.commonName());
+            log.warn(message);
+            throw new EntityExistsException(message);
+
+        } else {
+
+        }
+/*
+        Family familyObtained = null;
+        if (payload.familyName() != null) {
+            familyObtained = familyJpaRepository
+                .findByName(payload.familyName())
+                .orElseThrow(() -> new EntityNotFoundException("Familia %s no fue encontrada.".formatted(payload.familyName())));
+        }*/
+
+        Plant plantToPersist = fromCreatePlantDtoToEntityPlant(payload);
+
+        List<Detail> detailsToPersist = payload.details().stream()
+                .map(detail -> Detail.builder().detail(detail).plant(plantToPersist).build())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        List<TechnicalSheet> technicalSheet = payload.technicalSheet().stream()
+                .map(technicalSheetDTO -> TechnicalSheet.builder()
+                        .word(technicalSheetDTO.word())
+                        .info(technicalSheetDTO.info())
+                        .plant(plantToPersist)
+                        .build())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        plantToPersist.addDetails(detailsToPersist);
+        plantToPersist.addTechnicalSheet(technicalSheet);
+
+        Plant plantPersisted = plantJpaRepository.save(plantToPersist);
+        log.info("plant persisted successfully with its ID: {}", plantPersisted.getId());
+
+        return fromPlantEntitytoPlantResponseDTO(plantPersisted);
+    }
+
+    public PlantResponseDTO create2(final CreatePlantDTO payload) {
         if (plantJpaRepository.existsByCommonName(payload.commonName())) {
             throw new EntityExistsException("Planta nombrada: %s ya existe, no puede ser repetida.".formatted(payload.commonName()));
         }
@@ -73,6 +117,28 @@ public class PlantServiceImpl implements PlantService {
         return fromPlantEntitytoPlantResponseDTO(plantPersisted);
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public
+    void uploadImageToFileSystem(final MultipartFile file) {
+        String filePath = FOLDER_PATH + file.getOriginalFilename();
+        ImageV2 imagePersisted = imageRepository.save(
+                ImageV2.builder()
+                        .name(file.getOriginalFilename())
+                        .type(file.getContentType())
+                        .path(filePath)
+                        .build()
+        );
+
+        try {
+            file.transferTo(new File(filePath));
+            log.info("File named: {}, uploaded successfully in the folder {}", imagePersisted.getName(), FOLDER_PATH);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public List<SimpleInfoPlantResponseDTO> getAllCommonName() {
         List<SimpleInfoPlantResponseDTO> allSimpleInfoPlant = plantJpaRepository.findAllSimpleInfoPlant();
@@ -86,30 +152,7 @@ public class PlantServiceImpl implements PlantService {
         log.info("Plant with ID: {} deleted", id);
     }
 
-    @Override
-    public String uploadImageToFileSystem(final MultipartFile file, final Integer plantId) {
-        String filePath = FOLDER_PATH + file.getOriginalFilename();
 
-        try {
-            File pictureToSave = new File(filePath);
-            file.transferTo(pictureToSave);
-        } catch (Exception e) {
-            log.warn(e.getMessage());
-            return "Error upload file %s".formatted(file.getOriginalFilename());
-        }
-
-        Picture pictureToPersist = Picture.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
-                .filePath(filePath)
-                .build();
-        Picture picturePersisted = pictureJpaRepository.save(pictureToPersist);
-        String message = "File named '%s' uploaded successfully in the directory %s".formatted(
-                picturePersisted.getName(), FOLDER_PATH);
-        log.info(message);
-        return message;
-
-    }
 
     @Override
     public byte[] downloadPictureFromFileSystem(String pictureName) {
