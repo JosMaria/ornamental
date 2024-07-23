@@ -20,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -77,24 +80,27 @@ public class PlantServiceImpl implements PlantService {
                     return new EntityNotFoundException(message);
                 });
 
+        Path directory = Paths.get(FOLDER_PATH + plantId);
+        Image imagePersisted = imageRepository.save(
+                Image.builder()
+                        .name(file.getOriginalFilename())
+                        .type(file.getContentType())
+                        .path(directory.toAbsolutePath().toString())
+                        .plant(plantObtained)
+                        .build()
+        );
 
-        Image imageToPersist = Image.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
-                .path(FOLDER_PATH + file.getOriginalFilename())
-                .plant(plantObtained)
-                .build();
+        if (!Files.exists(directory)) {
+            try {
+                Files.createDirectory(directory);
+                String fileName = imagePersisted.getId() + "_" + file.getOriginalFilename();
+                Path filePath = directory.resolve(fileName);
+                Files.write(filePath, file.getBytes());
+                log.info("File named: {}, uploaded successfully in the folder {}", fileName, filePath.toAbsolutePath());
 
-        Image imagePersisted = imageRepository.save(imageToPersist);
-        plantObtained.addImage(imagePersisted);
-
-        try {
-            String fileName = String.format("%s_%s", imagePersisted.getId(), file.getOriginalFilename());
-            file.transferTo(new File(FOLDER_PATH + fileName));
-            log.info("File named: {}, uploaded successfully in the folder {}", imagePersisted.getName(), FOLDER_PATH);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
     }
 

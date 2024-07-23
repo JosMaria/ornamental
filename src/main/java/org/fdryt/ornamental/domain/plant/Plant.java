@@ -113,9 +113,5 @@ public class Plant {
     private Set<Classification> classifications;
 
     @OneToMany(mappedBy = "plant", fetch = FetchType.LAZY)
-    private final Set<Image> images = new HashSet<>();
-
-    public void addImage(Image image) {
-        images.add(image);
-    }
+    private Set<Image> images;
 }
