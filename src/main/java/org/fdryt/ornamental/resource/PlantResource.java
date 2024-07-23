@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,5 +34,12 @@ public class PlantResource {
     ) {
         plantService.uploadImageToFileSystem(plantId, file);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{plantId}/image")
+    public ResponseEntity<byte[]> downloadImage(@PathVariable String plantId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(plantService.downloadImageFromFileSystem(plantId));
     }
 }

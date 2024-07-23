@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -90,6 +92,24 @@ public class PlantServiceImpl implements PlantService {
             String fileName = String.format("%s_%s", imagePersisted.getId(), file.getOriginalFilename());
             file.transferTo(new File(FOLDER_PATH + fileName));
             log.info("File named: {}, uploaded successfully in the folder {}", imagePersisted.getName(), FOLDER_PATH);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public byte[] downloadImageFromFileSystem(String plantId) {
+        Image imageObtained = imageRepository.findById(1L)
+                .orElseThrow(() -> {
+                    String message = String.format("Image with ID %s not found.", 1L);
+                    log.warn(message);
+                    return new EntityExistsException(message);
+                });
+
+        try {
+            File file = new File(FOLDER_PATH + imageObtained.getId() + "_" + imageObtained.getName());
+            return Files.readAllBytes(file.toPath());
 
         } catch (IOException e) {
             throw new RuntimeException(e);

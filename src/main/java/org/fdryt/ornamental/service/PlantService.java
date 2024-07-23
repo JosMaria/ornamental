@@ -10,5 +10,7 @@ public interface PlantService {
 
     void uploadImageToFileSystem(String plantId, MultipartFile file);
 
+    byte[] downloadImageFromFileSystem(String plantId);
+
     void delete(Integer id);
 }
