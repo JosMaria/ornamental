@@ -17,7 +17,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "plants")
-@Entity
 @NamedNativeQueries({
         @NamedNativeQuery(
                 name = "findAllPlantCards",
@@ -85,6 +84,7 @@ import java.util.Set;
                 )
         )
 })
+@Entity
 public class Plant {
 
     @Id

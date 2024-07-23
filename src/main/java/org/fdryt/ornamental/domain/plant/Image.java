@@ -2,6 +2,7 @@ package org.fdryt.ornamental.domain.plant;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.fdryt.ornamental.dto.image.ImageMapping;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -11,6 +12,26 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 @Builder
 @Table(name = "images")
+@NamedNativeQuery(
+        name = "fetchAllByPlantId",
+        query = """
+            SELECT id, name, type
+            FROM images
+            WHERE plant_id = :plantId
+        """,
+        resultSetMapping = "ImageMapping"
+)
+@SqlResultSetMapping(
+        name = "ImageMapping",
+        classes = @ConstructorResult(
+                targetClass = ImageMapping.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "name", type = String.class),
+                        @ColumnResult(name = "type", type = String.class),
+                }
+        )
+)
 @Entity
 public class Image {
 

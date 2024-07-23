@@ -2,6 +2,7 @@ package org.fdryt.ornamental.resource;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.fdryt.ornamental.dto.image.ImageMapping;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,9 +36,9 @@ public class PlantResource {
     }
 
     @GetMapping("{plantId}/image")
-    public ResponseEntity<byte[]> downloadImage(@PathVariable String plantId) {
+    public ResponseEntity<List<ImageMapping>> downloadImage(@PathVariable String plantId) {
         return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_JPEG)
+
                 .body(plantService.downloadImageFromFileSystem(plantId));
     }
 }
