@@ -33,25 +33,23 @@ public class CatalogServiceImpl implements CatalogService {
         int limit = pageable.getPageSize();
         int offset = pageable.getPageNumber() * limit;
 
-        long count;
-        List<PlantCardDTO> plantCardsObtained;
         if (classification == null) {
-            count = plantJpaRepository.count();
-            plantCardsObtained = plantJpaRepository.findAllPlantCards(limit, offset);
-
+            log.info("Obtained all the plants on page number: {}", pageable.getPageNumber());
+            return obtainPlantCardsMapped(
+                    pageable,
+                    plantJpaRepository.count(),
+                    plantJpaRepository.findAllPlantCards(limit, offset)
+            );
         } else {
-            count = plantJpaRepository.countByClassification(classification.name());
-            plantCardsObtained = plantJpaRepository.findPlantCardsByClassification(limit, offset, classification.name());
+            log.info("Obtained all the plants on page number: {} and with classification: {}", pageable.getPageNumber(), classification);
+            return obtainPlantCardsMapped(
+                    pageable,
+                    plantJpaRepository.countByClassification(classification.name()),
+                    plantJpaRepository.findPlantCardsByClassification(limit, offset, classification.name())
+            );
         }
-
-        List<PlantCardResponseDTO> plantCardsConverted = plantCardsObtained.stream()
-                .map(this::toPlantCardResponseDTO)
-                .collect(Collectors.toCollection(ArrayList::new));
-        log.info("Fetch all plant of the number page: {}", pageable.getPageNumber());
-
-        return new PageImpl<>(plantCardsConverted, pageable, count);
     }
-    
+
     @Override
     public List<ItemResponseDTO> obtainAllItems() {
         List<ItemDTO> itemsObtained = plantJpaRepository.findAllItems();
@@ -60,6 +58,14 @@ public class CatalogServiceImpl implements CatalogService {
         return itemsObtained.stream()
                 .map(this::toItemResponseDTO)
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Page<PlantCardResponseDTO> obtainPlantCardsMapped(Pageable pageable, long count, List<PlantCardDTO> plantCardsObtained) {
+        List<PlantCardResponseDTO> plantsMapped = plantCardsObtained.stream()
+                .map(this::toPlantCardResponseDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        return new PageImpl<>(plantsMapped, pageable, count);
     }
 
     private ItemResponseDTO toItemResponseDTO(ItemDTO itemDTO) {
@@ -75,7 +81,6 @@ public class CatalogServiceImpl implements CatalogService {
                 plantCardDTO.id(),
                 firstLetterToCapitalize(plantCardDTO.commonName()),
                 scientificName,
-                firstLetterToCapitalize(plantCardDTO.familyName()),
                 plantCardDTO.status(),
                 "https://img.freepik.com/foto-gratis/hermosas-modernas-plantas-deco_23-2149198578.jpg?size=626&ext=jpg"
         );
