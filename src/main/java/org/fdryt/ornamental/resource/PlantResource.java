@@ -6,6 +6,8 @@ import org.fdryt.ornamental.dto.image.ImageMapping;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.service.PlantService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +38,10 @@ public class PlantResource {
     }
 
     @GetMapping("{plantId}/image")
-    public ResponseEntity<List<ImageMapping>> downloadImage(@PathVariable String plantId) {
-        return ResponseEntity.status(HttpStatus.OK)
-
+    public ResponseEntity<Resource> downloadImage(@PathVariable String plantId) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "josemaria" + "\"")
                 .body(plantService.downloadImageFromFileSystem(plantId));
     }
 }

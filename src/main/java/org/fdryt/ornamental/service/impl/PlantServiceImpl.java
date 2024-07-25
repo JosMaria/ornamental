@@ -15,10 +15,14 @@ import org.fdryt.ornamental.repository.FamilyJpaRepository;
 import org.fdryt.ornamental.repository.ImageRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -107,22 +111,19 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public List<ImageMapping> downloadImageFromFileSystem(final String plantId) {
+    public Resource downloadImageFromFileSystem(final String plantId) {
         List<ImageMapping> imagesObtained = imageRepository.fetchAllByPlantId(plantId);
-        return imagesObtained;/*
-        Image imageObtained = imageRepository.findById(1L)
-                .orElseThrow(() -> {
-                    String message = String.format("Image with ID %s not found.", 1L);
-                    log.warn(message);
-                    return new EntityExistsException(message);
-                });
         try {
-            File file = new File(FOLDER_PATH + imageObtained.getId() + "_" + imageObtained.getName());
-            return Files.readAllBytes(file.toPath());
+            Path filePath = Paths.get(FOLDER_PATH + plantId + "/").resolve("1_flor_de_navidad.jpeg").normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (!resource.exists() || !resource.isReadable()) {
+                throw new EntityNotFoundException("Image not found");
+            }
+            return resource;
 
-        } catch (IOException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
-        }*/
+        }
     }
 
     // mapper
