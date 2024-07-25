@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
+import org.fdryt.ornamental.dto.repertory.ItemDTO;
+import org.fdryt.ornamental.dto.repertory.ItemResponseDTO;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.CatalogService;
 import org.springframework.data.domain.Page;
@@ -48,6 +50,25 @@ public class CatalogServiceImpl implements CatalogService {
         log.info("Fetch all plant of the number page: {}", pageable.getPageNumber());
 
         return new PageImpl<>(plantCardsConverted, pageable, count);
+    }
+    
+    @Override
+    public List<ItemResponseDTO> obtainAllItems() {
+        List<ItemDTO> itemsObtained = plantJpaRepository.findAllItems();
+        log.info("Obtained all plants to show in the repertory");
+
+        return itemsObtained.stream()
+                .map(this::toItemResponseDTO)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private ItemResponseDTO toItemResponseDTO(ItemDTO itemDTO) {
+        String scientificName = buildScientificName(itemDTO.scientificName(), itemDTO.discoverer());
+        return new ItemResponseDTO(
+                firstLetterToCapitalize(itemDTO.commonName()),
+                scientificName,
+                firstLetterToCapitalize(itemDTO.familyName())
+        );
     }
 
     private PlantCardResponseDTO toPlantCardResponseDTO(PlantCardDTO plantCardDTO) {

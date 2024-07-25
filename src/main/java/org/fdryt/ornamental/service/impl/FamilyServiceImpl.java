@@ -76,16 +76,12 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     private Family obtainFamilyOrThrowException(String id) {
-        Optional<Family> familyObtained = familyJpaRepository.findById(id);
-
-        if (familyObtained.isEmpty()) {
-            String message = String.format("Family with ID %s not found.", id);
-            log.warn(message);
-            throw new EntityNotFoundException(message);
-
-        } else {
-            return familyObtained.get();
-        }
+        return familyJpaRepository.findById(id)
+                .orElseThrow(() -> {
+                    String message = String.format("Family with ID %s not found.", id);
+                    log.warn(message);
+                    return new EntityNotFoundException(message);
+                });
     }
 
     // Mappers

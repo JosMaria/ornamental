@@ -48,10 +48,10 @@ public class PlantServiceImpl implements PlantService {
 
         } else {
             Family familyObtained = null;
-            if (payload.familyName() != null) {
-                familyObtained = familyJpaRepository.findByName(payload.familyName())
+            if (payload.familyId() != null) {
+                familyObtained = familyJpaRepository.findById(payload.familyId())
                         .orElseThrow(() -> {
-                            String message = String.format("Family %s not found.", payload.familyName());
+                            String message = String.format("Family with ID %s has not been found", payload.familyId());
                             log.warn(message);
                             return new EntityExistsException(message);
                         });

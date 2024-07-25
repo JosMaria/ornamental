@@ -3,6 +3,7 @@ package org.fdryt.ornamental.resource;
 import lombok.RequiredArgsConstructor;
 import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
+import org.fdryt.ornamental.dto.repertory.ItemResponseDTO;
 import org.fdryt.ornamental.service.CatalogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,5 +29,10 @@ public class CatalogResource {
             @RequestParam(required = false) Classification classification
     ) {
         return ResponseEntity.ok(catalogService.obtainPlantCards(pageable, classification));
+    }
+
+    @GetMapping("/repertory")
+    public ResponseEntity<List<ItemResponseDTO>> fetchAllItems() {
+        return ResponseEntity.ok(catalogService.obtainAllItems());
     }
 }

@@ -1,6 +1,5 @@
 package org.fdryt.ornamental.dto.plant;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.fdryt.ornamental.domain.plant.enums.Classification;
@@ -18,12 +17,8 @@ public record PlantRequestDTO(
         String scientificName,
 
         Character discoverer,
-
         Status status,
-
-        @JsonProperty("family")
-        String familyName,
-
+        String familyId,
         Set<Classification> classifications/*,
 
         List<TechnicalSheetDTO> technicalSheet,
