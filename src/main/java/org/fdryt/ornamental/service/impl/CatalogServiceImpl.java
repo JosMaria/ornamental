@@ -64,11 +64,9 @@ public class CatalogServiceImpl implements CatalogService {
 
     private ItemResponseDTO toItemResponseDTO(ItemDTO itemDTO) {
         String scientificName = buildScientificName(itemDTO.scientificName(), itemDTO.discoverer());
-        return new ItemResponseDTO(
-                firstLetterToCapitalize(itemDTO.commonName()),
-                scientificName,
-                firstLetterToCapitalize(itemDTO.familyName())
-        );
+        String commonName = firstLetterToCapitalize(itemDTO.commonName());
+        String familyName = firstLetterToCapitalize(itemDTO.familyName());
+        return new ItemResponseDTO(commonName, scientificName, familyName);
     }
 
     private PlantCardResponseDTO toPlantCardResponseDTO(PlantCardDTO plantCardDTO) {

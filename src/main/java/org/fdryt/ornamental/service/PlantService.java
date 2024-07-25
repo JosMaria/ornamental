@@ -13,5 +13,5 @@ public interface PlantService {
 
     Resource downloadImageFromFileSystem(String plantId);
 
-    void delete(Integer id);
+    PlantResponseDTO deleteByID(String id);
 }

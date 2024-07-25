@@ -31,6 +31,11 @@ public class PlantResource {
                 .body(plantService.create(payload));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PlantResponseDTO> removeByID(@PathVariable("id") String id) {
+        return ResponseEntity.ok(plantService.deleteByID(id));
+    }
+
     @PostMapping(value = "{plantId}/image", consumes = {"multipart/form-data"})
     public ResponseEntity<Void> uploadImage(@PathVariable("plantId") String plantId, @RequestPart("image") MultipartFile file) {
         plantService.uploadImageToFileSystem(plantId, file);

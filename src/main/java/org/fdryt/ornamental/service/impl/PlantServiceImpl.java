@@ -17,7 +17,6 @@ import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.PlantService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -143,8 +142,9 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public void delete(final Integer id) {
+    public PlantResponseDTO deleteByID(final String id) {
+        plantJpaRepository.deleteById(id);
         // TODO: will done
-        log.info("Plant with ID: {} deleted", id);
+        return null;
     }
 }
