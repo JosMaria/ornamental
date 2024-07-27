@@ -32,18 +32,18 @@ public class PlantResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PlantResponseDTO> removeByID(@PathVariable("id") String id) {
+    public ResponseEntity<PlantResponseDTO> removeByID(@PathVariable("id") Long id) {
         return ResponseEntity.ok(plantService.deleteByID(id));
     }
 
     @PostMapping(value = "{plantId}/image", consumes = {"multipart/form-data"})
-    public ResponseEntity<Void> uploadImage(@PathVariable("plantId") String plantId, @RequestPart("image") MultipartFile file) {
+    public ResponseEntity<Void> uploadImage(@PathVariable("plantId") Long plantId, @RequestPart("image") MultipartFile file) {
         plantService.uploadImageToFileSystem(plantId, file);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{plantId}/image/{imageId}")
-    public ResponseEntity<Resource> downloadImage(@PathVariable String plantId, @PathVariable String imageId) {
+    public ResponseEntity<Resource> downloadImage(@PathVariable Long plantId, @PathVariable String imageId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(plantService.downloadImageFromFileSystem(plantId, imageId));

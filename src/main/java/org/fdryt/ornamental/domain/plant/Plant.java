@@ -6,10 +6,10 @@ import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.domain.plant.enums.Status;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.repertory.ItemDTO;
-import org.hibernate.annotations.UuidGenerator;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Getter
 @Setter
@@ -62,7 +62,7 @@ import java.util.Set;
                 classes = @ConstructorResult(
                         targetClass = PlantCardDTO.class,
                         columns = {
-                                @ColumnResult(name = "id", type = String.class),
+                                @ColumnResult(name = "id", type = Long.class),
                                 @ColumnResult(name = "common_name", type = String.class),
                                 @ColumnResult(name = "scientific_name", type = String.class),
                                 @ColumnResult(name = "discoverer", type = Character.class),
@@ -88,9 +88,9 @@ import java.util.Set;
 public class Plant {
 
     @Id
-    @UuidGenerator
-    @Column(updatable = false)
-    private String id;
+    @GeneratedValue(strategy = SEQUENCE, generator = "plant_sequence")
+    @SequenceGenerator(name = "plant_sequence", sequenceName = "plant_sequence", allocationSize = 1)
+    private Long id;
 
     @Column(unique = true, nullable = false, length = 50)
     private String commonName;

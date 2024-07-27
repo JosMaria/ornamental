@@ -9,9 +9,9 @@ public interface PlantService {
 
     PlantResponseDTO create(PlantRequestDTO payload);
 
-    void uploadImageToFileSystem(String plantId, MultipartFile file);
+    void uploadImageToFileSystem(Long plantId, MultipartFile file);
 
-    Resource downloadImageFromFileSystem(String plantId, String imageId);
+    Resource downloadImageFromFileSystem(Long plantId, String imageId);
 
-    PlantResponseDTO deleteByID(String id);
+    PlantResponseDTO deleteByID(Long id);
 }

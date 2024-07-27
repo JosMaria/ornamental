@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PlantJpaRepository extends JpaRepository<Plant, String> {
+public interface PlantJpaRepository extends JpaRepository<Plant, Long> {
 
     boolean existsByCommonName(String commonName);
 

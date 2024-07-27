@@ -73,7 +73,7 @@ public class PlantServiceImpl implements PlantService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public void uploadImageToFileSystem(final String plantId, final MultipartFile file) {
+    public void uploadImageToFileSystem(final Long plantId, final MultipartFile file) {
         Plant plantObtained = plantJpaRepository.findById(plantId)
                 .orElseThrow(() -> {
                     String message = String.format("Plant with ID %s not found.", plantId);
@@ -109,7 +109,7 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public Resource downloadImageFromFileSystem(final String plantId, final String imageId) {
+    public Resource downloadImageFromFileSystem(final Long plantId, final String imageId) {
         Resource resource = null;
         if (plantJpaRepository.existsById(plantId)) {
             Path directory = Paths.get(FOLDER_PATH + plantId);
@@ -149,7 +149,7 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public PlantResponseDTO deleteByID(final String id) {
+    public PlantResponseDTO deleteByID(final Long id) {
         plantJpaRepository.deleteById(id);
         // TODO: will done
         return null;

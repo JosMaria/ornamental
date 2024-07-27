@@ -32,6 +32,7 @@ import org.hibernate.annotations.UuidGenerator;
         )
 )
 public class Family {
+
     @Id
     @UuidGenerator
     @Column(updatable = false)

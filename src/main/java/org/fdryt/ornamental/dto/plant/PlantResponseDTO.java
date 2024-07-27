@@ -9,7 +9,7 @@ import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PlantResponseDTO(
-    String id,
+    Long id,
     String commonName,
     String scientificName,
     Character discoverer,
