@@ -3,8 +3,7 @@ package org.fdryt.ornamental.domain.plant;
 import jakarta.persistence.*;
 import lombok.*;
 import org.fdryt.ornamental.dto.image.ImageMapping;
-
-import static jakarta.persistence.GenerationType.SEQUENCE;
+import org.hibernate.annotations.UuidGenerator;
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
         classes = @ConstructorResult(
                 targetClass = ImageMapping.class,
                 columns = {
-                        @ColumnResult(name = "id", type = Long.class),
+                        @ColumnResult(name = "id", type = String.class),
                         @ColumnResult(name = "name", type = String.class),
                         @ColumnResult(name = "type", type = String.class),
                 }
@@ -36,9 +35,9 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class Image {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "image_sequence")
-    @SequenceGenerator(name = "image_sequence", sequenceName = "image_sequence", allocationSize = 1)
-    private Long id;
+    @UuidGenerator
+    @Column(updatable = false)
+    private String id;
 
     private String name;
     private String type;

@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.domain.plant.Image;
 import org.fdryt.ornamental.domain.plant.Plant;
-import org.fdryt.ornamental.dto.image.ImageMapping;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
@@ -22,10 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -97,7 +96,7 @@ public class PlantServiceImpl implements PlantService {
                             .build()
             );
 
-            String fileName = imagePersisted.getId() + "_" + file.getOriginalFilename();
+            String fileName = imagePersisted.getId();
             Path filePath = directory.resolve(fileName);
             Files.write(filePath, file.getBytes());
             log.info("File named: {}, uploaded successfully in the folder {}", fileName, filePath.toAbsolutePath());
@@ -110,19 +109,27 @@ public class PlantServiceImpl implements PlantService {
     }
 
     @Override
-    public Resource downloadImageFromFileSystem(final String plantId) {
-        List<ImageMapping> imagesObtained = imageRepository.fetchAllByPlantId(plantId);
-        try {
-            Path filePath = Paths.get(FOLDER_PATH + plantId + "/").resolve("1_flor_de_navidad.jpeg").normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (!resource.exists() || !resource.isReadable()) {
-                throw new EntityNotFoundException("Image not found");
-            }
-            return resource;
+    public Resource downloadImageFromFileSystem(final String plantId, final String imageId) {
+        Resource resource = null;
+        if (plantJpaRepository.existsById(plantId)) {
+            Path directory = Paths.get(FOLDER_PATH + plantId);
+            if (Files.exists(directory)) {
+                Path filePath = Paths.get(FOLDER_PATH + plantId + "/").resolve(imageId).normalize();
+                try {
+                    resource = new UrlResource(filePath.toUri());
+                    if (!resource.exists() || !resource.isReadable()) {
+                        String message = "Could not download image";
+                        log.warn(message);
+                        throw new FileSystemNotFoundException(message);
+                    }
+                } catch (MalformedURLException exception) {
+                    log.warn(exception.getMessage());
+                    throw new FileSystemNotFoundException(exception.getMessage());
+                }
 
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            }
         }
+        return resource;
     }
 
     // mapper

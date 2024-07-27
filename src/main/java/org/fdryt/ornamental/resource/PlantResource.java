@@ -42,11 +42,10 @@ public class PlantResource {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{plantId}/image")
-    public ResponseEntity<Resource> downloadImage(@PathVariable String plantId) {
+    @GetMapping("{plantId}/image/{imageId}")
+    public ResponseEntity<Resource> downloadImage(@PathVariable String plantId, @PathVariable String imageId) {
         return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + "josemaria" + "\"")
-                .body(plantService.downloadImageFromFileSystem(plantId));
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(plantService.downloadImageFromFileSystem(plantId, imageId));
     }
 }

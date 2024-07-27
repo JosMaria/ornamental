@@ -11,7 +11,7 @@ public interface PlantService {
 
     void uploadImageToFileSystem(String plantId, MultipartFile file);
 
-    Resource downloadImageFromFileSystem(String plantId);
+    Resource downloadImageFromFileSystem(String plantId, String imageId);
 
     PlantResponseDTO deleteByID(String id);
 }
