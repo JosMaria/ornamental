@@ -7,6 +7,7 @@ import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardResponseDTO;
 import org.fdryt.ornamental.dto.repertory.ItemDTO;
 import org.fdryt.ornamental.dto.repertory.ItemResponseDTO;
+import org.fdryt.ornamental.repository.ImageRepository;
 import org.fdryt.ornamental.repository.PlantJpaRepository;
 import org.fdryt.ornamental.service.CatalogService;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import static org.fdryt.ornamental.utils.Converters.firstLetterToCapitalize;
 public class CatalogServiceImpl implements CatalogService {
 
     private final PlantJpaRepository plantJpaRepository;
+    private final ImageRepository imageRepository;
 
     @Override
     public Page<PlantCardResponseDTO> obtainPlantCards(Pageable pageable, Classification classification) {
@@ -76,13 +78,13 @@ public class CatalogServiceImpl implements CatalogService {
     }
 
     private PlantCardResponseDTO toPlantCardResponseDTO(PlantCardDTO plantCardDTO) {
+        String imageId = imageRepository.findByPlantId(plantCardDTO.id())
+                .stream()
+                .findFirst()
+                .orElse(null);
+
         String scientificName = buildScientificName(plantCardDTO.scientificName(), plantCardDTO.discoverer());
-        return new PlantCardResponseDTO(
-                plantCardDTO.id(),
-                firstLetterToCapitalize(plantCardDTO.commonName()),
-                scientificName,
-                plantCardDTO.status(),
-                "https://img.freepik.com/foto-gratis/hermosas-modernas-plantas-deco_23-2149198578.jpg?size=626&ext=jpg"
-        );
+        String commonName = firstLetterToCapitalize(plantCardDTO.commonName());
+        return new PlantCardResponseDTO(plantCardDTO.id(), commonName, scientificName, plantCardDTO.status(), imageId);
     }
 }

@@ -126,7 +126,6 @@ public class PlantServiceImpl implements PlantService {
                     log.warn(exception.getMessage());
                     throw new FileSystemNotFoundException(exception.getMessage());
                 }
-
             }
         }
         return resource;
