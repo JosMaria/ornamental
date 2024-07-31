@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.family;
+package org.fdryt.ornamental.dto.plant;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

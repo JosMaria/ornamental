@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.repertory;
+package org.fdryt.ornamental.dto.catalog;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

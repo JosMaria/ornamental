@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.fdryt.ornamental.domain.plant.enums.Classification;
 import org.fdryt.ornamental.domain.plant.enums.Status;
+import org.fdryt.ornamental.dto.catalog.ItemDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
-import org.fdryt.ornamental.dto.repertory.ItemDTO;
 
 import java.util.Set;
 

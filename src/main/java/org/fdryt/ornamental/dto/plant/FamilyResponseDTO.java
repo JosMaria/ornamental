@@ -1,3 +1,3 @@
-package org.fdryt.ornamental.dto.family;
+package org.fdryt.ornamental.dto.plant;
 
 public record FamilyResponseDTO(String id, String name) {}

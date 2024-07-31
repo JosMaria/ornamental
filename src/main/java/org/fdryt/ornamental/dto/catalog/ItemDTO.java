@@ -1,4 +1,4 @@
-package org.fdryt.ornamental.dto.repertory;
+package org.fdryt.ornamental.dto.catalog;
 
 public record ItemDTO(
         String commonName,

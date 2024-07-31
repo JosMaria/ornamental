@@ -1,8 +1,8 @@
 package org.fdryt.ornamental.repository;
 
 import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.dto.catalog.ItemDTO;
 import org.fdryt.ornamental.dto.catalog.PlantCardDTO;
-import org.fdryt.ornamental.dto.repertory.ItemDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

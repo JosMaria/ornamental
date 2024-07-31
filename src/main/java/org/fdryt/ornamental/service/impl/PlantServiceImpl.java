@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.fdryt.ornamental.domain.plant.Family;
 import org.fdryt.ornamental.domain.plant.Image;
 import org.fdryt.ornamental.domain.plant.Plant;
+import org.fdryt.ornamental.dto.plant.FamilyRequestDTO;
+import org.fdryt.ornamental.dto.plant.FamilyResponseDTO;
 import org.fdryt.ornamental.dto.plant.PlantRequestDTO;
 import org.fdryt.ornamental.dto.plant.PlantResponseDTO;
 import org.fdryt.ornamental.repository.FamilyJpaRepository;
@@ -25,6 +27,10 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -69,6 +75,13 @@ public class PlantServiceImpl implements PlantService {
                     plantPersisted.getCommonName(), plantPersisted.getId());
             return mapToPlantResponseDTO(plantPersisted);
         }
+    }
+
+    @Override
+    public PlantResponseDTO deleteByID(final Long id) {
+        plantJpaRepository.deleteById(id);
+        // TODO: will done
+        return null;
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -131,7 +144,76 @@ public class PlantServiceImpl implements PlantService {
         return resource;
     }
 
-    // mapper
+    @Override
+    public FamilyResponseDTO createFamily(final FamilyRequestDTO payload) {
+        throwExceptionIfFamilyNameAlreadyExists(payload.name());
+        Family familyPersisted = familyJpaRepository.save(mapToFamilyEntity(payload));
+        log.info("Family persisted with the name: {}", familyPersisted.getName());
+        return mapToFamilyResponseDTO(familyPersisted);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public List<FamilyResponseDTO> createManyFamilies(final Set<FamilyRequestDTO> families) {
+        return families.stream()
+                .map(this::createFamily)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<FamilyResponseDTO> obtainAllFamilies() {
+        List<FamilyResponseDTO> familiesObtained = familyJpaRepository.findAllFamilies();
+        log.info("Obtained everyone of the families.");
+        return familiesObtained;
+    }
+
+    @Override
+    public FamilyResponseDTO deleteFamilyByID(final String id) {
+        Family family = obtainFamilyOrThrowException(id);
+        familyJpaRepository.deleteById(id);
+        log.info("Family removed with name: {}.", family.getName());
+        return mapToFamilyResponseDTO(family);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
+    @Override
+    public FamilyResponseDTO modifyFamilyNameByID(final String id, final FamilyRequestDTO payload) {
+        throwExceptionIfFamilyNameAlreadyExists(payload.name());
+        Family family = obtainFamilyOrThrowException(id);
+        family.setName(payload.name());
+        log.info("Family updated with new name: {}", family.getName());
+        return mapToFamilyResponseDTO(family);
+    }
+
+    // Methods utils
+    private void throwExceptionIfFamilyNameAlreadyExists(String name) {
+        if (familyJpaRepository.existsByName(name)) {
+            String message = String.format("Family with name %s already exists.", name);
+            log.warn(message);
+            throw new EntityExistsException(message);
+        }
+    }
+
+    private Family obtainFamilyOrThrowException(String id) {
+        return familyJpaRepository.findById(id)
+                .orElseThrow(() -> {
+                    String message = String.format("Family with ID %s not found.", id);
+                    log.warn(message);
+                    return new EntityNotFoundException(message);
+                });
+    }
+
+    // Mappers
+    private Family mapToFamilyEntity(FamilyRequestDTO payload) {
+        return Family.builder()
+                .name(payload.name())
+                .build();
+    }
+
+    private FamilyResponseDTO mapToFamilyResponseDTO(Family family) {
+        return new FamilyResponseDTO(family.getId(), family.getName());
+    }
+
     private PlantResponseDTO mapToPlantResponseDTO(Plant plant) {
         Family family = plant.getFamily();
         String familyName = family != null ? family.getName() : null;
@@ -145,12 +227,5 @@ public class PlantServiceImpl implements PlantService {
                 familyName,
                 plant.getClassifications()
         );
-    }
-
-    @Override
-    public PlantResponseDTO deleteByID(final Long id) {
-        plantJpaRepository.deleteById(id);
-        // TODO: will done
-        return null;
     }
 }
